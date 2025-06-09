@@ -12,7 +12,7 @@ const AffectationDepot = sequelize.define('AffectationDepot', {
     allowNull: false,
     primaryKey: true
   },
-  role: {
+  roleDepot: {
     type: DataTypes.STRING,
     allowNull: false,
     validate: {
@@ -20,12 +20,12 @@ const AffectationDepot = sequelize.define('AffectationDepot', {
     }
   }
 }, {
-  tableName: 'AffectationDepots',
+
   timestamps: false,
   indexes: [
     {
       unique: true,
-      fields: ['codeDepot', 'role'] // ❌ Empêche 2 utilisateurs d’avoir le même rôle sur le même dépôt
+      fields: ['codeDepot', 'roleDepot'] // ❌ Empêche 2 utilisateurs d’avoir le même rôle sur le même dépôt
     }
   ]
 });

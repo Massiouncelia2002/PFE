@@ -1,27 +1,43 @@
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import {
   MenuIcon,
   XIcon,
   MoonIcon,
   SunIcon,
-  SearchIcon,
   UserIcon,
   LogoutIcon,
 } from '@heroicons/react/outline';
 import { Menu } from '@headlessui/react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from './Sidebar';
+
 const AdminLayout = ({ children }) => {
   const [darkMode, setDarkMode] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [user, setUser] = useState({ nom: '', prenom: '', role: '' });
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navigate('/', { replace: true });
+    } else {
+      const nom = localStorage.getItem('nom') || '';
+      const prenom = localStorage.getItem('prenom') || '';
+      const role = localStorage.getItem('role') || '';
+      setUser({ nom, prenom, role });
+    }
+  }, [navigate]);
 
   const handleLogout = () => {
     const confirmLogout = window.confirm('Êtes-vous sûr de vouloir vous déconnecter ?');
     if (confirmLogout) {
       localStorage.removeItem('token');
-      navigate('/');
+      localStorage.removeItem('nom');
+      localStorage.removeItem('prenom');
+      localStorage.removeItem('role');
+      navigate('/', { replace: true });
     }
   };
 
@@ -43,16 +59,10 @@ const AdminLayout = ({ children }) => {
                     {isSidebarOpen ? <XIcon className="w-6 h-6" /> : <MenuIcon className="w-6 h-6" />}
                   </button>
 
-                  <div className="relative">
-                    <SearchIcon className="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                    <input
-                      type="text"
-                      placeholder="Rechercher..."
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-10 pr-4 py-2 rounded-lg bg-white dark:bg-gray-700 text-sm text-gray-900 dark:text-white border border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                  </div>
+                  {/* Message de bienvenue */}
+                  <p className="text-sm md:text-base font-medium text-gray-700 dark:text-gray-200">
+                    Bienvenue, {user.role} : {user.nom} {user.prenom}
+                  </p>
                 </div>
 
                 <div className="flex items-center gap-4">
@@ -60,7 +70,11 @@ const AdminLayout = ({ children }) => {
                     onClick={() => setDarkMode(!darkMode)}
                     className="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                   >
-                    {darkMode ? <SunIcon className="w-6 h-6 text-gray-400" /> : <MoonIcon className="w-6 h-6 text-gray-400" />}
+                    {darkMode ? (
+                      <SunIcon className="w-6 h-6 text-gray-400" />
+                    ) : (
+                      <MoonIcon className="w-6 h-6 text-gray-400" />
+                    )}
                   </button>
 
                   <Menu as="div" className="relative inline-block text-left">
