@@ -5,10 +5,11 @@ const multer = require("multer");
 const path = require("path");
 const upload = multer({ dest: "uploads/" });
 
-router.post("/import-excel", upload.single("file"), utilisateurController.importerDepuisExcel);
 
+router.post("/import-excel", upload.single("file"), utilisateurController.importerDepuisExcel);
 router.post("/", utilisateurController.creerUtilisateur);
 router.get("/", utilisateurController.getTousLesUtilisateurs);
+
 
 router.put("/:codeUtilisateur", utilisateurController.modifierUtilisateur);
 router.delete("/:codeUtilisateur", utilisateurController.supprimerUtilisateur);

@@ -748,7 +748,8 @@ const AffectationDepot = () => {
         if (!utilisateurData) return false;
 
         try {
-            const res = await axios.get(`http://localhost:5000/depot/check/${codeDepot}/${utilisateurData.role}`);
+            // const res = await axios.get(`http://localhost:5000/depot/check/${codeDepot}/${utilisateurData.role}`);
+            const res = await axios.get(`http://localhost:5000/depot/check/${codeDepot}/${utilisateurData.codeUtilisateur}/${utilisateurData.role}`);
             return res.data.affecte;
         } catch (error) {
             console.error("Erreur lors de la vérification du dépôt :", error);

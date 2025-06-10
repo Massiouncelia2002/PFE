@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./pages/Login";
 
 import AdminFonctionnel from "./pages/AdminFonctionnel";
+import AdminDepot from "./pages/AdminDepot";
 
 import FamillesSousFamillesPage from './pages/FamillesSousFamillesPage'
 
@@ -49,6 +50,9 @@ import PlanifierCommande from "./pages/PlanifierCommande";
 
 
 
+
+
+
 export default function App() {
   return (
     <>
@@ -56,11 +60,13 @@ export default function App() {
       <Router>
         <Routes>
           <Route path="/" element={<Login />} />
-          <Route path="/dashboard/admin" element={<div>Admin Dashboard</div>} />
+          {/* <Route path="/dashboard/admin" element={<div>Admin Dashboard</div>} /> */}
           <Route path="/dashboard/gestionnaire" element={<div>Gestionnaire Dashboard</div>} />
-          <Route path="/dashboard/depot" element={<div>Admin Dépôt Dashboard</div>} />
+          
 
           <Route path="/admin-fonctionnel" element={<AdminFonctionnel />} />
+          <Route path="/admin-depot" element={<AdminDepot/>} />
+
 
           <Route path="/ajouter-utilisateur" element={<AjouterUtilisateur />} />
           <Route path="/utilisateurs" element={<ListeUtilisateurs />} />
@@ -104,6 +110,8 @@ export default function App() {
           <Route path="/EntreeStock" element={<EntreeStock />} />
 
           <Route path="/PlanifierCommande" element={<PlanifierCommande />} />
+
+          
 
           
       

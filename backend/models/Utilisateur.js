@@ -248,6 +248,7 @@ const Utilisateur = sequelize.define("Utilisateur", {
     type: DataTypes.ENUM("Admin Fonctionnel", "Gestionnaire Dépôt", "Admin Dépôt"),
     allowNull: false,
   },
+
 }, {
   hooks: {
     beforeSave: async (utilisateur) => {
