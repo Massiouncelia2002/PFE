@@ -279,7 +279,7 @@
 
 
 
-const { Utilisateur, Depot,Article, ArticleDepot,AffectationDepot } = require("../models");
+const { Utilisateur, Depot, Article, ArticleDepot,AffectationDepot } = require("../models");
 const xlsx = require("xlsx");
 
 
@@ -452,152 +452,25 @@ exports.importDepotsFromExcel = async (req, res) => {
 
 
 
-// exports.affecterUtilisateurMultiple = async (req, res) => {
-//   try {
-//     const { codesDepot, codeUtilisateur } = req.body;
-
-//     // Vérifier si l'utilisateur existe
-//     const utilisateur = await Utilisateur.findOne({ where: { codeUtilisateur } });
-//     if (!utilisateur) {
-//       return res.status(404).json({ message: "Utilisateur non trouvé" });
-//     }
-
-//     // Affecter chaque dépôt à l'utilisateur
-//     for (const codeDepot of codesDepot) {
-//       const depot = await Depot.findOne({ where: { codeDepot } });
-//       if (!depot) {
-//         return res.status(404).json({ message: `Dépôt avec le code ${codeDepot} non trouvé` });
-//       }
-
-//       // Mise à jour de l'affectation
-//       depot.codeUtilisateur = codeUtilisateur;
-//       await depot.save();
-//     }
-
-//     res.status(200).json({ message: "Les dépôts ont été affectés à l'utilisateur avec succès" });
-//   } catch (error) {
-//     res.status(500).json({ error: error.message });
-//   }
-// };
-
-
-// // affectation un depot a deux utilisateurs de roles differents   
-// exports.affecterUtilisateurMultiple = async (req, res) => {
-//   try {
-//     const { codesDepot, codeUtilisateur, role } = req.body;
-
-//     // Vérifier si l'utilisateur existe
-//     const utilisateur = await Utilisateur.findOne({ where: { codeUtilisateur } });
-//     if (!utilisateur) {
-//       return res.status(404).json({ message: "Utilisateur non trouvé" });
-//     }
-
-//     for (const codeDepot of codesDepot) {
-//       const depot = await Depot.findOne({ where: { codeDepot } });
-//       if (!depot) {
-//         return res.status(404).json({ message: `Dépôt avec le code ${codeDepot} non trouvé` });
-//       }
-
-//       // Vérifie si ce rôle est déjà utilisé pour ce dépôt
-//       const affectationExistante = await AffectationDepot.findOne({
-//         where: { codeDepot, role }
-//       });
-
-//       if (affectationExistante) {
-//         return res.status(400).json({
-//           message: `Le dépôt ${codeDepot} est déjà affecté à un utilisateur avec le rôle ${role}`
-//         });
-//       }
-
-//       // Créer l'affectation
-//       await AffectationDepot.create({
-//         codeUtilisateur,
-//         codeDepot,
-//         role
-//       });
-//     }
-
-//     res.status(200).json({ message: "Affectations effectuées avec succès" });
-//   } catch (error) {
-//     res.status(500).json({ error: error.message });
-//   }
-// };
-
-
-
-
-// exports.affecterUtilisateurMultiple = async (req, res) => {
-//   try {
-//     const { codesDepot, codeUtilisateur, roleDepot } = req.body;
-
-//     // Vérifier l'utilisateur et son rôle
-//     const utilisateur = await Utilisateur.findOne({ where: { codeUtilisateur } });
-
-//     if (!utilisateur) {
-//       return res.status(404).json({ message: "Utilisateur non trouvé" });
-//     }
-
-//     if (utilisateur.roleDepot !== roleDepot) {
-//       return res.status(400).json({ message: `Le rôle fourni (${roleDepot}) ne correspond pas au rôle de l'utilisateur (${utilisateur.role})` });
-//     }
-
-//     for (const codeDepot of codesDepot) {
-//       const depot = await Depot.findOne({ where: { codeDepot } });
-
-//       if (!depot) {
-//         return res.status(404).json({ message: `Dépôt avec le code ${codeDepot} non trouvé` });
-//       }
-
-//       // Vérifier si le dépôt a déjà un utilisateur pour le même rôle
-//       const affectationExistante = await AffectationDepot.findOne({
-//         where: { codeDepot, roleDepot }
-//       });
-
-//       if (affectationExistante) {
-//         return res.status(400).json({
-//           message: `Le dépôt ${codeDepot} est déjà affecté à un utilisateur avec le rôle ${roleDepot}`
-//         });
-//       }
-
-//       // Vérifier si cette affectation existe déjà pour cet utilisateur
-//       const dejaAffecte = await AffectationDepot.findOne({
-//         where: { codeDepot, codeUtilisateur }
-//       });
-
-//       if (dejaAffecte) {
-//         return res.status(400).json({
-//           message: `L'utilisateur est déjà affecté au dépôt ${codeDepot}`
-//         });
-//       }
-
-//       // Créer l'affectation
-//       await AffectationDepot.create({
-//         codeUtilisateur,
-//         codeDepot,
-//         roleDepot
-//       });
-//     }
-
-//     res.status(200).json({ message: "Affectations effectuées avec succès" });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ error: error.message });
-//   }
-// };
-
-
-
-
 exports.affecterUtilisateurMultiple = async (req, res) => {
   try {
-    const { codesDepot, codeUtilisateur, roleDepot } = req.body;
+    const { codesDepot, codeUtilisateur } = req.body;
 
-    // Vérification des champs requis
-    if (!codesDepot || !codeUtilisateur || !roleDepot) {
+    if (!codesDepot || !codeUtilisateur) {
       return res.status(400).json({
-        message: "Tous les champs (codesDepot, codeUtilisateur, roleDepot) sont requis."
+        message: "Les champs codeUtilisateur et codesDepot sont requis."
       });
     }
+
+    // Vérifier que l’utilisateur existe
+    const utilisateur = await Utilisateur.findOne({ where: { codeUtilisateur } });
+
+    if (!utilisateur) {
+      return res.status(404).json({ message: "Utilisateur non trouvé." });
+    }
+
+    // Récupérer le rôle global de l’utilisateur (qui devient roleDepot)
+    const roleDepot = utilisateur.role;
 
     for (const codeDepot of codesDepot) {
       const depot = await Depot.findOne({ where: { codeDepot } });
@@ -608,18 +481,18 @@ exports.affecterUtilisateurMultiple = async (req, res) => {
         });
       }
 
-      // Vérifier si ce rôle est déjà attribué à un utilisateur pour ce dépôt
-      const affectationExistante = await AffectationDepot.findOne({
+      // Vérifier si ce rôle est déjà affecté dans ce dépôt
+      const roleExiste = await AffectationDepot.findOne({
         where: { codeDepot, roleDepot }
       });
 
-      if (affectationExistante) {
+      if (roleExiste) {
         return res.status(400).json({
-          message: `Le dépôt ${codeDepot} est déjà affecté à un utilisateur avec le rôle ${roleDepot}`
+          message: `Le dépôt ${codeDepot} est déjà occupé par un utilisateur avec le rôle ${roleDepot}`
         });
       }
 
-      // Vérifier si cet utilisateur est déjà affecté à ce dépôt (peu importe le rôle)
+      // Vérifier si cet utilisateur est déjà affecté à ce dépôt
       const dejaAffecte = await AffectationDepot.findOne({
         where: { codeDepot, codeUtilisateur }
       });
@@ -630,7 +503,7 @@ exports.affecterUtilisateurMultiple = async (req, res) => {
         });
       }
 
-      // Créer l'affectation
+      // Créer l'affectation avec le rôle récupéré
       await AffectationDepot.create({
         codeUtilisateur,
         codeDepot,
@@ -638,10 +511,10 @@ exports.affecterUtilisateurMultiple = async (req, res) => {
       });
     }
 
-    res.status(200).json({ message: "Affectations effectuées avec succès" });
+    res.status(200).json({ message: "Affectation(s) enregistrée(s) avec succès." });
 
   } catch (error) {
-    console.error(error);
+    console.error("Erreur affectation :", error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -652,68 +525,77 @@ exports.affecterUtilisateurMultiple = async (req, res) => {
 
 
 
-// Vérifier le statut d'affectation d'un dépôt en fonction du rôle
 exports.checkDepotStatut = async (req, res) => {
   try {
     const { codeDepot, role } = req.params;
 
-    const depot = await Depot.findOne({ where: { codeDepot } });
-
-    if (!depot) {
-      return res.status(404).json({ message: "Dépôt non trouvé" });
-    }
-
-    // Si le dépôt n’est pas affecté, il est disponible pour tout le monde
-    if (!depot.codeUtilisateur) {
-      return res.status(200).json({ affecte: false });
-    }
-
-    // Aller chercher le rôle du user affecté à ce dépôt
-    const utilisateurAffecte = await Utilisateur.findOne({
-      where: { codeUtilisateur: depot.codeUtilisateur }
+    const exist = await AffectationDepot.findOne({
+      where: {
+        codeDepot,
+        roleDepot: role
+      }
     });
 
-    if (!utilisateurAffecte) {
-      return res.status(200).json({ affecte: false });
-    }
-
-    // Comparer les rôles
-    if (utilisateurAffecte.role === role) {
-      // Si le rôle correspond, on bloque
-      return res.status(200).json({ affecte: true });
-    }
-
-    // Sinon, dépôt reste disponible
-    return res.status(200).json({ affecte: false });
+    return res.status(200).json({ affecte: !!exist });
 
   } catch (error) {
+    console.error("Erreur statut dépôt :", error);
     res.status(500).json({ error: error.message });
   }
 };
+
 
 
 
 
 
 exports.getUtilisateursAvecDepots = async (req, res) => {
-  
   try {
-    const utilisateurs = await Utilisateur.findAll({
+    const affectations = await AffectationDepot.findAll({
       include: [
         {
+          model: Utilisateur,
+          attributes: ['codeUtilisateur', 'nom', 'prenom', 'email', 'role']
+        },
+        {
           model: Depot,
-          as: "depots",
           attributes: ['codeDepot', 'nomDepot', 'region', 'wilaya']
         }
-      ],
-      attributes: ['codeUtilisateur', 'nom', 'prenom', 'email']
+      ]
     });
 
-    if (!utilisateurs || utilisateurs.length === 0) {
-      return res.status(404).json({ message: "Aucun utilisateur trouvé avec des dépôts" });
+    if (!affectations || affectations.length === 0) {
+      return res.status(404).json({ message: "Aucune affectation trouvée" });
     }
 
-    res.status(200).json(utilisateurs);
+    // Regrouper les dépôts par utilisateur
+    const utilisateursMap = {};
+
+    affectations.forEach(({ Utilisateur: user, Depot: depot, roleDepot }) => {
+      const userId = user.codeUtilisateur;
+
+      if (!utilisateursMap[userId]) {
+        utilisateursMap[userId] = {
+          codeUtilisateur: user.codeUtilisateur,
+          nom: user.nom,
+          prenom: user.prenom,
+          email: user.email,
+          role: user.role,
+          depots: []
+        };
+      }
+
+      utilisateursMap[userId].depots.push({
+        codeDepot: depot.codeDepot,
+        nomDepot: depot.nomDepot,
+        region: depot.region,
+        wilaya: depot.wilaya,
+        roleDepot
+      });
+    });
+
+    res.status(200).json(Object.values(utilisateursMap));
+
   } catch (error) {
     console.error("Erreur :", error);
     res.status(500).json({ message: "Erreur serveur", error: error.message });
@@ -722,21 +604,9 @@ exports.getUtilisateursAvecDepots = async (req, res) => {
 
 
 
-exports.supprimerDepotUtilisateur = async (req, res) => {
-    const { codeUtilisateur, codeDepot } = req.params;
 
-    try {
-        // Supposons que tu as une table de liaison "utilisateur_depot"
-        await pool.query(
-            'DELETE FROM utilisateur_depot WHERE codeUtilisateur = $1 AND codeDepot = $2',
-            [codeUtilisateur, codeDepot]
-        );
-        res.status(200).json({ message: "Dépôt désaffecté avec succès." });
-    } catch (error) {
-        console.error("Erreur suppression :", error);
-        res.status(500).json({ message: "Erreur lors de la désaffectation." });
-    }
-};
+
+
 
 
 
@@ -801,3 +671,28 @@ exports.affecterArticlesADepots = async (req, res) => {
     return res.status(500).json({ message: "Erreur serveur lors de l’affectation." });
   }
 };
+
+
+
+
+exports.getDepotsUtilisateurConnecte = async (req, res) => {
+  try {
+    const codeUtilisateur = req.user.id; // récupéré depuis le token
+
+    const affectations = await AffectationDepot.findAll({
+      where: { codeUtilisateur },
+      include: [{ model: Depot }]
+    });
+
+    const depots = affectations.map((a) => a.Depot);
+
+    res.status(200).json(depots);
+  } catch (error) {
+    console.error("Erreur récupération des dépôts utilisateur connecté :", error);
+    res.status(500).json({ message: "Erreur serveur" });
+  }
+};
+
+
+
+

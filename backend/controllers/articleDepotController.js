@@ -59,23 +59,65 @@ exports.getDepotsAvecArticles = async (req, res) => {
 
 
 
+// exports.getArticlesByDepot = async (req, res) => {
+//   const depotId = req.params.codeDepot;
+//   console.log("🔍 Requête reçue pour récupérer les articles du dépôt :", depotId);
+
+//   try {
+//     // Vérification que l'ID du dépôt est bien reçu
+//     if (!depotId) {
+//       console.warn("⚠️ Aucun ID de dépôt reçu !");
+//       return res.status(400).json({ message: "ID de dépôt manquant" });
+//     }
+
+//     // On cherche le dépôt avec l'id donné, et on inclut ses articles
+//     const depot = await Depot.findByPk(depotId, {
+//       include: {
+//         model: Article,
+//         through: {
+//           attributes: ['quantiteStockee', 'stockMax', 'stockAlert'] // infos stock dans la table de liaison
+//         }
+//       }
+
+//       // include: {
+//       //   model: Article,
+//       //   as: 'articles', // Utiliser le même alias défini dans la relation
+//       //   through: {
+//       //     attributes: ['quantiteStockee', 'stockMax', 'stockAlert']
+//       //   }
+//       //    }
+//       });
+
+//     if (!depot) {
+//       console.warn("❌ Aucun dépôt trouvé avec cet ID :", depotId);
+//       return res.status(404).json({ message: "Dépôt non trouvé" });
+//     }
+
+//     console.log("✅ Dépôt trouvé. Nombre d'articles :", depot.Articles?.length || 0);
+//     res.status(200).json(depot.Articles);
+//   } catch (error) {
+//     console.error("💥 Erreur récupération articles du dépôt :", error);
+//     res.status(500).json({ message: "Erreur serveur" });
+//   }
+// };
+
+
 exports.getArticlesByDepot = async (req, res) => {
   const depotId = req.params.codeDepot;
   console.log("🔍 Requête reçue pour récupérer les articles du dépôt :", depotId);
 
   try {
-    // Vérification que l'ID du dépôt est bien reçu
     if (!depotId) {
       console.warn("⚠️ Aucun ID de dépôt reçu !");
       return res.status(400).json({ message: "ID de dépôt manquant" });
     }
 
-    // On cherche le dépôt avec l'id donné, et on inclut ses articles
     const depot = await Depot.findByPk(depotId, {
       include: {
         model: Article,
+        as: 'articles', // ✅ ALIAS requis ici !
         through: {
-          attributes: ['quantiteStockee', 'stockMax', 'stockAlert'] // infos stock dans la table de liaison
+          attributes: ['quantiteStockee', 'stockMax', 'stockAlert']
         }
       }
     });
@@ -85,13 +127,14 @@ exports.getArticlesByDepot = async (req, res) => {
       return res.status(404).json({ message: "Dépôt non trouvé" });
     }
 
-    console.log("✅ Dépôt trouvé. Nombre d'articles :", depot.Articles?.length || 0);
-    res.status(200).json(depot.Articles);
+    console.log("✅ Dépôt trouvé. Nombre d'articles :", depot.articles?.length || 0);
+    res.status(200).json(depot.articles);
   } catch (error) {
     console.error("💥 Erreur récupération articles du dépôt :", error);
     res.status(500).json({ message: "Erreur serveur" });
   }
 };
+
 
 
 
@@ -201,3 +244,45 @@ exports.updateStockInfos = async (req, res) => {
 // };
 
 
+
+
+
+
+
+
+
+exports.getArticlesUtilisateurConnecte = async (req, res) => {
+  const codeUtilisateur = req.user.id;
+
+  try {
+    // Étape 1 : Récupérer tous les dépôts affectés à cet utilisateur
+    const affectations = await AffectationDepot.findAll({
+      where: { codeUtilisateur }
+    });
+
+    const codesDepot = affectations.map(a => a.codeDepot);
+
+    if (codesDepot.length === 0) {
+      return res.status(404).json({ message: "Aucun dépôt affecté à cet utilisateur." });
+    }
+
+    // Étape 2 : Récupérer tous les articles liés à ces dépôts via la table ArticleDepot
+    const articles = await Article.findAll({
+      include: [
+        {
+          model: Depot,
+          as: 'depots', // IMPORTANT : doit correspondre à l'alias défini dans index.js
+          where: { codeDepot: codesDepot },
+          through: {
+            attributes: ['quantiteStockee', 'stockMax', 'stockAlert']
+          }
+        }
+      ]
+    });
+
+    res.status(200).json(articles);
+  } catch (error) {
+    console.error("💥 Erreur lors de la récupération des articles de l'utilisateur connecté :", error);
+    res.status(500).json({ message: "Erreur serveur" });
+  }
+};

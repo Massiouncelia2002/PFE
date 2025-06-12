@@ -58,7 +58,7 @@ exports.login = async (req, res) => {
     // Création du token JWT
     const token = jwt.sign(
       {
-        id: user.codeutilis, // utilise bien le nom exact de la clé primaire dans ta BDD
+        id: user.codeUtilisateur, // utilise bien le nom exact de la clé primaire dans ta BDD
         role: user.role,
       },
       process.env.JWT_SECRET, // stocké dans .env

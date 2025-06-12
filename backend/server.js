@@ -36,6 +36,7 @@ const articleuniteRoutes = require("./routes/articleUniteRoutes");
 const articleDepotRoutes = require('./routes/articleDepotRoutes');
 const entreeRoutes = require("./routes/entreeRoutes");
 const commandePlanifieRoutes = require("./routes/commandePlanifieRoutes");
+const predictionRoute = require('./routes/predictionRoutes');
 
 
 
@@ -47,6 +48,7 @@ app.use('/utilisateur', utilisateurRoutes);
 app.use("/api/familles", familleRoutes);
 app.use("/api/sous-familles", sousFamilleRoutes);
 app.use("/api/articles", articleRoutes);
+
 app.use("/depot", depotRoutes);
 app.use("/client", clientRoutes);
 app.use("/vehicules", vehiculeRoutes);
@@ -62,6 +64,8 @@ app.use("/articleDepot", articleDepotRoutes);
 app.use("/entree", entreeRoutes);
 
 app.use("/api/commandePlanifie", commandePlanifieRoutes);
+
+app.use('/api/prediction', predictionRoute);
 
 
 

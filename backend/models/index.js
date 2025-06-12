@@ -15,11 +15,12 @@ const UniteDeMesure = require("./UniteDeMesure");
 const ArticleUnite = require("./ArticleUnite");
 const ArticleDepot = require("./ArticleDepot");
 const Entree = require("./Entree");
-const CommandePlanifie = require("./CommandePlanifie")
-const CommandeVehicule = require("./CommandeVehicule")
+const CommandePlanifie = require("./CommandePlanifie");
+const CommandeVehicule = require("./CommandeVehicule");
+const ArticlesEntree = require("./ArticlesEntree");
 
 
-const db = { sequelize, Utilisateur, Depot, AffectationDepot, Vehicule, Famille, SousFamille, Article, Client, CommandeClient, ArticleCommandeClient, UniteDeMesure, ArticleUnite, ArticleDepot, Entree ,CommandePlanifie, CommandeVehicule};
+const db = { sequelize, Utilisateur, Depot, AffectationDepot, Vehicule, Famille, SousFamille, Article, Client, CommandeClient, ArticleCommandeClient, UniteDeMesure, ArticleUnite, ArticleDepot, Entree ,CommandePlanifie, CommandeVehicule, ArticlesEntree};
 
 
 
@@ -55,10 +56,6 @@ Article.belongsTo(SousFamille, {
 
 
 
-// // utilisateur et depot
-// Utilisateur.hasMany(Depot, { foreignKey: 'codeUtilisateur', as: 'depots' });
-// Depot.belongsTo(Utilisateur, { foreignKey: 'codeUtilisateur', as: 'utilisateur' });
-
 // un depot peux avoir deux utilisateur de roles differents 
 
 // Utilisateur.js
@@ -76,6 +73,17 @@ Depot.belongsToMany(Utilisateur, {
   otherKey: 'codeUtilisateur',
   as: 'utilisateurs'
 });
+
+
+
+
+// Association entre Utilisateur et AffectationDepot
+Utilisateur.hasMany(AffectationDepot, { foreignKey: "codeUtilisateur" });
+AffectationDepot.belongsTo(Utilisateur, { foreignKey: "codeUtilisateur" });
+
+// Association entre Depot et AffectationDepot
+Depot.hasMany(AffectationDepot, { foreignKey: "codeDepot" });
+AffectationDepot.belongsTo(Depot, { foreignKey: "codeDepot" });
 
 
 
@@ -132,36 +140,6 @@ ArticleCommandeClient.belongsTo(Article, {
   as: 'article'
 });
 
-// // Associations directes pour permettre les includes
-// ArticleCommandeClient.belongsTo(Article, { foreignKey: 'codeArticle' });
-// ArticleCommandeClient.belongsTo(CommandeClient, { foreignKey: 'codeCommande' });
-
-
-// // Article - UniteDeMesure (unité de base)
-// UniteDeMesure.hasMany(Article, { foreignKey: "idUniteDeBase" });
-// Article.belongsTo(UniteDeMesure, { foreignKey: "idUniteDeBase", as: "uniteDeBase" });
-
-// // Article - Conditionnements
-// Article.hasMany(ConditionnementArticle, { foreignKey: "codeArticle", as: "conditionnements" });
-// ConditionnementArticle.belongsTo(Article, { foreignKey: "codeArticle", as: "article" });
-
-// // Chaque niveau de conditionnement peut aussi avoir une unité de mesure
-// UniteDeMesure.hasMany(ConditionnementArticle, { foreignKey: "idUnite" });
-// ConditionnementArticle.belongsTo(UniteDeMesure, { foreignKey: "idUnite", as: "unite" });
-
-
-
-// // Associations
-// Article.belongsToMany(UniteDeMesure, { through: ArticleUnite, foreignKey: "codeArticle", otherKey: "idUnite" });
-// UniteDeMesure.belongsToMany(Article, { through: ArticleUnite, foreignKey: "idUnite", otherKey: "codeArticle" });
-
-// // Si tu veux récupérer ArticleUnite en tant que modèle complet :
-// Article.hasMany(ArticleUnite, { foreignKey: "codeArticle" });
-// ArticleUnite.belongsTo(Article, { foreignKey: "codeArticle" });
-
-// UniteDeMesure.hasMany(ArticleUnite, { foreignKey: "idUnite" });
-// ArticleUnite.belongsTo(UniteDeMesure, { foreignKey: "idUnite" });
-
 
 Article.belongsToMany(UniteDeMesure, {
   through: ArticleUnite,
@@ -189,28 +167,53 @@ ArticleUnite.belongsTo(UniteDeMesure, { foreignKey: "uniteId" });
 Article.belongsToMany(Depot, {
   through: ArticleDepot,
   foreignKey: "codeArticle",
-  otherKey: "codeDepot"
+  otherKey: "codeDepot",
+  as: "depots"
 });
 
 Depot.belongsToMany(Article, {
   through: ArticleDepot,
   foreignKey: "codeDepot",
-  otherKey: "codeArticle"
+  otherKey: "codeArticle",
+  as: "articles"
 });
 
 
 
-// Relation Article - Entree
-Article.hasMany(Entree, { foreignKey: "codeArticle" });
-Entree.belongsTo(Article, { foreignKey: "codeArticle" });
+// // Relation Article - Entree
+// Article.hasMany(Entree, { foreignKey: "codeArticle" });
+// Entree.belongsTo(Article, { foreignKey: "codeArticle" });
 
-// Relation Depot - Entree
-Depot.hasMany(Entree, { foreignKey: "codeDepot" });
-Entree.belongsTo(Depot, { foreignKey: "codeDepot" });
-
-
+// // Relation Depot - Entree
+// Depot.hasMany(Entree, { foreignKey: "codeDepot" });
+// Entree.belongsTo(Depot, { foreignKey: "codeDepot" });
 
 
+
+
+
+// Associations N:N entre Article et Entree via ArticlesEntree
+// Many-to-Many: Article ↔ Entree via ArticlesEntree
+Article.belongsToMany(Entree, {
+  through: 'articlesEntree', // ou le modèle si tu l'importes : ArticlesEntree
+  foreignKey: 'codeArticle',
+  otherKey: 'codeEntree',
+  as: 'entrees',
+});
+
+Entree.belongsToMany(Article, {
+  through: 'articlesEntree',
+  foreignKey: 'codeEntree',
+  otherKey: 'codeArticle',
+  as: 'articles',
+});
+
+// Relations directes utiles
+ArticlesEntree.belongsTo(Article, { foreignKey: "codeArticle" });
+ArticlesEntree.belongsTo(Entree, { foreignKey: "codeEntree" });
+
+Article.hasMany(ArticlesEntree, { foreignKey: "codeArticle" });
+Entree.hasMany(ArticlesEntree, { foreignKey: "codeEntree" });
 
 
 // Relation 1:N — CommandeClient → CommandePlanifie
@@ -234,6 +237,8 @@ Vehicule.belongsToMany(CommandePlanifie, {
   foreignKey: "matricule",
   otherKey: "codePlanification"
 });
+
+
 
 
 // Pour accéder aux données supplémentaires, on peut aussi déclarer belongsTo dans CommandeVehicule
