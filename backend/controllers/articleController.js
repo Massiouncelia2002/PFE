@@ -120,7 +120,7 @@ const generateCodeArticle = async (codeSousFamille) => {
 // Ajouter un article
 exports.addArticle = async (req, res) => {
   try {
-    const { designation, statut, codeFamille, codeSousFamille } = req.body;
+    const { designation, codeFamille, codeSousFamille } = req.body;
 
     // Vérification des codes Famille et SousFamille
     const famille = await Famille.findByPk(codeFamille);
@@ -136,12 +136,12 @@ exports.addArticle = async (req, res) => {
     const newArticle = await Article.create({
       codeArticle,
       designation,
-      statut,
       codeFamille,
       codeSousFamille,
 
     });
-    await affecterArticleADepots(newArticle);
+    // await affecterArticleADepots(newArticle);
+    
 
     res.status(201).json(newArticle);
   } catch (error) {
@@ -205,14 +205,14 @@ exports.deleteArticle = async (req, res) => {
 exports.updateArticle = async (req, res) => {
   try {
     const { codeArticle } = req.params;
-    const { designation, statut, codeFamille, codeSousFamille } = req.body;
+    const { designation, codeFamille, codeSousFamille } = req.body;
 
     const article = await Article.findByPk(codeArticle);
     if (!article) {
       return res.status(404).json({ error: "Article non trouvé" });
     }
 
-    await article.update({ designation, statut, codeFamille, codeSousFamille });
+    await article.update({ designation, codeFamille, codeSousFamille });
     res.status(200).json(article);
   } catch (error) {
     console.error("Erreur modification :", error);

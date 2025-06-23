@@ -108,12 +108,12 @@
 
 //   const handleDeleteFamille = async (famille) => {
 //     if (!window.confirm(`Supprimer la famille ${famille.nomFamille} ?`)) return;
-  
+
 //     try {
 //       const response = await axios.delete(
 //         `http://localhost:5000/api/familles/${famille.idFamille}`
 //       );
-  
+
 //       if (response.data.success) {
 //         setFamilles(prev => prev.filter(f => f.idFamille !== famille.idFamille));
 //         setSelectedFamille(prev => 
@@ -121,10 +121,10 @@
 //         );
 //         alert(response.data.message);
 //       }
-  
+
 //     } catch (error) {
 //       let errorMessage = "Erreur lors de la suppression";
-      
+
 //       if (error.response) {
 //         errorMessage = `
 //           Code: ${error.response.status}
@@ -132,7 +132,7 @@
 //           ${error.response.data.details ? `Détails: ${error.response.data.details}` : ''}
 //         `;
 //       }
-  
+
 //       alert(errorMessage);
 //       console.error("Erreur détaillée:", error);
 //     }
@@ -140,7 +140,7 @@
 
 //   const handleDeleteSousFamille = async (sousFamille) => {
 //     if (!window.confirm("Supprimer cette sous-famille ?")) return;
-    
+
 //     try {
 //       await axios.delete(`http://localhost:5000/api/sous-familles/${sousFamille.idSousFamille}`);
 //       setSousFamilles(prev => prev.filter(sf => sf.idSousFamille !== sousFamille.idSousFamille));
@@ -170,7 +170,7 @@
 //       Header: "Actions",
 //       Cell: ({ row }) => {
 //         const hasSousFamilles = allSousFamilles.some(sf => sf.idFamille === row.original.idFamille);
-        
+
 //         return (
 //           <div className="flex gap-2">
 //             <button 
@@ -444,7 +444,7 @@ const FamillesSousFamillesPage = () => {
           `http://localhost:5000/api/familles/${editingFamille.codeFamille}`,
           { nomFamille: familleForm.nomFamille }
         );
-        setFamilles(prev => 
+        setFamilles(prev =>
           prev.map(f => f.codeFamille === res.data.codeFamille ? res.data : f)
         );
         setEditingFamille(null);
@@ -476,7 +476,7 @@ const FamillesSousFamillesPage = () => {
           `http://localhost:5000/api/sous-familles/${editingSousFamille.codeSousFamille}`,
           payload
         );
-        setAllSousFamilles(prev => 
+        setAllSousFamilles(prev =>
           prev.map(sf => sf.codeSousFamille === res.data.codeSousFamille ? res.data : sf)
         );
         setEditingSousFamille(null);
@@ -495,23 +495,23 @@ const FamillesSousFamillesPage = () => {
 
   const handleDeleteFamille = async (famille) => {
     if (!window.confirm(`Supprimer la famille ${famille.nomFamille} ?`)) return;
-  
+
     try {
       const response = await axios.delete(
         `http://localhost:5000/api/familles/${famille.codeFamille}`
       );
-  
+
       if (response.data.success) {
         setFamilles(prev => prev.filter(f => f.codeFamille !== famille.codeFamille));
-        setSelectedFamille(prev => 
+        setSelectedFamille(prev =>
           prev?.codeFamille === famille.codeFamille ? null : prev
         );
         alert(response.data.message);
       }
-  
+
     } catch (error) {
       let errorMessage = "Erreur lors de la suppression";
-      
+
       if (error.response) {
         errorMessage = `
           Code: ${error.response.status}
@@ -519,7 +519,7 @@ const FamillesSousFamillesPage = () => {
           ${error.response.data.details ? `Détails: ${error.response.data.details}` : ''}
         `;
       }
-  
+
       alert(errorMessage);
       console.error("Erreur détaillée:", error);
     }
@@ -527,7 +527,7 @@ const FamillesSousFamillesPage = () => {
 
   const handleDeleteSousFamille = async (sousFamille) => {
     if (!window.confirm("Supprimer cette sous-famille ?")) return;
-    
+
     try {
       await axios.delete(`http://localhost:5000/api/sous-familles/${sousFamille.codeSousFamille}`);
       setSousFamilles(prev => prev.filter(sf => sf.codeSousFamille !== sousFamille.codeSousFamille));
@@ -538,10 +538,11 @@ const FamillesSousFamillesPage = () => {
   };
 
   const familleColumns = [
-    { 
-      Header: "Nom Famille", 
-      accessor: "nomFamille",
-      Cell: ({ row, value }) => (
+    {
+      header: "Nom Famille",
+      accessorKey: "nomFamille",
+      id: "nomFamille",
+      cell: ({ row, value }) => (
         <div className="flex items-center gap-2">
           <span>{value}</span>
           {allSousFamilles.filter(sf => sf.codeFamille === row.original.codeFamille).length > 0 && (
@@ -552,15 +553,16 @@ const FamillesSousFamillesPage = () => {
         </div>
       )
     },
-    { Header: "Code Famille", accessor: "codeFamille" },
+    { header: "Code Famille", accessorKey: "codeFamille" },
     {
-      Header: "Actions",
-      Cell: ({ row }) => {
+      header: "Actions",
+      id: "familleActions",
+      cell: ({ row }) => {
         const hasSousFamilles = allSousFamilles.some(sf => sf.codeFamille === row.original.codeFamille);
-        
+
         return (
           <div className="flex gap-2">
-            <button 
+            <button
               onClick={() => {
                 if (!hasSousFamilles) {
                   setEditingFamille(row.original);
@@ -573,7 +575,7 @@ const FamillesSousFamillesPage = () => {
             >
               <FaEdit className="text-blue-600 hover:text-blue-800" />
             </button>
-            <button 
+            <button
               onClick={() => handleDeleteFamille(row.original)}
               aria-label="Supprimer"
             >
@@ -586,16 +588,17 @@ const FamillesSousFamillesPage = () => {
   ];
 
   const sousFamilleColumns = [
-    { Header: "Nom Sous-Famille", accessor: "nomSousFamille" },
-    { Header: "Code Sous-Famille", accessor: "codeSousFamille" },
+    { header: "Nom Sous-Famille", accessorKey: "nomSousFamille" },
+    { header: "Code Sous-Famille", accessorKey: "codeSousFamille" },
     {
-      Header: "Actions",
-      Cell: ({ row }) => (
+      header: "Actions",
+      id: "sousFamilleActions",
+      cell: ({ row }) => (
         <div className="flex gap-2">
-          <button 
+          <button
             onClick={() => {
               setEditingSousFamille(row.original);
-              setSousFamilleForm({ 
+              setSousFamilleForm({
                 nomSousFamille: row.original.nomSousFamille
               });
             }}
@@ -603,7 +606,7 @@ const FamillesSousFamillesPage = () => {
           >
             <FaEdit className="text-blue-600 hover:text-blue-800" />
           </button>
-          <button 
+          <button
             onClick={() => handleDeleteSousFamille(row.original)}
             aria-label="Supprimer"
           >
@@ -638,7 +641,7 @@ const FamillesSousFamillesPage = () => {
                     {editingFamille ? "Modifier" : "Ajouter"}
                   </Button>
                   {editingFamille && (
-                    <Button 
+                    <Button
                       variant="secondary"
                       onClick={() => {
                         setEditingFamille(null);
@@ -669,7 +672,7 @@ const FamillesSousFamillesPage = () => {
                   <h3 className="font-medium">
                     Famille sélectionnée : {selectedFamille.nomFamille}
                   </h3>
-                  <button 
+                  <button
                     onClick={() => setSelectedFamille(null)}
                     className="hover:text-red-600"
                   >
@@ -683,9 +686,9 @@ const FamillesSousFamillesPage = () => {
                       name="nomSousFamille"
                       placeholder="Nom de la sous-famille"
                       value={sousFamilleForm.nomSousFamille}
-                      onChange={(e) => setSousFamilleForm({ 
-                        ...sousFamilleForm, 
-                        nomSousFamille: e.target.value 
+                      onChange={(e) => setSousFamilleForm({
+                        ...sousFamilleForm,
+                        nomSousFamille: e.target.value
                       })}
                       required
                       className="flex-1"
@@ -695,7 +698,7 @@ const FamillesSousFamillesPage = () => {
                         {editingSousFamille ? "Modifier" : "Ajouter"}
                       </Button>
                       {editingSousFamille && (
-                        <Button 
+                        <Button
                           variant="secondary"
                           onClick={() => {
                             setEditingSousFamille(null);
@@ -712,7 +715,7 @@ const FamillesSousFamillesPage = () => {
                 <Table
                   data={sousFamilles}
                   columns={sousFamilleColumns}
-                  onRowClick={() => {}} // Fonction vide
+                  onRowClick={() => { }} // Fonction vide
                   className="border rounded-lg overflow-hidden"
                 />
               </>
@@ -739,8 +742,8 @@ const FamillesSousFamillesPage = () => {
                   {allSousFamilles
                     .filter(sf => sf.codeFamille === famille.codeFamille)
                     .map(sf => (
-                      <div 
-                        key={sf.codeSousFamille} 
+                      <div
+                        key={sf.codeSousFamille}
                         className="flex justify-between items-center p-2 bg-white rounded border"
                       >
                         <span>

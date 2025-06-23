@@ -241,8 +241,8 @@ const ModifierArticle = () => {
       setFormData({
         codeArticle: article.codeArticle,
         designation: article.designation,
-        statut: article.statut,
-        um: article.um,
+        
+        
       });
 
       const familleMatch = familles.find((f) => f.value === article.codeFamille);
@@ -271,10 +271,10 @@ const ModifierArticle = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: name === "statut" ? value === "true" : value,
-    });
+    // setFormData({
+    //   ...formData,
+    //   [name]: name === "statut" ? value === "true" : value,
+    // });
   };
 
   const handleFamilleChange = (option) => {
@@ -320,7 +320,7 @@ const ModifierArticle = () => {
           />
 
           {/* Statut */}
-          <div>
+          {/* <div>
             <select
               name="statut"
               value={formData.statut ? "true" : "false"}
@@ -330,15 +330,15 @@ const ModifierArticle = () => {
               <option value="true">Actif</option>
               <option value="false">Inactif</option>
             </select>
-          </div>
+          </div> */}
 
           {/* Unité de mesure */}
-          <Input
+          {/* <Input
             name="um"
             value={formData.um}
             onChange={handleChange}
             placeholder="Unité"
-          />
+          /> */}
 
           {/* Famille */}
           <div>

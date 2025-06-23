@@ -5,6 +5,12 @@ import Login from "./pages/Login";
 
 import AdminFonctionnel from "./pages/AdminFonctionnel";
 import AdminDepot from "./pages/AdminDepot";
+import PlanificateurDepot from "./pages/PlanificateurDepot";
+
+
+import PlanifierMesDepots from "./pages/PlanifierMesDepots";
+
+
 
 import FamillesSousFamillesPage from './pages/FamillesSousFamillesPage'
 
@@ -33,8 +39,6 @@ import AffectationDepot from "./pages/AffectationDepot";
 
 import ImporterCommandes from "./pages/ImporterCommandes";
 
-import UniteDeMesurePage from "./pages/UniteDeMesurePage";
-
 import AffecterUnitesArticle from "./pages/AffecterUnitesArticle";
 
 import ArticleDepot from "./pages/ArticleDepot";
@@ -45,7 +49,20 @@ import StockModifier from "./pages/StockModifier";
 
 import EntreeStock from "./pages/EntreeStock";
 
+import PlanifierCommandes from "./pages/PlanifierCommandes";
+
 import PlanifierCommande from "./pages/PlanifierCommande";
+
+import AfficherCommandesParClient from "./pages/AfficherCommandesParClient";
+
+import AffecterVehiculePage from './pages/AffecterVehiculePage';
+
+import Previsions from "./pages/Previsions";
+
+import PrevisionsParUtilisateur from "./pages/PrevisionsParUtilisateur";
+
+import Reapprovisionnement from './pages/RapportReapprovisionnement';
+
 
 
 
@@ -66,6 +83,10 @@ export default function App() {
 
           <Route path="/admin-fonctionnel" element={<AdminFonctionnel />} />
           <Route path="/admin-depot" element={<AdminDepot/>} />
+          <Route path="/gestionnaire-depot" element={<PlanificateurDepot/>} />
+
+
+          <Route path="/PlanifierMesDepots" element={<PlanifierMesDepots/>} />
 
 
           <Route path="/ajouter-utilisateur" element={<AjouterUtilisateur />} />
@@ -94,12 +115,6 @@ export default function App() {
           <Route path="/affecter-depot" element={<AffectationDepot />} />
 
           <Route path="/import-commandes" element={<ImporterCommandes />} />
-          
-
-
-          <Route path="/uniteMesure" element={<UniteDeMesurePage />} />
-          
-          <Route path="/affecter-unite-article" element={<AffecterUnitesArticle />} />
 
           <Route path="/article-depot" element={<ArticleDepot />} />
 
@@ -109,7 +124,21 @@ export default function App() {
 
           <Route path="/EntreeStock" element={<EntreeStock />} />
 
+          <Route path="/Planifier-commandes" element={<PlanifierCommandes />} />
+
           <Route path="/PlanifierCommande" element={<PlanifierCommande />} />
+
+          <Route path="/AffecterVehiculePage" element={<AffecterVehiculePage />} />
+
+          <Route path="/Previsions" element={<Previsions />} />
+
+          <Route path="/PrevisionsParUtilisateur" element={<PrevisionsParUtilisateur />} />
+
+          <Route path="/RapportReapprovisionnement" element={<Reapprovisionnement />} />
+
+          <Route path="/AfficherCommandesParClient" element={<AfficherCommandesParClient />} />
+
+         
 
           
 

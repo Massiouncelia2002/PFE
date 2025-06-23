@@ -319,7 +319,6 @@ const Articles = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     designation: "",
-    statut: true,
     codeFamille: "",
     codeSousFamille: "",
   });
@@ -366,10 +365,10 @@ const Articles = () => {
       newErrors.designation = "La désignation ne peut pas être uniquement des chiffres.";
     }
 
-    // Vérification du statut
-    if (!formData.statut) {
-      newErrors.statut = "Le statut est requis.";
-    }
+    // // Vérification du statut
+    // if (!formData.statut) {
+    //   newErrors.statut = "Le statut est requis.";
+    // }
 
     
 
@@ -434,7 +433,7 @@ const Articles = () => {
             {errors.designation && <p style={{ color: "red" }}>{errors.designation}</p>}
           </div>
           
-          <div>
+          {/* <div>
             <select
               name="statut"
               value={formData.statut}
@@ -445,7 +444,7 @@ const Articles = () => {
               <option value={false}>Inactif</option>
             </select>
             {errors.statut && <p style={{ color: "red" }}>{errors.statut}</p>}
-          </div>
+          </div> */}
 
           
 

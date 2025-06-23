@@ -52,7 +52,7 @@ const ListeArticles = () => {
                 <th className="px-6 py-3">Désignation</th>
                 <th className="px-6 py-3">Famille</th>
                 <th className="px-6 py-3">Sous-Famille</th>
-                <th className="px-6 py-3">Statut</th>
+                <th className="px-6 py-3">Unite Stockage</th>
                 <th className="px-6 py-3 text-center"></th>
               </tr>
             </thead>
@@ -66,7 +66,7 @@ const ListeArticles = () => {
                   <td className="px-6 py-4">{article.designation}</td>
                   <td className="px-6 py-4">{article.famille?.nomFamille || "—"}</td>
                   <td className="px-6 py-4">{article.sousFamille?.nomSousFamille || "—"}</td>
-                  <td className="px-6 py-4">{article.statut ? "Actif" : "Inactif"}</td>
+                  <td className="px-6 py-4">{article.uniteStockage}</td>
                   <td className="px-6 py-4 text-center flex justify-center gap-4">
                     <Pencil
                       className="h-5 w-5 text-blue-600 cursor-pointer opacity-0 group-hover:opacity-100 transition"
