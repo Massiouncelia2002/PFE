@@ -66,11 +66,7 @@ const ArticleCommandeClient = sequelize.define("ArticleCommandeClient", {
     type: DataTypes.INTEGER,
     allowNull: false
   },
-  // quantiteALivrer: {
-  //   type: DataTypes.INTEGER,
-  //   allowNull: true,
-  //   defaultValue: null
-  // }
+ 
 }, {
   tableName: "articlesCommandeClient",
   timestamps: false

@@ -55,6 +55,8 @@ import PlanifierCommande from "./pages/PlanifierCommande";
 
 import AfficherCommandesParClient from "./pages/AfficherCommandesParClient";
 
+import AfficherCommandesPlanifiees from "./pages/AfficherCommandesPlanifiees";
+
 import AffecterVehiculePage from './pages/AffecterVehiculePage';
 
 import Previsions from "./pages/Previsions";
@@ -62,6 +64,8 @@ import Previsions from "./pages/Previsions";
 import PrevisionsParUtilisateur from "./pages/PrevisionsParUtilisateur";
 
 import Reapprovisionnement from './pages/RapportReapprovisionnement';
+
+import AffichePlanificationAdmin from "./pages/AffichePlanificationAdmin";
 
 
 
@@ -137,6 +141,10 @@ export default function App() {
           <Route path="/RapportReapprovisionnement" element={<Reapprovisionnement />} />
 
           <Route path="/AfficherCommandesParClient" element={<AfficherCommandesParClient />} />
+
+          <Route path="/AfficherCommandesPlanifiees" element={<AfficherCommandesPlanifiees />} />
+
+          <Route path="/AffichePlanificationAdmin" element={<AffichePlanificationAdmin />} />
 
          
 

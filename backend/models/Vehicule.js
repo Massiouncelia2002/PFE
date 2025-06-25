@@ -48,7 +48,7 @@ const Vehicule = sequelize.define("Vehicule", {
     allowNull: false
   },
   statut: {
-    type: DataTypes.ENUM('disponible', 'non disponible'),
+    type: DataTypes.ENUM('disponible', 'non_disponible'),
     allowNull: false,
     defaultValue: 'disponible'
   }

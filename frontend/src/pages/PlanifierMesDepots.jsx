@@ -598,6 +598,12 @@ const PlanifierMesDepots = () => {
       codeDepot: selectedDepot.codeDepot
     },
   });
+  // navigate("/AfficherCommandesPlanifiees", {
+  //   state: {
+  //     articles,
+  //     codeDepot: selectedDepot.codeDepot
+  //   },
+  // });
 };
 
   return (

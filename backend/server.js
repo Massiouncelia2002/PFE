@@ -45,6 +45,7 @@ const reapproRoutes = require("./routes/reapprovisionnementRoutes");
 
 
 
+
 // Définition des routes
 app.use("/api/auth", authRoutes);
 app.use('/utilisateur', utilisateurRoutes);
@@ -71,6 +72,8 @@ app.use("/api/livraison", livraisonRoutes);
 app.use('/api/prediction', predictionRoutes);
 
 app.use("/api/reappro", reapproRoutes);
+
+app.use("/pdfs", express.static(path.join(__dirname, "../pdfs")));
 
 
 

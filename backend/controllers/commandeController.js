@@ -1,119 +1,10 @@
 // controllers/CommandeController.js
 
 const XLSX = require("xlsx");
-const { Client,Depot, CommandeClient, Article,ArticleDepot, ArticleCommandeClient, AffectationDepot } = require("../models");
+const { Client, Depot, CommandeClient, Article, ArticleDepot, ArticleCommandeClient, AffectationDepot, CommandePlanifie } = require("../models");
 
 
 const { Op } = require("sequelize");
-
-
-// function generateCodeCommande(codeClient, codeArticle, dateCommande) {
-//   const datePart = new Date(dateCommande).toISOString().slice(0, 10).replace(/-/g, ''); // ex: 20250619
-//   const randomPart = Math.floor(1000 + Math.random() * 9000); // ex: 8372
-//   return `${codeClient}-${codeArticle}-${datePart}-${randomPart}`;
-// }
-
-
-
-// const importerCommandes = async (req, res) => {
-//   try {
-//     if (!req.file) {
-//       return res.status(400).json({ error: "Aucun fichier téléchargé." });
-//     }
-
-//     // 1. Récupérer les dépôts du planificateur connecté
-//     const affectations = await AffectationDepot.findAll({
-//       where: { codeUtilisateur: req.user.id },
-//       include: [{ model: Depot }]
-//     });
-
-//     const codeDepotsAutorises = affectations.map((a) => a.Depot.codeDepot);
-
-//     // 2. Lire le fichier Excel
-//     const workbook = XLSX.readFile(req.file.path);
-//     const sheet = workbook.Sheets[workbook.SheetNames[0]];
-//     const data = XLSX.utils.sheet_to_json(sheet);
-
-//     let lignesIgnorees = 0;
-//     let lignesDupliquees = 0;
-//     let lignesHorsDepots = 0;
-
-//     for (const row of data) {
-//       const codeClient = (row.codeClient || "").toString().trim().toUpperCase();
-//       const nomClient = (row.nomClient || "").toString().trim();
-//       const dateCommande = new Date(row.dateCommande);
-//       const codeArticle = (row.codeArticle || "").toString().trim().toUpperCase();
-//       const designation = (row.designation || "").toString().trim();
-//       const quantiteDemandee = parseInt(row.QuantiteDemandee ?? row.quantiteDemandee);
-
-//       if (!codeClient || !codeArticle || isNaN(quantiteDemandee) || isNaN(dateCommande.getTime())) {
-//         lignesIgnorees++;
-//         continue;
-//       }
-
-//       const client = await Client.findByPk(codeClient);
-//       const article = await Article.findByPk(codeArticle);
-
-//       if (!client || !article) {
-//         console.warn("Client ou article non trouvé :", { codeClient, codeArticle });
-//         lignesIgnorees++;
-//         continue;
-//       }
-
-//       // 3. Vérifier si le client appartient à un dépôt autorisé
-//       if (!codeDepotsAutorises.includes(client.codeDepot)) {
-//         lignesHorsDepots++;
-//         continue;
-//       }
-
-//       // 4. Vérifier doublons
-//       const commandesExistantes = await ArticleCommandeClient.findAll({
-//         include: [{
-//           model: CommandeClient,
-//           as: 'commande',
-//           where: { codeClient },
-//           attributes: []
-//         }],
-//         where: {
-//           codeArticle,
-//           quantiteDemandee
-//         }
-//       });
-
-//       if (commandesExistantes.length > 0) {
-//         lignesDupliquees++;
-//         continue;
-//       }
-
-//       // 5. Insertion
-//       const codeCommande = generateCodeCommande(codeClient, codeArticle, dateCommande);
-//       const commande = await CommandeClient.create({
-//         codeCommande,
-//         dateCommande,
-//         codeClient
-//       });
-
-//       await ArticleCommandeClient.create({
-//         codeCommande,
-//         codeArticle,
-//         quantiteDemandee
-//       });
-//     }
-
-//     // 6. Message de fin
-//     let message = "Commandes importées avec succès.";
-//     if (lignesIgnorees > 0) message += ` ${lignesIgnorees} lignes ignorées (informations invalides).`;
-//     if (lignesDupliquees > 0) message += ` ${lignesDupliquees} lignes ignorées (commandes en double).`;
-//     if (lignesHorsDepots > 0) message += ` ${lignesHorsDepots} lignes ignorées (client hors de vos dépôts).`;
-
-//     res.status(200).json({ success: true, message });
-
-//   } catch (error) {
-//     console.error("Erreur d'importation :", error);
-//     res.status(500).json({ error: "Erreur lors de l'importation." });
-//   }
-// };
-
 
 
 function generateCodeCommande(codeClient, dateCommande) {
@@ -394,69 +285,6 @@ exports.getCommandesParClient = async (req, res) => {
 
 
 
-// const getCommandesParClientAffichage = async (req, res) => {
-//   try {
-//     const idUtilisateur = req.user.id; // ✅ Récupération de l'utilisateur connecté
-
-//     // 1️⃣ Récupérer les dépôts affectés à l'utilisateur
-//     const affectations = await AffectationDepot.findAll({
-//       where: { codeUtilisateur: idUtilisateur },
-//       attributes: ["codeDepot"]
-//     });
-
-//     const codesDepots = affectations.map(a => a.codeDepot);
-//     if (codesDepots.length === 0) {
-//       return res.status(403).json({ message: "Aucun dépôt affecté à cet utilisateur." });
-//     }
-
-//     // 2️⃣ Récupérer les clients liés à ces dépôts
-//     const clients = await Client.findAll({
-//       where: { codeDepot: { [Op.in]: codesDepots } },
-//       include: [{
-//         model: CommandeClient,
-//         as: "commandes",
-//         include: [{
-//           model: ArticleCommandeClient,
-//           as: "articlesCommandes",
-//           include: [{
-//             model: Article,
-//             as: "article", // ⚠️ utiliser le bon alias ici
-//             attributes: ["codeArticle", "designation"]
-//           }]
-//         }]
-//       }]
-//     });
-
-//     // 3️⃣ Construction du résultat
-//     const result = clients.map((client) => {
-//       const commandes = [];
-
-//       client.commandes.forEach((cmd) => {
-//         cmd.articlesCommandes.forEach((a) => {
-//           commandes.push({
-//             codeArticle: a.codeArticle,
-//             designation: a.article.designation, // ⚠️ doit correspondre à l'alias "as: 'article'"
-//             quantiteCommandee: a.quantiteDemandee,
-//             quantiteALivrer: a.quantiteALivrer
-//           });
-//         });
-//       });
-
-//       return {
-//         codeClient: client.codeClient,
-//         nomClient: client.nom,
-//         commandes
-//       };
-//     });
-
-//     res.status(200).json(result);
-//   } catch (error) {
-//     console.error("Erreur getCommandesParClientAffichage:", error);
-//     res.status(500).json({ message: "Erreur serveur" });
-//   }
-// };
-
-
 
 
 
@@ -464,7 +292,103 @@ exports.getCommandesParClient = async (req, res) => {
 //   try {
 //     const idUtilisateur = req.user.id;
 
-//     // 1️⃣ Récupérer les dépôts affectés à l'utilisateur
+//     // 🔹 1. Récupérer les dépôts affectés à l'utilisateur
+//     const affectations = await AffectationDepot.findAll({
+//       where: { codeUtilisateur: idUtilisateur },
+//       attributes: ["codeDepot"]
+//     });
+
+//     const codesDepots = affectations.map(a => a.codeDepot);
+//     if (codesDepots.length === 0) {
+//       return res
+//         .status(403)
+//         .json({ message: "Aucun dépôt affecté à cet utilisateur." });
+//     }
+
+//     // 🔹 2. Récupérer les clients liés à ces dépôts et ayant passé des commandes
+//     const clients = await Client.findAll({
+//       where: { codeDepot: { [Op.in]: codesDepots } },
+//       include: [
+//         {
+//           model: CommandeClient,
+//           as: "commandes",
+//           required: true,
+//           include: [
+//             {
+//               model: ArticleCommandeClient,
+//               as: "articlesCommandes",
+//               include: [
+//                 {
+//                   model: Article,
+//                   as: "article",
+//                   attributes: ["codeArticle", "designation"]
+//                 }
+//               ]
+//             }
+//           ]
+//         }
+//       ]
+//     });
+
+//     // 🔹 3. Récupérer les quantités stockées des articles dans chaque dépôt
+//     const stocks = await ArticleDepot.findAll({
+//       where: { codeDepot: { [Op.in]: codesDepots } },
+//       attributes: ["codeDepot", "codeArticle", "quantiteStockee"]
+//     });
+
+//     const stockMap = {};
+//     stocks.forEach((s) => {
+//       if (!stockMap[s.codeDepot]) stockMap[s.codeDepot] = {};
+//       stockMap[s.codeDepot][s.codeArticle] = s.quantiteStockee;
+//     });
+
+//     // 🔹 4. Construction du résultat final
+//     const result = clients.map((client) => {
+//       const commandes = [];
+
+//       client.commandes.forEach((commande) => {
+//         commande.articlesCommandes.forEach((a) => {
+//           const qStock =
+//             stockMap[client.codeDepot]?.[a.codeArticle] ?? null;
+
+//           commandes.push({
+//             codeCommande: commande.codeCommande,
+//             codeArticle: a.article.codeArticle,
+//             designation: a.article.designation,
+//             quantiteCommandee: a.quantiteDemandee,
+//             quantiteALivrer: a.quantiteALivrer,
+//             quantiteStockee: qStock
+//           });
+//         });
+//       });
+
+//       return {
+//         codeClient: client.codeClient,
+//         nomClient: client.nomClient,
+//         codeDepot: client.codeDepot,
+//         commandes
+//       };
+//     });
+
+//     return res.status(200).json(result);
+//   } catch (error) {
+//     console.error("Erreur getCommandesParClientAffichage:", error);
+//     res.status(500).json({ message: "Erreur serveur" });
+//   }
+// };
+
+
+
+
+
+// // ✅ Controller : getCommandesParClientAffichage avec exclusion des commandes totalement planifiées
+
+
+// const getCommandesParClientAffichage = async (req, res) => {
+//   try {
+//     const idUtilisateur = req.user.id;
+
+//     // 🔹 1. Dépôts de l'utilisateur
 //     const affectations = await AffectationDepot.findAll({
 //       where: { codeUtilisateur: idUtilisateur },
 //       attributes: ["codeDepot"]
@@ -475,54 +399,101 @@ exports.getCommandesParClient = async (req, res) => {
 //       return res.status(403).json({ message: "Aucun dépôt affecté à cet utilisateur." });
 //     }
 
-//     // 2️⃣ Récupérer les clients de ces dépôts avec commandes
+//     // 🔹 2. Clients avec commandes
 //     const clients = await Client.findAll({
 //       where: { codeDepot: { [Op.in]: codesDepots } },
-//       include: [{
-//         model: CommandeClient,
-//         as: "commandes",
-//         required: true, // ✅ important : ne ramène que les clients qui ont passé au moins une commande
-//         include: [{
-//           model: ArticleCommandeClient,
-//           as: "articlesCommandes",
-//           include: [{
-//             model: Article,
-//             as: "article",
-//             attributes: ["codeArticle", "designation"]
-//           }]
-//         }]
-//       }]
+//       include: [
+//         {
+//           model: CommandeClient,
+//           as: "commandes",
+//           required: true,
+//           include: [
+//             {
+//               model: ArticleCommandeClient,
+//               as: "articlesCommandes",
+//               include: [
+//                 {
+//                   model: Article,
+//                   as: "article",
+//                   attributes: ["codeArticle", "designation"]
+//                 }
+//               ]
+//             }
+//           ]
+//         }
+//       ]
 //     });
 
-//     // 3️⃣ Construction du résultat
-//     const result = clients.map((client) => {
+//     // 🔹 3. Stock par article + dépôt
+//     const stocks = await ArticleDepot.findAll({
+//       where: { codeDepot: { [Op.in]: codesDepots } },
+//       attributes: ["codeDepot", "codeArticle", "quantiteStockee"]
+//     });
+
+//     const stockMap = {};
+//     stocks.forEach((s) => {
+//       if (!stockMap[s.codeDepot]) stockMap[s.codeDepot] = {};
+//       stockMap[s.codeDepot][s.codeArticle] = s.quantiteStockee;
+//     });
+
+//     // 🔹 4. Quantités déjà planifiées
+//     const planifiees = await CommandePlanifie.findAll({
+//       attributes: ["codeCommande", "codeArticle", "quantiteTransporte"]
+//     });
+
+//     const mapPlanifiees = {};
+//     planifiees.forEach((p) => {
+//       const key = `${p.codeCommande}-${p.codeArticle}`;
+//       mapPlanifiees[key] = (mapPlanifiees[key] || 0) + parseFloat(p.quantiteTransporte);
+//     });
+
+//     // 🔹 5. Construction du résultat filtré
+//     const result = [];
+
+//     clients.forEach((client) => {
 //       const commandes = [];
 
-//       client.commandes.forEach((cmd) => {
-//         cmd.articlesCommandes.forEach((a) => {
+//       client.commandes.forEach((commande) => {
+//         commande.articlesCommandes.forEach((a) => {
+//           const key = `${commande.codeCommande}-${a.codeArticle}`;
+//           const totalPlanifie = mapPlanifiees[key] || 0;
+//           const quantiteDemandee = parseFloat(a.quantiteDemandee);
+
+//           // ✅ On exclut les lignes totalement planifiées
+//           if (totalPlanifie >= quantiteDemandee) return;
+
+//           const qStock = stockMap[client.codeDepot]?.[a.codeArticle] ?? null;
+
 //           commandes.push({
-//             codeArticle: a.codeArticle,
+//             codeCommande: commande.codeCommande,
+//             codeArticle: a.article.codeArticle,
 //             designation: a.article.designation,
-//             quantiteCommandee: a.quantiteDemandee,
-//             quantiteALivrer: a.quantiteALivrer
+//             quantiteCommandee: quantiteDemandee,
+//             quantiteALivrer: quantiteDemandee - totalPlanifie,
+//             quantiteStockee: qStock
 //           });
 //         });
 //       });
 
-//       return {
-//         codeClient: client.codeClient,
-//         nomClient: client.nom,
-//          codeDepot: client.codeDepot,
-//         commandes
-//       };
+//       if (commandes.length > 0) {
+//         result.push({
+//           codeClient: client.codeClient,
+//           nomClient: client.nomClient,
+//           codeDepot: client.codeDepot,
+//           commandes
+//         });
+//       }
 //     });
 
-//     res.status(200).json(result);
+//     return res.status(200).json(result);
 //   } catch (error) {
 //     console.error("Erreur getCommandesParClientAffichage:", error);
 //     res.status(500).json({ message: "Erreur serveur" });
 //   }
 // };
+
+
+
 
 
 
@@ -582,34 +553,74 @@ const getCommandesParClientAffichage = async (req, res) => {
       stockMap[s.codeDepot][s.codeArticle] = s.quantiteStockee;
     });
 
-    // 🔹 4. Construction du résultat final
+    // 🔹 4. Récupérer les quantités déjà transportées (planifiées)
+    const plans = await CommandePlanifie.findAll({
+      attributes: ["codeCommande", "quantiteTransporte"],
+      raw: true
+    });
+
+    const mapQuantiteTransporte = {};
+    plans.forEach(p => {
+      if (!mapQuantiteTransporte[p.codeCommande]) {
+        mapQuantiteTransporte[p.codeCommande] = 0;
+      }
+      mapQuantiteTransporte[p.codeCommande] += parseFloat(p.quantiteTransporte || 0);
+    });
+
+    // 🔹 5. Construction du résultat final (en filtrant ce qui est déjà planifié à 100%)
     const result = clients.map((client) => {
       const commandes = [];
 
       client.commandes.forEach((commande) => {
         commande.articlesCommandes.forEach((a) => {
-          const qStock =
-            stockMap[client.codeDepot]?.[a.codeArticle] ?? null;
+          const qStock = stockMap[client.codeDepot]?.[a.codeArticle] ?? null;
+          const quantiteDemandee = parseFloat(a.quantiteDemandee || 0);
+          const codeCmd = commande.codeCommande;
+          const totalTransporte = parseFloat(mapQuantiteTransporte[codeCmd] || 0);
+
+          // ❌ On ignore les articles dont la commande est déjà entièrement planifiée
+          if (totalTransporte >= quantiteDemandee) return;
+
+          // commandes.push({
+          //   codeCommande: codeCmd,
+          //   codeArticle: a.article.codeArticle,
+          //   designation: a.article.designation,
+          //   quantiteCommandee: quantiteDemandee,
+          //   quantiteALivrer: a.quantiteALivrer,
+          //   quantiteStockee: qStock
+          // });
 
           commandes.push({
-            codeArticle: a.codeArticle,
+            codeCommande: codeCmd,
+            codeArticle: a.article.codeArticle,
             designation: a.article.designation,
-            quantiteCommandee: a.quantiteDemandee,
+            quantiteCommandee: quantiteDemandee,
             quantiteALivrer: a.quantiteALivrer,
-            quantiteStockee: qStock
+            quantiteStockee: qStock,
+            planifications: plans
+              .filter(p => p.codeCommande === codeCmd)
+              .map(p => ({
+                quantiteTransporte: p.quantiteTransporte
+              }))
           });
+
+
         });
       });
 
       return {
         codeClient: client.codeClient,
-        nomClient: client.nom,
+        nomClient: client.nomClient,
         codeDepot: client.codeDepot,
         commandes
       };
-    });
+    }).filter(client => client.commandes.length > 0); // ⚠️ Ne garder que les clients ayant des commandes restantes
 
-    return res.status(200).json(result);
+    if (result.length === 0) {
+      return res.status(200).json({ message: "Aucune commande à planifier.", data: [] });
+    }
+
+    return res.status(200).json({ data: result });
   } catch (error) {
     console.error("Erreur getCommandesParClientAffichage:", error);
     res.status(500).json({ message: "Erreur serveur" });
@@ -617,7 +628,11 @@ const getCommandesParClientAffichage = async (req, res) => {
 };
 
 
- 
+
+
+
+
+
 
 
 
@@ -657,8 +672,8 @@ module.exports = {
   getCommandesParDepot,
   getCommandesParClientAffichage,
   saveLivraisons
-  
-  
+
+
 };
 
 

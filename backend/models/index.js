@@ -13,11 +13,12 @@ const ArticleCommandeClient = require("./ArticleCommandeClient");
 const ArticleDepot = require("./ArticleDepot");
 const Entree = require("./Entree");
 const CommandePlanifie = require("./CommandePlanifie");
+const BonLivraison = require("./BonLivraison");
 const LivraisonPlanifiee = require("./LivraisonPlanifiee");
 const ArticlesEntree = require("./ArticlesEntree");
 
 
-const db = { sequelize, Utilisateur, Depot, AffectationDepot, Vehicule, Famille, SousFamille, Article, Client, CommandeClient, ArticleCommandeClient, ArticleDepot, Entree ,CommandePlanifie, LivraisonPlanifiee, ArticlesEntree};
+const db = { sequelize, Utilisateur, Depot, AffectationDepot, Vehicule, Famille, SousFamille, Article, Client, CommandeClient, ArticleCommandeClient, ArticleDepot,BonLivraison, Entree ,CommandePlanifie, LivraisonPlanifiee, ArticlesEntree};
 
 
 
@@ -182,25 +183,17 @@ Article.hasMany(ArticlesEntree, { foreignKey: "codeArticle" });
 Entree.hasMany(ArticlesEntree, { foreignKey: "codeEntree" });
 
 
-// // Relation 1:N — CommandeClient → CommandePlanifie
-// CommandeClient.hasMany(CommandePlanifie, {
-//   foreignKey: "codeCommande",
-//   sourceKey: "codeCommande"
-// });
-// CommandePlanifie.belongsTo(CommandeClient, {
-//   foreignKey: "codeCommande",
-//   targetKey: "codeCommande"
-// });
-
 
 
 //commandeClient et Vehicule via commandePlanifie 
 
 CommandeClient.hasMany(CommandePlanifie, {
-  foreignKey: "codeCommande"
+  foreignKey: "codeCommande",
+  as: "planifications"
 });
 CommandePlanifie.belongsTo(CommandeClient, {
-  foreignKey: "codeCommande"
+  foreignKey: "codeCommande",
+  as: "commande"
 });
 
 
@@ -208,30 +201,25 @@ Vehicule.hasMany(CommandePlanifie, {
   foreignKey: "matricule"
 });
 CommandePlanifie.belongsTo(Vehicule, {
-  foreignKey: "matricule"
+  foreignKey: "matricule",
+  as: "vehicule"
 });
 
 
 
 
 
-// // Une commande planifiée a plusieurs livraisons planifiées
-// CommandePlanifie.hasMany(LivraisonPlanifiee, {
-//   foreignKey: 'codePlanification'
-// });
-// LivraisonPlanifiee.belongsTo(CommandePlanifie, {
-//   foreignKey: 'codePlanification'
-// });
-
-// // Un véhicule peut être affecté à plusieurs livraisons planifiées
-// Vehicule.hasMany(LivraisonPlanifiee, {
-//   foreignKey: 'matricule'
-// });
-// LivraisonPlanifiee.belongsTo(Vehicule, {
-//   foreignKey: 'matricule'
-// });
 
 
+
+// Relation avec BonLivraison (1-1)
+CommandePlanifie.hasOne(BonLivraison, {
+  foreignKey: 'commandePlanifieId'
+});
+
+BonLivraison.belongsTo(CommandePlanifie, {
+  foreignKey: 'commandePlanifieId'
+});
 
 
 

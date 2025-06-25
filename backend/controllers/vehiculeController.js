@@ -838,3 +838,43 @@ exports.importVehiculesFromExcel = async (req, res) => {
 
 
 
+
+
+exports.updateStatut = async (req, res) => {
+  try {
+    const matricule = req.params.matricule;
+    const { statut } = req.body;
+
+    if (!statut) {
+      return res.status(400).json({
+        success: false,
+        message: "Le champ 'statut' est requis"
+      });
+    }
+
+    const [updatedRows] = await Vehicule.update(
+      { statut },
+      { where: { matricule } }
+    );
+
+    if (updatedRows === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Véhicule non trouvé"
+      });
+    }
+
+    res.json({
+      success: true,
+      message: `Statut du véhicule ${matricule} mis à jour`
+    });
+
+  } catch (error) {
+    console.error("Erreur lors de la mise à jour du véhicule :", error); // ✅ corrigé ici
+    res.status(500).json({
+      success: false,
+      message: "Erreur serveur",
+      error: error.message
+    });
+  }
+};

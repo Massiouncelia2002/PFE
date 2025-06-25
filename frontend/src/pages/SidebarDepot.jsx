@@ -37,6 +37,11 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
             { name: 'gerer les documents', to: '/articles' },
           ],
         },
+        {
+          name: 'Consulter les commandes planifiees',
+          icon: HomeIcon,
+          to: '/AffichePlanificationAdmin',
+        },
         
         
         

@@ -41,19 +41,24 @@ const { DataTypes } = require("sequelize");
 const sequelize = require("../config/database");
 
 const CommandePlanifie = sequelize.define("CommandePlanifie", {
+  commandePlanifieId: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
   codeCommande: {
     type: DataTypes.STRING,
     allowNull: false,
-    primaryKey: true,
+    primaryKey: false,
     references: {
       model: "commandeClients",
       key: "codeCommande"
     }
   },
-  codeVehicule: {
+  matricule: {
     type: DataTypes.STRING,
     allowNull: false,
-    primaryKey: true,
+    primaryKey: false,
     references: {
       model: "vehicules",
       key: "matricule"
@@ -64,9 +69,7 @@ const CommandePlanifie = sequelize.define("CommandePlanifie", {
     defaultValue: DataTypes.NOW,
     allowNull: false
   },
-  nbrVehicule: {
-    type: DataTypes.INTEGER
-  },
+ 
   quantiteTransporte: {
     type: DataTypes.FLOAT
   },
