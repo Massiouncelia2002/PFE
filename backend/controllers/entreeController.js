@@ -16,6 +16,7 @@ const ajouterEntree = async (req, res) => {
 
     // 1. Créer l'entrée principale
     const entree = await Entree.create({
+      
       dateEntree,
       codeDepot
     });

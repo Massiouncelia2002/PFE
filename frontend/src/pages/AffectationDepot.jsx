@@ -181,7 +181,7 @@ const AffectationDepot = () => {
                             Gestion des Affectations Utilisateurs
                         </h1>
                         <p className="text-slate-600 text-lg max-w-2xl mx-auto">
-                            Affectez facilement les dépôts aux différents utilisateurs avec notre interface moderne et intuitive
+                            Affectez facilement les dépôts aux différents utilisateurs
                         </p>
                     </div>
 
@@ -233,7 +233,7 @@ const AffectationDepot = () => {
                                                 })}
                                         </optgroup>
 
-                                        <optgroup label="Gestionnaires de dépôt">
+                                        <optgroup label="Planificateur">
                                             {utilisateurs
                                                 .filter((u) => u.role === "Planificateur")
                                                 .map((u) => (

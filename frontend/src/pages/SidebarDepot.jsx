@@ -245,6 +245,11 @@ const Sidebar = ({ isOpen = true, closeSidebar = () => {} }) => {
             { name: 'Gérer les documents', to: '/articles' },
           ],
         },
+         {
+                  name: 'Consulter les commandes planifiees',
+                  icon:  Layers,
+                  to: '/AffichePlanificationAdmin',
+                },
         
         
         

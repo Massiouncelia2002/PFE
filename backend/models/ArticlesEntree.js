@@ -13,7 +13,7 @@ const ArticlesEntree = sequelize.define('ArticlesEntree', {
   },
   quantiteEntree: {
     type: DataTypes.FLOAT,
-    allowNull: false,
+    allowNull: true,
   },
   commentaire: {
     type: DataTypes.STRING,
