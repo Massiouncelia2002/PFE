@@ -1,4 +1,3 @@
-
 const Utilisateur = require("../models/Utilisateur");
 const XLSX = require("xlsx");
 const fs = require("fs");
@@ -7,33 +6,44 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const { Op } = require("sequelize");
 
-
+// const generateRandomPassword = (length = 10) => {
+//   const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+[]{}|;:,.<>?";
+//   let password = "";
+//   for (let i = 0; i < length; i++) {
+//     password += charset.charAt(Math.floor(Math.random() * charset.length));
+//   }
+//   return password;
+// };
 const generateRandomPassword = (length = 10) => {
+  if (length < 2) {
+    throw new Error("La longueur doit être d'au moins 2 pour inclure une lettre au début et à la fin.");
+  }
+
+  const letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
   const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+[]{}|;:,.<>?";
+
   let password = "";
-  for (let i = 0; i < length; i++) {
+
+  // Première lettre
+  password += letters.charAt(Math.floor(Math.random() * letters.length));
+
+  // Corps du mot de passe
+  for (let i = 0; i < length - 2; i++) {
     password += charset.charAt(Math.floor(Math.random() * charset.length));
   }
+
+  // Dernière lettre
+  password += letters.charAt(Math.floor(Math.random() * letters.length));
+
   return password;
 };
 
-const prefixParRole = {
-  "Admin Fonctionnel": "ADMF",
-  "Gestionnaire Dépôt": "GDEP",
-  "Admin Dépôt": "ADMD"
-};
 
-// const genererCodeUtilisateur = async (role) => {
-//   const prefix = prefixParRole[role] || "GEN";
-//   const utilisateurs = await Utilisateur.findAll({ where: { role } });
-//   const numero = (utilisateurs.length + 1).toString().padStart(3, "0");
-//   return `${prefix}-${numero}`;
-// };
 const genererCodeUtilisateur = async (role) => {
   const prefixParRole = {
     "Admin Fonctionnel": "ADMF",
     "Admin Dépôt": "ADMD",
-    "Gestionnaire Dépôt": "GEST",
+    "Planificateur": "PLNF" 
   };
 
   const prefix = prefixParRole[role] || "GEN";
@@ -60,7 +70,6 @@ const genererCodeUtilisateur = async (role) => {
   return code;
 };
 
-
 exports.importerDepuisExcel = async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ message: "Aucun fichier reçu" });
@@ -71,20 +80,34 @@ exports.importerDepuisExcel = async (req, res) => {
     const donnees = XLSX.utils.sheet_to_json(feuille);
 
     const erreurs = [];
+    const emailsExistants = new Set();
 
+    // Vérification préalable des emails
+    for (const d of donnees) {
+      if (!d.email) {
+        erreurs.push({ ligne: donnees.indexOf(d) + 2, messages: ["Email manquant"] });
+        continue;
+      }
+
+      const emailExistant = await Utilisateur.findOne({ where: { email: d.email } });
+      if (emailExistant || emailsExistants.has(d.email)) {
+        erreurs.push({ ligne: donnees.indexOf(d) + 2, messages: ["Cet email est déjà utilisé"] });
+      } else {
+        emailsExistants.add(d.email);
+      }
+    }
+
+    if (erreurs.length > 0) {
+      fs.unlinkSync(filePath);
+      return res.status(400).json({
+        message: "Erreurs détectées avant importation",
+        erreurs
+      });
+    }
+
+    // Importation des données valides
     for (const [index, d] of donnees.entries()) {
       try {
-       
-        if (email && email !== utilisateur.email) {
-          const emailExistant = await Utilisateur.findOne({ where: { email } });
-          if (emailExistant) {
-            return res.status(400).json({
-              message: "Erreur de validation",
-              erreurs: { email: "Cet email est déjà utilisé." }
-            });
-          }
-        }
-
         const codeUtilisateur = await genererCodeUtilisateur(d.role);
 
         await Utilisateur.create({
@@ -121,9 +144,13 @@ exports.importerDepuisExcel = async (req, res) => {
 
   } catch (err) {
     console.error("Erreur générale lors de l'importation :", err);
+    if (req.file && fs.existsSync(req.file.path)) {
+      fs.unlinkSync(req.file.path);
+    }
     res.status(500).json({ message: "Erreur lors de l'importation", error: err.message });
   }
 };
+
 
 
 exports.creerUtilisateur = async (req, res) => {
@@ -326,7 +353,7 @@ exports.supprimerUtilisateur = async (req, res) => {
 exports.getUtilisateursDepotGroupes = async (req, res) => {
   try {
     const gestionnaires = await Utilisateur.findAll({
-      where: { role: "Gestionnaire Dépôt" }
+      where: { role: "Planificateur" }
     });
 
     const admins = await Utilisateur.findAll({
@@ -342,3 +369,46 @@ exports.getUtilisateursDepotGroupes = async (req, res) => {
   }
 };
 
+exports.getProfil = async (req, res) => {
+  try {
+    console.log("Profile request received. Headers:", req.headers);
+    console.log("Authenticated user:", req.user);
+
+    if (!req.user?.id) {
+      return res.status(401).json({ message: "Unauthorized - No user ID found" });
+    }
+
+    const userId = req.user.id;
+
+    const user = await Utilisateur.findByPk(userId, {
+      attributes: [
+        "codeUtilisateur",
+        "nom",
+        "prenom",
+        "email",
+        "posteTravail",
+        "brancheFonction",
+        "role",
+        "dateCreation",
+        "dateFin",
+        "statut"
+      ]
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: "Utilisateur non trouvé" });
+    }
+
+    console.log("Sending profile data for user ID:", userId);
+    res.status(200).json(user);
+  } catch (error) {
+    console.error("Profile controller error:", {
+      message: error.message,
+      stack: error.stack
+    });
+    res.status(500).json({ 
+      message: "Erreur serveur",
+      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
+  }
+};

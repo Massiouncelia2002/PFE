@@ -13,39 +13,160 @@ function generateCodeCommande(codeClient, dateCommande) {
   return `${codeClient}-${datePart}-${randomPart}`;
 }
 
+// const importerCommandes = async (req, res) => {
+//   try {
+//     if (!req.file) {
+//       return res.status(400).json({ error: "Aucun fichier téléchargé." });
+//     }
+
+//     // 1. Récupérer les dépôts du planificateur
+//     const affectations = await AffectationDepot.findAll({
+//       where: { codeUtilisateur: req.user.id },
+//       include: [{ model: Depot }]
+//     });
+//     const codeDepotsAutorises = affectations.map((a) => a.Depot.codeDepot);
+
+//     // 2. Lire le fichier Excel
+//     const workbook = XLSX.readFile(req.file.path);
+//     const sheet = workbook.Sheets[workbook.SheetNames[0]];
+//     const data = XLSX.utils.sheet_to_json(sheet);
+
+//     // 3. Initialiser les compteurs et le cache de commandes
+//     let lignesIgnorees = 0;
+//     let lignesDupliquees = 0;
+//     let lignesHorsDepots = 0;
+//     const commandesMap = new Map(); // clé = `${codeClient}-${date}`, valeur = codeCommande
+
+//     for (const row of data) {
+//       const codeClient = (row.codeClient || "").toString().trim().toUpperCase();
+//       const nomClient = (row.nomClient || "").toString().trim();
+//       const dateCommande = new Date(row.dateCommande);
+//       const codeArticle = (row.codeArticle || "").toString().trim().toUpperCase();
+//       const designation = (row.designation || "").toString().trim();
+//       const quantiteDemandee = parseInt(row.QuantiteDemandee ?? row.quantiteDemandee);
+
+//       if (!codeClient || !codeArticle || isNaN(quantiteDemandee) || isNaN(dateCommande.getTime())) {
+//         lignesIgnorees++;
+//         continue;
+//       }
+
+//       const client = await Client.findByPk(codeClient);
+//       const article = await Article.findByPk(codeArticle);
+
+//       if (!client || !article) {
+//         lignesIgnorees++;
+//         continue;
+//       }
+
+//       if (!codeDepotsAutorises.includes(client.codeDepot)) {
+//         lignesHorsDepots++;
+//         continue;
+//       }
+
+//       const commandeKey = `${codeClient}-${dateCommande.toISOString().slice(0, 10)}`;
+//       let codeCommande;
+
+//       // Vérifier ou créer la commande
+//       if (commandesMap.has(commandeKey)) {
+//         codeCommande = commandesMap.get(commandeKey);
+//       } else {
+//         codeCommande = generateCodeCommande(codeClient, dateCommande);
+
+//         await CommandeClient.create({
+//           codeCommande,
+//           codeClient,
+//           dateCommande
+//         });
+
+//         commandesMap.set(commandeKey, codeCommande);
+//       }
+
+//       // Éviter doublons d’articles dans la même commande
+//       const doublon = await ArticleCommandeClient.findOne({
+//         where: {
+//           codeCommande,
+//           codeArticle,
+//           quantiteDemandee
+//         }
+//       });
+
+//       if (doublon) {
+//         lignesDupliquees++;
+//         continue;
+//       }
+
+//       // Ajouter l'article à la commande
+//       await ArticleCommandeClient.create({
+//         codeCommande,
+//         codeArticle,
+//         quantiteDemandee
+//       });
+//     }
+
+//     // 4. Résumé
+//     let message = "✅ Commandes importées avec succès.";
+//     if (lignesIgnorees > 0) message += ` ${lignesIgnorees} ligne(s) ignorée(s) (informations invalides).`;
+//     if (lignesDupliquees > 0) message += ` ${lignesDupliquees} doublon(s) détecté(s).`;
+//     if (lignesHorsDepots > 0) message += ` ${lignesHorsDepots} client(s) hors de vos dépôts.`;
+
+//     return res.status(200).json({ success: true, message });
+
+//   } catch (error) {
+//     console.error("❌ Erreur d'importation :", error);
+//     return res.status(500).json({ error: "Erreur serveur lors de l'importation." });
+//   }
+// };
 const importerCommandes = async (req, res) => {
   try {
+    console.log("📥 Importation appelée");
+
     if (!req.file) {
+      console.log("⚠️ Aucun fichier reçu");
       return res.status(400).json({ error: "Aucun fichier téléchargé." });
     }
 
-    // 1. Récupérer les dépôts du planificateur
+    // 1. Récupérer les dépôts autorisés
     const affectations = await AffectationDepot.findAll({
       where: { codeUtilisateur: req.user.id },
       include: [{ model: Depot }]
     });
     const codeDepotsAutorises = affectations.map((a) => a.Depot.codeDepot);
+    console.log("✅ Dépôts autorisés :", codeDepotsAutorises);
 
     // 2. Lire le fichier Excel
     const workbook = XLSX.readFile(req.file.path);
     const sheet = workbook.Sheets[workbook.SheetNames[0]];
     const data = XLSX.utils.sheet_to_json(sheet);
 
-    // 3. Initialiser les compteurs et le cache de commandes
+    // 3. Initialiser
     let lignesIgnorees = 0;
     let lignesDupliquees = 0;
     let lignesHorsDepots = 0;
-    const commandesMap = new Map(); // clé = `${codeClient}-${date}`, valeur = codeCommande
+    const commandesMap = new Map();
 
     for (const row of data) {
+      console.log("➡️ Traitement ligne : ", row);
+
       const codeClient = (row.codeClient || "").toString().trim().toUpperCase();
       const nomClient = (row.nomClient || "").toString().trim();
-      const dateCommande = new Date(row.dateCommande);
+      const dateExcel = row.dateCommande;
       const codeArticle = (row.codeArticle || "").toString().trim().toUpperCase();
       const designation = (row.designation || "").toString().trim();
       const quantiteDemandee = parseInt(row.QuantiteDemandee ?? row.quantiteDemandee);
 
+      // ✅ Convertir date au format français "dd/mm/yyyy"
+      let dateCommande;
+      if (typeof dateExcel === "string" && dateExcel.includes("/")) {
+        const [jour, mois, annee] = dateExcel.split("/");
+        dateCommande = new Date(`${annee}-${mois}-${jour}`);
+      } else {
+        dateCommande = new Date(dateExcel);
+      }
+
+      console.log(`🔍 Données extraites : codeClient=${codeClient}, codeArticle=${codeArticle}, date=${dateCommande}, quantité=${quantiteDemandee}`);
+
       if (!codeClient || !codeArticle || isNaN(quantiteDemandee) || isNaN(dateCommande.getTime())) {
+        console.log("⛔ Ligne ignorée : Données invalides", row);
         lignesIgnorees++;
         continue;
       }
@@ -53,12 +174,20 @@ const importerCommandes = async (req, res) => {
       const client = await Client.findByPk(codeClient);
       const article = await Article.findByPk(codeArticle);
 
-      if (!client || !article) {
+      if (!client) {
+        console.log("⛔ Client introuvable :", codeClient);
+        lignesIgnorees++;
+        continue;
+      }
+
+      if (!article) {
+        console.log("⛔ Article introuvable :", codeArticle);
         lignesIgnorees++;
         continue;
       }
 
       if (!codeDepotsAutorises.includes(client.codeDepot)) {
+        console.log(`⛔ Client ${codeClient} hors dépôt autorisé (${client.codeDepot})`);
         lignesHorsDepots++;
         continue;
       }
@@ -66,22 +195,19 @@ const importerCommandes = async (req, res) => {
       const commandeKey = `${codeClient}-${dateCommande.toISOString().slice(0, 10)}`;
       let codeCommande;
 
-      // Vérifier ou créer la commande
       if (commandesMap.has(commandeKey)) {
         codeCommande = commandesMap.get(commandeKey);
       } else {
         codeCommande = generateCodeCommande(codeClient, dateCommande);
-
         await CommandeClient.create({
           codeCommande,
           codeClient,
           dateCommande
         });
-
         commandesMap.set(commandeKey, codeCommande);
+        console.log(`🆕 Nouvelle commande créée : ${codeCommande}`);
       }
 
-      // Éviter doublons d’articles dans la même commande
       const doublon = await ArticleCommandeClient.findOne({
         where: {
           codeCommande,
@@ -91,19 +217,19 @@ const importerCommandes = async (req, res) => {
       });
 
       if (doublon) {
+        console.log("⚠️ Doublon détecté : commande déjà existante avec même article et quantité.");
         lignesDupliquees++;
         continue;
       }
 
-      // Ajouter l'article à la commande
       await ArticleCommandeClient.create({
         codeCommande,
         codeArticle,
         quantiteDemandee
       });
+      console.log("✅ Article ajouté à la commande :", codeCommande);
     }
 
-    // 4. Résumé
     let message = "✅ Commandes importées avec succès.";
     if (lignesIgnorees > 0) message += ` ${lignesIgnorees} ligne(s) ignorée(s) (informations invalides).`;
     if (lignesDupliquees > 0) message += ` ${lignesDupliquees} doublon(s) détecté(s).`;
@@ -116,6 +242,7 @@ const importerCommandes = async (req, res) => {
     return res.status(500).json({ error: "Erreur serveur lors de l'importation." });
   }
 };
+
 
 
 

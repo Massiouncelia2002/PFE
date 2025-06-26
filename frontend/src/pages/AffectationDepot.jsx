@@ -1,686 +1,3 @@
-// import React, { useEffect, useState } from "react";
-// import axios from "axios";
-
-// const AffectationDepot = () => {
-//   const [depots, setDepots] = useState([]);
-//   const [utilisateurs, setUtilisateurs] = useState([]);
-//   const [selectedDepot, setSelectedDepot] = useState("");
-//   const [selectedUtilisateur, setSelectedUtilisateur] = useState("");
-//   const [message, setMessage] = useState("");
-
-//   useEffect(() => {
-//     const fetchData = async () => {
-//       const resDepots = await axios.get("http://localhost:5000/depot");
-//       const resUsers = await axios.get("http://localhost:5000/utilisateur");
-//       setDepots(resDepots.data);
-//       setUtilisateurs(resUsers.data);
-//     };
-//     fetchData();
-//   }, []);
-
-//   const handleAffectation = async () => {
-//     if (!selectedDepot || !selectedUtilisateur) {
-//       setMessage("Veuillez sélectionner un dépôt et un utilisateur.");
-//       return;
-//     }
-
-//     try {
-//       const res = await axios.post("http://localhost:5000/depot/affecter", {
-//         codeDepot: selectedDepot,
-//         codeUtilisateur: selectedUtilisateur,
-//       });
-
-//       if (res.status === 200) {
-//         setMessage("Utilisateur affecté au dépôt avec succès.");
-//       }
-//     } catch (error) {
-//       setMessage(error.response?.data?.message || "Erreur lors de l'affectation.");
-//     }
-//   };
-
-//   return (
-//     <div className="p-6 space-y-4">
-//       <h2 className="text-xl font-bold">Affecter un utilisateur à un dépôt</h2>
-
-//       {message && (
-//         <div className="p-3 rounded bg-blue-100 border border-blue-400 text-blue-800">
-//           {message}
-//         </div>
-//       )}
-
-//       <div className="flex flex-col gap-4 max-w-md">
-//         <select
-//           value={selectedDepot}
-//           onChange={(e) => setSelectedDepot(e.target.value)}
-//           className="border p-2 rounded"
-//         >
-//           <option value="">Sélectionnez un dépôt</option>
-//           {depots.map((d) => (
-//             <option key={d.codeDepot} value={d.codeDepot}>
-//               {d.nomDepot} ({d.codeDepot})
-//             </option>
-//           ))}
-//         </select>
-
-//         <select
-//           value={selectedUtilisateur}
-//           onChange={(e) => setSelectedUtilisateur(e.target.value)}
-//           className="border p-2 rounded"
-//         >
-//           <option value="">Sélectionnez un utilisateur</option>
-//           {utilisateurs.map((u) => (
-//             <option key={u.codeUtilisateur} value={u.codeUtilisateur}>
-//               {u.nom} {u.prenom} ({u.codeUtilisateur})
-//             </option>
-//           ))}
-//         </select>
-
-//         <button
-//           onClick={handleAffectation}
-//           className="bg-green-600 text-white p-2 rounded hover:bg-green-700 transition"
-//         >
-//           Affecter
-//         </button>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default AffectationDepot;
-
-
-
-
-
-
-
-
-// import React, { useEffect, useState } from "react";
-// import axios from "axios";
-
-// const AffectationDepot = () => {
-//   const [depots, setDepots] = useState([]);
-//   const [utilisateurs, setUtilisateurs] = useState([]);
-//   const [selectedUtilisateur, setSelectedUtilisateur] = useState("");
-//   const [selectedDepot, setSelectedDepot] = useState("");
-//   const [depotsAffectes, setDepotsAffectes] = useState([]);
-//   const [message, setMessage] = useState("");
-//   const [utilisateurData, setUtilisateurData] = useState(null);
-
-//   useEffect(() => {
-//     const fetchData = async () => {
-//       try {
-//         const resDepots = await axios.get("http://localhost:5000/depot");
-//         const resUsers = await axios.get("http://localhost:5000/utilisateur");
-//         setDepots(resDepots.data);
-//         setUtilisateurs(resUsers.data);
-//       } catch (error) {
-//         console.error("Erreur lors du chargement des données:", error);
-//       }
-//     };
-//     fetchData();
-//   }, []);
-
-//   // Récupérer les dépôts affectés à l'utilisateur
-//   useEffect(() => {
-//     if (selectedUtilisateur) {
-//       const fetchUtilisateur = async () => {
-//         try {
-//           const res = await axios.get(
-//             `http://localhost:5000/utilisateur/${selectedUtilisateur}`
-//           );
-//           setUtilisateurData(res.data);
-//           setDepotsAffectes(res.data.depots || []); // Si dépots est undefined, mettre un tableau vide
-//         } catch (error) {
-//           console.error("Erreur lors de la récupération de l'utilisateur :", error);
-//         }
-//       };
-//       fetchUtilisateur();
-//     }
-//   }, [selectedUtilisateur]);
-
-//   const handleAddDepot = () => {
-//     if (selectedDepot && !depotsAffectes.includes(selectedDepot)) {
-//       setDepotsAffectes([...depotsAffectes, selectedDepot]);
-//       setSelectedDepot("");
-//     }
-//   };
-
-//   const handleRemoveDepot = (codeDepot) => {
-//     setDepotsAffectes(depotsAffectes.filter((d) => d !== codeDepot));
-//   };
-
-//   const handleAffectation = async () => {
-//     if (!selectedUtilisateur || depotsAffectes.length === 0) {
-//       setMessage("Veuillez sélectionner un utilisateur et au moins un dépôt.");
-//       return;
-//     }
-
-//     try {
-//       const res = await axios.post("http://localhost:5000/depot/affecter-multiple", {
-//         codeUtilisateur: selectedUtilisateur,
-//         codesDepot: depotsAffectes,
-//       });
-
-//       if (res.status === 200) {
-//         setMessage("Dépôts affectés avec succès !");
-//         setDepotsAffectes([]);
-//       }
-//     } catch (error) {
-//       setMessage(error.response?.data?.message || "Erreur lors de l'affectation.");
-//     }
-//   };
-
-//   return (
-//     <div className="flex flex-col lg:flex-row p-6 gap-8">
-//       <div className="max-w-md flex flex-col gap-4">
-//         <h2 className="text-xl font-bold">Affecter des dépôts à un utilisateur</h2>
-
-//         <select
-//           value={selectedUtilisateur}
-//           onChange={(e) => {
-//             setSelectedUtilisateur(e.target.value);
-//             setDepotsAffectes([]);
-//             setUtilisateurData(null);
-//             setMessage("");
-//           }}
-//           className="border p-2 rounded"
-//         >
-//           <option value="">Sélectionnez un utilisateur</option>
-//           {utilisateurs.map((u) => (
-//             <option key={u.codeUtilisateur} value={u.codeUtilisateur}>
-//               {u.nom} {u.prenom} ({u.codeUtilisateur})
-//             </option>
-//           ))}
-//         </select>
-
-//         {selectedUtilisateur && utilisateurData && (
-//           <>
-//             <div className="mt-4">
-//               <h3 className="text-lg font-semibold">Utilisateur sélectionné :</h3>
-//               <p>Nom : {utilisateurData.nom} {utilisateurData.prenom}</p>
-//               <p>Code utilisateur : {utilisateurData.codeUtilisateur}</p>
-//             </div>
-
-//             <div className="mt-6">
-//               <h3 className="text-lg font-semibold">Dépôts affectés :</h3>
-//               {(depotsAffectes && depotsAffectes.length === 0) ? (
-//                 <p>Aucun dépôt affecté à cet utilisateur.</p>
-//               ) : (
-//                 <ul className="list-disc ml-5">
-//                   {depotsAffectes.map((code) => {
-//                     const depot = depots.find((d) => d.codeDepot === code);
-//                     return (
-//                       <li key={code} className="flex items-center justify-between">
-//                         {depot?.nomDepot || code}
-//                         <button
-//                           onClick={() => handleRemoveDepot(code)}
-//                           className="ml-2 text-red-600 hover:underline text-sm"
-//                         >
-//                           Supprimer
-//                         </button>
-//                       </li>
-//                     );
-//                   })}
-//                 </ul>
-//               )}
-//             </div>
-
-//             <div className="mt-4">
-//               <select
-//                 value={selectedDepot}
-//                 onChange={(e) => setSelectedDepot(e.target.value)}
-//                 className="border p-2 rounded"
-//               >
-//                 <option value="">Sélectionnez un dépôt à ajouter</option>
-//                 {depots.map((d) => (
-//                   <option key={d.codeDepot} value={d.codeDepot}>
-//                     {d.nomDepot} ({d.codeDepot})
-//                   </option>
-//                 ))}
-//               </select>
-
-//               <button
-//                 onClick={handleAddDepot}
-//                 className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 ml-2"
-//               >
-//                 Ajouter le dépôt
-//               </button>
-//             </div>
-//           </>
-//         )}
-
-//         {message && (
-//           <div className="p-3 rounded bg-blue-100 border border-blue-400 text-blue-800 mt-4">
-//             {message}
-//           </div>
-//         )}
-
-//         <button
-//           onClick={handleAffectation}
-//           className="mt-4 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-//         >
-//           Valider l’affectation
-//         </button>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default AffectationDepot;
-
-
-
-
-
-
-
-
-// import React, { useEffect, useState } from "react";
-// import axios from "axios";
-
-// const AffectationDepot = () => {
-//   const [depots, setDepots] = useState([]);
-//   const [utilisateurs, setUtilisateurs] = useState([]);
-//   const [selectedUtilisateur, setSelectedUtilisateur] = useState("");
-//   const [selectedDepot, setSelectedDepot] = useState("");
-//   const [depotsAffectes, setDepotsAffectes] = useState([]);
-//   const [message, setMessage] = useState("");
-//   const [utilisateurData, setUtilisateurData] = useState(null);
-
-//   useEffect(() => {
-//     const fetchData = async () => {
-//       try {
-//         const resDepots = await axios.get("http://localhost:5000/depot");
-//         const resUsers = await axios.get("http://localhost:5000/utilisateur");
-//         setDepots(resDepots.data);
-//         setUtilisateurs(resUsers.data);
-//       } catch (error) {
-//         console.error("Erreur lors du chargement des données:", error);
-//       }
-//     };
-//     fetchData();
-//   }, []);
-
-//   useEffect(() => {
-//     if (selectedUtilisateur) {
-//       const fetchUtilisateur = async () => {
-//         try {
-//           const res = await axios.get(
-//             `http://localhost:5000/utilisateur/${selectedUtilisateur}`
-//           );
-//           setUtilisateurData(res.data);
-//           setDepotsAffectes(res.data.depots || []);
-//         } catch (error) {
-//           console.error("Erreur lors de la récupération de l'utilisateur :", error);
-//         }
-//       };
-//       fetchUtilisateur();
-//     }
-//   }, [selectedUtilisateur]);
-
-//   const handleAddDepot = () => {
-//     if (selectedDepot && !depotsAffectes.includes(selectedDepot)) {
-//       setDepotsAffectes([...depotsAffectes, selectedDepot]);
-//       setSelectedDepot("");
-//     }
-//   };
-
-//   const handleRemoveDepot = (codeDepot) => {
-//     setDepotsAffectes(depotsAffectes.filter((d) => d !== codeDepot));
-//   };
-
-//   const handleAffectation = async () => {
-//     if (!selectedUtilisateur || depotsAffectes.length === 0) {
-//       setMessage("Veuillez sélectionner un utilisateur et au moins un dépôt.");
-//       return;
-//     }
-
-//     try {
-//       const res = await axios.post("http://localhost:5000/depot/affecter-multiple", {
-//         codeUtilisateur: selectedUtilisateur,
-//         codesDepot: depotsAffectes,
-//       });
-
-//       if (res.status === 200) {
-//         setMessage("Dépôts affectés avec succès !");
-//         setDepotsAffectes([]);
-//       }
-//     } catch (error) {
-//       setMessage(error.response?.data?.message || "Erreur lors de l'affectation.");
-//     }
-//   };
-
-//   // 🔒 Liste de tous les dépôts déjà affectés à n'importe quel utilisateur
-//   const depotsDejaAffectes = utilisateurs
-//     .map((u) => u.depots || [])
-//     .flat();
-
-//   return (
-//     <div className="flex flex-col lg:flex-row p-6 gap-8">
-//       <div className="max-w-md flex flex-col gap-4">
-//         <h2 className="text-xl font-bold">Affecter des dépôts à un utilisateur</h2>
-
-//         <select
-//           value={selectedUtilisateur}
-//           onChange={(e) => {
-//             setSelectedUtilisateur(e.target.value);
-//             setDepotsAffectes([]);
-//             setUtilisateurData(null);
-//             setMessage("");
-//           }}
-//           className="border p-2 rounded"
-//         >
-//           <option value="">Sélectionnez un utilisateur</option>
-//           {utilisateurs.map((u) => (
-//             <option key={u.codeUtilisateur} value={u.codeUtilisateur}>
-//               {u.nom} {u.prenom} ({u.codeUtilisateur})
-//             </option>
-//           ))}
-//         </select>
-
-//         {selectedUtilisateur && utilisateurData && (
-//           <>
-//             <div className="mt-4">
-//               <h3 className="text-lg font-semibold">Utilisateur sélectionné :</h3>
-//               <p>Nom : {utilisateurData.nom} {utilisateurData.prenom}</p>
-//               <p>Code utilisateur : {utilisateurData.codeUtilisateur}</p>
-//             </div>
-
-//             <div className="mt-6">
-//               <h3 className="text-lg font-semibold">Dépôts affectés :</h3>
-//               {depotsAffectes.length === 0 ? (
-//                 <p>Aucun dépôt affecté à cet utilisateur.</p>
-//               ) : (
-//                 <ul className="list-disc ml-5">
-//                   {depotsAffectes.map((code) => {
-//                     const depot = depots.find((d) => d.codeDepot === code);
-//                     return (
-//                       <li key={code} className="flex items-center justify-between">
-//                         {depot?.nomDepot || code}
-//                         <button
-//                           onClick={() => handleRemoveDepot(code)}
-//                           className="ml-2 text-red-600 hover:underline text-sm"
-//                         >
-//                           Supprimer
-//                         </button>
-//                       </li>
-//                     );
-//                   })}
-//                 </ul>
-//               )}
-//             </div>
-
-//             <div className="mt-4">
-//               <select
-//                 value={selectedDepot}
-//                 onChange={(e) => setSelectedDepot(e.target.value)}
-//                 className="border p-2 rounded w-full"
-//               >
-//                 <option value="">Sélectionnez un dépôt à ajouter</option>
-//                 {depots.map((d) => {
-//                   const isDisabled = depotsDejaAffectes.includes(d.codeDepot);
-//                   return (
-//                     <option
-//                       key={d.codeDepot}
-//                       value={d.codeDepot}
-//                       disabled={isDisabled}
-//                       className={isDisabled ? "text-gray-400" : ""}
-//                     >
-//                       {d.nomDepot} ({d.codeDepot}) {isDisabled ? " - Déjà affecté" : ""}
-//                     </option>
-//                   );
-//                 })}
-//               </select>
-
-//               <button
-//                 onClick={handleAddDepot}
-//                 className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mt-2"
-//               >
-//                 Ajouter le dépôt
-//               </button>
-//             </div>
-//           </>
-//         )}
-
-//         {message && (
-//           <div className="p-3 rounded bg-blue-100 border border-blue-400 text-blue-800 mt-4">
-//             {message}
-//           </div>
-//         )}
-
-//         <button
-//           onClick={handleAffectation}
-//           className="mt-4 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-//         >
-//           Valider l’affectation
-//         </button>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default AffectationDepot;
-
-
-
-
-
-
-
-// //le code sans affichage de la liste ok sans button supprimer sans 
-
-// import React, { useEffect, useState } from "react";
-// import axios from "axios";
-
-// const AffectationDepot = () => {
-//   const [depots, setDepots] = useState([]);
-//   const [utilisateurs, setUtilisateurs] = useState([]);
-//   const [selectedUtilisateur, setSelectedUtilisateur] = useState("");
-//   const [selectedDepot, setSelectedDepot] = useState("");
-//   const [depotsAffectes, setDepotsAffectes] = useState([]);
-//   const [message, setMessage] = useState("");
-//   const [utilisateurData, setUtilisateurData] = useState(null);
-//   const [depotsStatus, setDepotsStatus] = useState({}); // Suivi de l'état des dépôts
-
-//   useEffect(() => {
-//     const fetchData = async () => {
-//       try {
-//         const resDepots = await axios.get("http://localhost:5000/depot");
-//         const resUsers = await axios.get("http://localhost:5000/utilisateur");
-//         setDepots(resDepots.data);
-//         setUtilisateurs(resUsers.data);
-//       } catch (error) {
-//         console.error("Erreur lors du chargement des données:", error);
-//       }
-//     };
-//     fetchData();
-//   }, []);
-
-//   useEffect(() => {
-//     if (selectedUtilisateur) {
-//       const fetchUtilisateur = async () => {
-//         try {
-//           const res = await axios.get(
-//             `http://localhost:5000/utilisateur/${selectedUtilisateur}`
-//           );
-//           setUtilisateurData(res.data);
-//           setDepotsAffectes(res.data.depots || []);
-//         } catch (error) {
-//           console.error("Erreur lors de la récupération de l'utilisateur :", error);
-//         }
-//       };
-//       fetchUtilisateur();
-//     }
-//   }, [selectedUtilisateur]);
-
-//   // Vérifier si un dépôt est déjà affecté
-//   const checkDepotAffecte = async (codeDepot) => {
-//     try {
-//       const res = await axios.get(`http://localhost:5000/depot/affecte/${codeDepot}`);
-//       return res.data.message === "Dépôt est affecté à un utilisateur";
-//     } catch (error) {
-//       console.error("Erreur lors de la vérification du dépôt :", error);
-//       return false;
-//     }
-//   };
-
-//   const handleAddDepot = () => {
-//     if (selectedDepot && !depotsAffectes.includes(selectedDepot)) {
-//       setDepotsAffectes([...depotsAffectes, selectedDepot]);
-//       setSelectedDepot("");
-//     }
-//   };
-
-//   const handleRemoveDepot = (codeDepot) => {
-//     setDepotsAffectes(depotsAffectes.filter((d) => d !== codeDepot));
-//   };
-
-//   const handleAffectation = async () => {
-//     if (!selectedUtilisateur || depotsAffectes.length === 0) {
-//       setMessage("Veuillez sélectionner un utilisateur et au moins un dépôt.");
-//       return;
-//     }
-
-//     try {
-//       const res = await axios.post("http://localhost:5000/depot/affecter-multiple", {
-//         codeUtilisateur: selectedUtilisateur,
-//         codesDepot: depotsAffectes,
-//       });
-
-//       if (res.status === 200) {
-//         setMessage("Dépôts affectés avec succès !");
-//         setDepotsAffectes([]);
-//       }
-//     } catch (error) {
-//       setMessage(error.response?.data?.message || "Erreur lors de l'affectation.");
-//     }
-//   };
-
-//   // Vérifier l'état des dépôts
-//   const verifyDepotsStatus = async () => {
-//     const status = {};
-//     for (let depot of depots) {
-//       status[depot.codeDepot] = await checkDepotAffecte(depot.codeDepot);
-//     }
-//     setDepotsStatus(status);
-//   };
-
-//   useEffect(() => {
-//     verifyDepotsStatus();
-//   }, [depots]);
-
-//   return (
-//     <div className="flex flex-col lg:flex-row p-6 gap-8">
-//       <div className="max-w-md flex flex-col gap-4">
-//         <h2 className="text-xl font-bold">Affecter des dépôts à un utilisateur</h2>
-
-//         <select
-//           value={selectedUtilisateur}
-//           onChange={(e) => {
-//             setSelectedUtilisateur(e.target.value);
-//             setDepotsAffectes([]);
-//             setUtilisateurData(null);
-//             setMessage("");
-//           }}
-//           className="border p-2 rounded"
-//         >
-//           <option value="">Sélectionnez un utilisateur</option>
-//           {utilisateurs.map((u) => (
-//             <option key={u.codeUtilisateur} value={u.codeUtilisateur}>
-//               {u.nom} {u.prenom} ({u.codeUtilisateur})
-//             </option>
-//           ))}
-//         </select>
-
-//         {selectedUtilisateur && utilisateurData && (
-//           <>
-//             <div className="mt-4">
-//               <h3 className="text-lg font-semibold">Utilisateur sélectionné :</h3>
-//               <p>Nom : {utilisateurData.nom} {utilisateurData.prenom}</p>
-//               <p>Code utilisateur : {utilisateurData.codeUtilisateur}</p>
-//             </div>
-
-//             <div className="mt-6">
-//               <h3 className="text-lg font-semibold">Dépôts affectés :</h3>
-//               {depotsAffectes.length === 0 ? (
-//                 <p>Aucun dépôt affecté à cet utilisateur.</p>
-//               ) : (
-//                 <ul className="list-disc ml-5">
-//                   {depotsAffectes.map((code) => {
-//                     const depot = depots.find((d) => d.codeDepot === code);
-//                     return (
-//                       <li key={code} className="flex items-center justify-between">
-//                         {depot?.nomDepot || code}
-//                         <button
-//                           onClick={() => handleRemoveDepot(code)}
-//                           className="ml-2 text-red-600 hover:underline text-sm"
-//                         >
-//                           Supprimer
-//                         </button>
-//                       </li>
-//                     );
-//                   })}
-//                 </ul>
-//               )}
-//             </div>
-
-//             <div className="mt-4">
-//               <select
-//                 value={selectedDepot}
-//                 onChange={(e) => setSelectedDepot(e.target.value)}
-//                 className="border p-2 rounded w-full"
-//               >
-//                 <option value="">Sélectionnez un dépôt à ajouter</option>
-//                 {depots.map((d) => {
-//                   const isDisabled = depotsStatus[d.codeDepot]; // Vérifier si le dépôt est affecté
-//                   return (
-//                     <option
-//                       key={d.codeDepot}
-//                       value={d.codeDepot}
-//                       disabled={isDisabled}
-//                       className={`${isDisabled ? "text-gray-400" : ""}`}
-//                     >
-//                       {d.nomDepot} ({d.codeDepot}) {isDisabled ? " - Déjà affecté" : ""}
-//                     </option>
-//                   );
-//                 })}
-//               </select>
-
-//               <button
-//                 onClick={handleAddDepot}
-//                 className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mt-2"
-//               >
-//                 Ajouter le dépôt
-//               </button>
-//             </div>
-//           </>
-//         )}
-
-//         {message && (
-//           <div className="p-3 rounded bg-blue-100 border border-blue-400 text-blue-800 mt-4">
-//             {message}
-//           </div>
-//         )}
-
-//         <button
-//           onClick={handleAffectation}
-//           className="mt-4 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-//         >
-//           Valider l’affectation
-//         </button>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default AffectationDepot;
-
-
-
-
-
-
 
 
 
@@ -688,6 +5,8 @@
 
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { Search, Plus, X, CheckCircle, AlertCircle, ChevronDown, ChevronUp } from "lucide-react";
+import AdminLayout from "./AdminLayout";
 
 const AffectationDepot = () => {
     const [depots, setDepots] = useState([]);
@@ -695,13 +14,13 @@ const AffectationDepot = () => {
     const [selectedUtilisateur, setSelectedUtilisateur] = useState("");
     const [selectedDepot, setSelectedDepot] = useState("");
     const [depotsAffectes, setDepotsAffectes] = useState([]);
-    const [message, setMessage] = useState("");
+    const [message, setMessage] = useState({ type: "", text: "" });
     const [utilisateurData, setUtilisateurData] = useState(null);
     const [depotsStatus, setDepotsStatus] = useState({});
-    const [utilisateursAvecDepots, setUtilisateursAvecDepots] = useState([]); // 🔥 NOUVEAU
-
-
-
+    const [utilisateursAvecDepots, setUtilisateursAvecDepots] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [showDepotList, setShowDepotList] = useState(false);
+    const [searchDepot, setSearchDepot] = useState("");
 
     useEffect(() => {
         const fetchData = async () => {
@@ -713,10 +32,6 @@ const AffectationDepot = () => {
                 const usersFiltres = [...admins, ...gestionnaires];
                 setUtilisateurs(usersFiltres);
 
-
-
-
-                // 🔥 Appel à la route qui retourne les utilisateurs avec leurs dépôts affectés
                 const resUtilDepots = await axios.get("http://localhost:5000/depot/utilisateurs-avec-depots");
                 setUtilisateursAvecDepots(resUtilDepots.data);
             } catch (error) {
@@ -730,7 +45,6 @@ const AffectationDepot = () => {
         if (selectedUtilisateur) {
             const fetchUtilisateur = async () => {
                 try {
-
                     const res = await axios.get(
                         `http://localhost:5000/utilisateur/${selectedUtilisateur}`
                     );
@@ -749,7 +63,6 @@ const AffectationDepot = () => {
 
         try {
             const res = await axios.get(`http://localhost:5000/depot/check/${codeDepot}/${utilisateurData.role}`);
-
             return res.data.affecte;
         } catch (error) {
             console.error("Erreur lors de la vérification du dépôt :", error);
@@ -757,97 +70,50 @@ const AffectationDepot = () => {
         }
     };
 
-
-
     const handleAddDepot = () => {
-        if (
-            selectedDepot &&
-            !depotsAffectes.includes(selectedDepot) &&
-            !depotsInterdits.includes(selectedDepot)
-        ) {
+        if (selectedDepot && !depotsAffectes.includes(selectedDepot)) {
             setDepotsAffectes([...depotsAffectes, selectedDepot]);
             setSelectedDepot("");
         }
     };
 
-
     const handleRemoveDepot = (codeDepot) => {
         setDepotsAffectes(depotsAffectes.filter((d) => d !== codeDepot));
     };
 
-
-
-
-    // const handleAffectation = async () => {
-    //     if (!selectedUtilisateur || depotsAffectes.length === 0) {
-    //         setMessage("Veuillez sélectionner un utilisateur et au moins un dépôt.");
-    //         return;
-    //     }
-
-    //     try {
-    //         const res = await axios.post("http://localhost:5000/depot/affecter-multiple", {
-    //             codeUtilisateur: selectedUtilisateur,
-    //             codesDepot: depotsAffectes,
-    //             role: utilisateurData?.role,
-    //         });
-
-    //         if (res.status === 200) {
-    //             setMessage("Dépôts affectés avec succès !");
-    //             setDepotsAffectes([]);
-
-
-    //             const updatedDepotsStatus = { ...depotsStatus };
-    //             depotsAffectes.forEach((depotCode) => {
-    //                 updatedDepotsStatus[depotCode] = true;  
-    //             });
-    //             setDepotsStatus(updatedDepotsStatus);
-
-
-    //             const resUtilDepots = await axios.get("http://localhost:5000/depot/utilisateurs-avec-depots");
-    //             setUtilisateursAvecDepots(resUtilDepots.data);
-    //         }
-    //     } catch (error) {
-    //         setMessage(error.response?.data?.message || "Erreur lors de l'affectation.");
-    //     }
-    // };
-
-
-
-
     const handleAffectation = async () => {
         if (!selectedUtilisateur || depotsAffectes.length === 0) {
-            setMessage("Veuillez sélectionner un utilisateur et au moins un dépôt.");
+            setMessage({ type: "error", text: "Veuillez sélectionner un utilisateur et au moins un dépôt." });
             return;
         }
 
+        setIsLoading(true);
+
         try {
-            // ✅ On n'envoie plus "role", car le backend va récupérer automatiquement le rôle via l'utilisateur
             const res = await axios.post("http://localhost:5000/depot/affecter-multiple", {
                 codeUtilisateur: selectedUtilisateur,
                 codesDepot: depotsAffectes
             });
 
             if (res.status === 200) {
-                setMessage("Dépôts affectés avec succès !");
+                setMessage({ type: "success", text: "Dépôts affectés avec succès !" });
                 setDepotsAffectes([]);
 
-                // ✅ Met à jour les statuts des dépôts
                 const updatedDepotsStatus = { ...depotsStatus };
                 depotsAffectes.forEach((depotCode) => {
                     updatedDepotsStatus[depotCode] = true;
                 });
                 setDepotsStatus(updatedDepotsStatus);
 
-                // ✅ Recharge la liste des utilisateurs avec leurs dépôts
                 const resUtilDepots = await axios.get("http://localhost:5000/depot/utilisateurs-avec-depots");
                 setUtilisateursAvecDepots(resUtilDepots.data);
             }
         } catch (error) {
-            setMessage(error.response?.data?.message || "Erreur lors de l'affectation.");
+            setMessage({ type: "error", text: error.response?.data?.message || "Erreur lors de l'affectation." });
+        } finally {
+            setIsLoading(false);
         }
     };
-
-
 
     const verifyDepotsStatus = async () => {
         if (!utilisateurData) return;
@@ -858,21 +124,15 @@ const AffectationDepot = () => {
         setDepotsStatus(status);
     };
 
-
     useEffect(() => {
         verifyDepotsStatus();
     }, [depots, utilisateurData]);
-
-
-
-
 
     const getDepotsInterditsParRole = () => {
         if (!selectedUtilisateur || !utilisateurData) return [];
 
         const roleSelectionne = utilisateurData.role;
         const codeUtilisateurSelectionne = utilisateurData.codeUtilisateur;
-
 
         const autresUtilisateurs = utilisateursAvecDepots.filter(
             (u) => u.codeUtilisateur !== codeUtilisateurSelectionne
@@ -881,7 +141,7 @@ const AffectationDepot = () => {
         let depotsInterdits = [];
 
         autresUtilisateurs.forEach((util) => {
-            if (roleSelectionne === "Gestionnaire Dépôt" && util.role === "Gestionnaire Dépôt") {
+            if (roleSelectionne === "Planificateur" && util.role === "Planificateur") {
                 depotsInterdits.push(...(util.depots || []));
             } else if (roleSelectionne === "Admin Dépôt" && util.role === "Admin Dépôt") {
                 depotsInterdits.push(...(util.depots || []));
@@ -891,221 +151,343 @@ const AffectationDepot = () => {
         return depotsInterdits.map((d) => d.codeDepot);
     };
 
-
     const depotsInterdits = getDepotsInterditsParRole();
 
+    const filteredDepots = depots.filter((d) => {
+        const code = d.codeDepot?.toLowerCase() || "";
+        const nom = d.nomDepot?.toLowerCase() || "";
+        const region = d.region?.toLowerCase() || "";
+        const wilaya = d.wilaya?.toLowerCase() || "";
+        const s = searchDepot.toLowerCase();
+        return (
+            code.includes(s) || nom.includes(s) || region.includes(s) || wilaya.includes(s)
+        );
+    });
 
-
-
+    useEffect(() => {
+        if (message.text) {
+            const timer = setTimeout(() => setMessage({ type: "", text: "" }), 5000);
+            return () => clearTimeout(timer);
+        }
+    }, [message]);
 
     return (
-        <div className="p-6">
-            <h2 className="text-2xl font-bold mb-6 text-center">
-                Affectation des Dépôts aux Utilisateurs
-            </h2>
+        <AdminLayout>
+            <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 py-8 px-4">
+                <div className="max-w-6xl mx-auto">
+                    {/* Header */}
+                    <div className="text-center mb-12">
+                        <h1 className="text-4xl font-bold text-slate-800 mb-4">
+                            Gestion des Affectations Utilisateurs
+                        </h1>
+                        <p className="text-slate-600 text-lg max-w-2xl mx-auto">
+                            Affectez facilement les dépôts aux différents utilisateurs avec notre interface moderne et intuitive
+                        </p>
+                    </div>
 
-            {/* Section Sélection */}
-            <div className="flex flex-col lg:flex-row gap-6 mb-10">
-                {/* Colonne Utilisateur */}
-                <div className="lg:w-1/2 flex flex-col gap-4 border p-4 rounded shadow bg-white">
-                    <h3 className="text-lg font-semibold">Sélectionnez un utilisateur :</h3>
-                    <select
-                        value={selectedUtilisateur}
-                        onChange={(e) => {
-                            setSelectedUtilisateur(e.target.value);
-                            setDepotsAffectes([]);
-                            setUtilisateurData(null);
-                            setMessage("");
-                        }}
-                        className="border p-2 rounded"
-                    >
-                        <option value="">-- Choisir un utilisateur --</option>
-                        {/* <optgroup label="Administrateurs de dépôt">
-                        {utilisateurs
-                            .filter((u) => u.role === "Admin Dépôt")
-                            .map((u) => (
-                                <option key={u.codeUtilisateur} value={u.codeUtilisateur}>
-                                    {u.nom} {u.prenom} ({u.codeUtilisateur})
-                                </option>
-                            ))}
-                    </optgroup> */}
-                        <optgroup label="Administrateurs de dépôt">
-                            {utilisateurs
-                                .filter((u) => u.role === "Admin Dépôt")
-                                .map((u) => {
-                                    const dejaAffecte = utilisateursAvecDepots.some(
-                                        (aff) =>
-                                            aff.codeUtilisateur === u.codeUtilisateur &&
-                                            aff.depots && aff.depots.length > 0
-                                    );
+                    <div className="grid lg:grid-cols-2 gap-8">
+                        {/* Formulaire d'affectation */}
+                        <div className="bg-white rounded-2xl shadow-xl p-8 border border-slate-200">
+                            <h2 className="text-2xl font-bold text-slate-800 mb-6 flex items-center">
+                                <Plus className="mr-3 text-blue-600" size={28} />
+                                Nouvelle Affectation
+                            </h2>
 
-                                    return (
-                                        <option
-                                            key={u.codeUtilisateur}
-                                            value={u.codeUtilisateur}
-                                            disabled={dejaAffecte}
-                                        >
-                                            {u.nom} {u.prenom} ({u.codeUtilisateur}) {dejaAffecte ? " - Affecté" : ""}
-                                        </option>
-                                    );
-                                })}
-                        </optgroup>
+                            <div className="space-y-6">
+                                {/* Sélection utilisateur */}
+                                <div className="space-y-3">
+                                    <label className="block text-sm font-semibold text-slate-700">
+                                        Sélectionnez un utilisateur
+                                    </label>
+                                    <select
+                                        value={selectedUtilisateur}
+                                        onChange={(e) => {
+                                            setSelectedUtilisateur(e.target.value);
+                                            setDepotsAffectes([]);
+                                            setUtilisateurData(null);
+                                            setMessage({ type: "", text: "" });
+                                        }}
+                                        className="w-full p-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    >
+                                        <option value="">-- Choisir un utilisateur --</option>
+                                        <optgroup label="Administrateurs de dépôt">
+                                            {utilisateurs
+                                                .filter((u) => u.role === "Admin Dépôt")
+                                                .map((u) => {
+                                                    const dejaAffecte = utilisateursAvecDepots.some(
+                                                        (aff) =>
+                                                            aff.codeUtilisateur === u.codeUtilisateur &&
+                                                            aff.depots && aff.depots.length > 0
+                                                    );
 
-                        <optgroup label="Gestionnaires de dépôt">
-                            {utilisateurs
-                                .filter((u) => u.role === "Gestionnaire Dépôt")
-                                .map((u) => (
-                                    <option key={u.codeUtilisateur} value={u.codeUtilisateur}>
-                                        {u.nom} {u.prenom} ({u.codeUtilisateur})
-                                    </option>
-                                ))}
-                        </optgroup>
-                    </select>
+                                                    return (
+                                                        <option
+                                                            key={u.codeUtilisateur}
+                                                            value={u.codeUtilisateur}
+                                                            disabled={dejaAffecte}
+                                                            className={dejaAffecte ? "text-slate-400" : ""}
+                                                        >
+                                                            {u.nom} {u.prenom} ({u.codeUtilisateur}) {dejaAffecte ? " - Déjà affecté" : ""}
+                                                        </option>
+                                                    );
+                                                })}
+                                        </optgroup>
 
-                    {selectedUtilisateur && utilisateurData && (
-                        <div className="text-sm bg-gray-50 p-3 rounded">
-                            <p><strong>Nom :</strong> {utilisateurData.nom} {utilisateurData.prenom}</p>
-                            <p><strong>Code :</strong> {utilisateurData.codeUtilisateur}</p>
-                            <p><strong>Rôle :</strong> {utilisateurData.role}</p>
-                        </div>
-                    )}
-                </div>
+                                        <optgroup label="Gestionnaires de dépôt">
+                                            {utilisateurs
+                                                .filter((u) => u.role === "Planificateur")
+                                                .map((u) => (
+                                                    <option key={u.codeUtilisateur} value={u.codeUtilisateur}>
+                                                        {u.nom} {u.prenom} ({u.codeUtilisateur})
+                                                    </option>
+                                                ))}
+                                        </optgroup>
+                                    </select>
 
-                {/* Colonne Dépôt */}
-                <div className="lg:w-1/2 flex flex-col gap-4 border p-4 rounded shadow bg-white">
-                    <h3 className="text-lg font-semibold">Affecter un dépôt :</h3>
-                    <select
-                        value={selectedDepot}
-                        onChange={(e) => setSelectedDepot(e.target.value)}
-                        className="border p-2 rounded"
-                    >
-                        <option value="">-- Choisir un dépôt --</option>
-                        {depots.map((depot) => (
-                            <option
-                                key={depot.codeDepot}
-                                value={depot.codeDepot}
-                                disabled={depotsStatus[depot.codeDepot]}
-                            >
-                                {depot.nomDepot}
-                            </option>
-                        ))}
-                    </select>
-
-                    <button
-                        onClick={handleAddDepot}
-                        className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"
-                        disabled={!selectedDepot || depotsInterdits.includes(selectedDepot)}
-                    >
-                        Ajouter ce dépôt
-                    </button>
-
-                    {depotsAffectes.length > 0 && (
-                        <div className="mt-4">
-                            <h4 className="font-semibold">Dépôts sélectionnés :</h4>
-                            <ul className="list-disc pl-5">
-                                {depotsAffectes.map((code) => {
-                                    const depot = depots.find((d) => d.codeDepot === code);
-                                    return (
-                                        <li key={code} className="flex justify-between items-center">
-                                            {depot?.nomDepot || code}
-                                            <button
-                                                onClick={() => handleRemoveDepot(code)}
-                                                className="ml-2 text-red-500 hover:underline text-sm"
-                                            >
-                                                Supprimer
-                                            </button>
-                                        </li>
-                                    );
-                                })}
-                            </ul>
-                        </div>
-                    )}
-                </div>
-            </div>
-
-
-            {message && (
-                <div className="mb-4 p-3 rounded bg-blue-100 border border-blue-400 text-blue-800">
-                    {message}
-                </div>
-            )}
-            <div className="mb-10">
-                <button
-                    onClick={handleAffectation}
-                    className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded"
-                >
-                    Valider l’affectation
-                </button>
-            </div>
-
-
-
-            {/* Section affichage des affectations */}
-            <div className="bg-gray-100 p-6 rounded">
-                <h3 className="text-xl font-bold mb-6 text-center">
-                    Utilisateurs avec leurs dépôts affectés
-                </h3>
-
-                {utilisateursAvecDepots.length === 0 ? (
-                    <p className="text-center text-gray-600">Aucune affectation trouvée.</p>
-                ) : (
-                    <div className="flex flex-col space-y-4">
-                        {utilisateursAvecDepots.map((user) => (
-                            <div
-                                key={user.codeUtilisateur}
-                                className="border border-gray-300 rounded-lg shadow bg-white p-4"
-                            >
-                                <p className="font-semibold text-lg mb-2">
-                                    {user.nom} {user.prenom}
-                                </p>
-                                <p className="text-sm text-gray-600 mb-1">
-                                    <strong>Code utilisateur :</strong> {user.codeUtilisateur}
-                                </p>
-                                {/* <p className="text-sm text-gray-600 mb-3">
-            <strong>Rôle :</strong> {user.role}
-          </p> */}
-                                <p className="text-sm text-gray-600 mb-3">
-                                    <strong>Rôle :</strong> {user.role}
-                                </p>
-
-                                <div>
-                                    <p className="font-medium mb-1">Dépôts affectés :</p>
-                                    {user.depots && user.depots.length > 0 ? (
-                                        <ul className="list-disc list-inside text-sm text-gray-700 space-y-1">
-                                            {user.depots.map((d) => (
-                                                <li key={d.codeDepot}>
-                                                    <div className="ml-2">
-                                                        <p>
-                                                            <strong>Code :</strong> {d.codeDepot}
-                                                        </p>
-                                                        <p>
-                                                            <strong>Nom :</strong> {d.nomDepot}
-                                                        </p>
-                                                        <p>
-                                                            <strong>Région :</strong> {d.region}
-                                                        </p>
-                                                        <p>
-                                                            <strong>Wilaya :</strong> {d.wilaya}
-                                                        </p>
-                                                    </div>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    ) : (
-                                        <p className="text-sm text-gray-500">Aucun dépôt affecté.</p>
+                                    {selectedUtilisateur && utilisateurData && (
+                                        <div className="text-sm bg-slate-50 p-4 rounded-xl border border-slate-200">
+                                            <p className="font-medium text-slate-800">
+                                                {utilisateurData.nom} {utilisateurData.prenom}
+                                            </p>
+                                            <p className="text-slate-600">
+                                                <span className="font-medium">Code :</span> {utilisateurData.codeUtilisateur}
+                                            </p>
+                                            <p className="text-slate-600">
+                                                <span className="font-medium">Rôle :</span> {utilisateurData.role}
+                                            </p>
+                                        </div>
                                     )}
                                 </div>
+
+                                {/* Dépôts sélectionnés */}
+                                <div className="space-y-3">
+                                    <label className="block text-sm font-semibold text-slate-700">
+                                        Dépôts sélectionnés
+                                    </label>
+                                    <div className="min-h-[80px] border-2 border-dashed border-slate-200 rounded-xl p-4 bg-slate-50 transition-all duration-200 hover:border-blue-300">
+                                        {depotsAffectes.length === 0 ? (
+                                            <div className="flex items-center justify-center h-full text-slate-400">
+                                                <span>Aucun dépôt sélectionné</span>
+                                            </div>
+                                        ) : (
+                                            <div className="flex flex-wrap gap-2">
+                                                {depotsAffectes.map((codeDepot) => {
+                                                    const depot = depots.find((d) => d.codeDepot === codeDepot);
+                                                    return (
+                                                        <span
+                                                            key={codeDepot}
+                                                            className="inline-flex items-center px-3 py-2 bg-blue-100 text-blue-800 rounded-lg text-sm font-medium cursor-pointer hover:bg-blue-200 transition-colors duration-200 group"
+                                                            onClick={() => handleRemoveDepot(codeDepot)}
+                                                            title="Cliquez pour désélectionner"
+                                                        >
+                                                            {depot ? `${depot.codeDepot} - ${depot.nomDepot}` : codeDepot}
+                                                            <X className="ml-2 w-4 h-4 group-hover:text-blue-600" />
+                                                        </span>
+                                                    );
+                                                })}
+                                            </div>
+                                        )}
+                                    </div>
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowDepotList(true)}
+                                        className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-200 transform hover:scale-105 shadow-md hover:shadow-lg"
+                                    >
+                                        <Plus className="mr-2 w-4 h-4" />
+                                        Choisir des dépôts
+                                    </button>
+                                </div>
+
+                                <button
+                                    onClick={handleAffectation}
+                                    disabled={isLoading}
+                                    className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-4 rounded-xl font-semibold text-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-200 transform hover:scale-[1.02] shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                                >
+                                    {isLoading ? (
+                                        <div className="flex items-center justify-center">
+                                            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                                            Affectation en cours...
+                                        </div>
+                                    ) : (
+                                        "Affecter les dépôts"
+                                    )}
+                                </button>
                             </div>
-                        ))}
+                        </div>
+
+                        {/* Liste des utilisateurs avec leurs dépôts */}
+                        <div className="bg-white rounded-2xl shadow-xl p-8 border border-slate-200">
+                            <h3 className="text-2xl font-bold text-slate-800 mb-6">
+                                Utilisateurs avec leurs dépôts affectés
+                            </h3>
+                            <div className="space-y-4 max-h-[600px] overflow-y-auto">
+                                {utilisateursAvecDepots.length === 0 ? (
+                                    <p className="text-center text-slate-500 py-8 italic">
+                                        Aucune affectation trouvée
+                                    </p>
+                                ) : (
+                                    utilisateursAvecDepots.map((user) => (
+                                        <div key={user.codeUtilisateur} className="border border-slate-200 rounded-xl overflow-hidden hover:shadow-md transition-shadow duration-200">
+                                            <div className="w-full text-left p-4 bg-slate-50 hover:bg-slate-100 transition-colors duration-200">
+                                                <div className="font-semibold text-slate-800 text-lg">
+                                                    {user.nom} {user.prenom}
+                                                </div>
+                                                <div className="text-sm text-slate-600">
+                                                    <span className="font-medium">Code :</span> {user.codeUtilisateur} • <span className="font-medium">Rôle :</span> {user.role}
+                                                </div>
+                                            </div>
+
+                                            {user.depots && user.depots.length > 0 && (
+                                                <div className="p-4 bg-white border-t border-slate-200">
+                                                    <div className="space-y-2">
+                                                        {user.depots.map((d) => (
+                                                            <div key={d.codeDepot} className="flex items-center p-3 bg-slate-50 rounded-lg">
+                                                                <div className="w-2 h-2 bg-blue-500 rounded-full mr-3"></div>
+                                                                <div>
+                                                                    <div className="font-medium text-slate-800">{d.nomDepot}</div>
+                                                                    <div className="text-sm text-slate-600">
+                                                                        {d.codeDepot} • {d.region} • {d.wilaya}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+                                    ))
+                                )}
+                            </div>
+                        </div>
                     </div>
-                )}
+
+                    {/* Message de notification */}
+                    {message.text && (
+                        <div className={`fixed top-4 right-4 z-50 p-4 rounded-xl shadow-lg transform transition-all duration-300 ${
+                            message.type === "success" 
+                                ? "bg-green-500 text-white" 
+                                : "bg-red-500 text-white"
+                        }`}>
+                            <div className="flex items-center">
+                                {message.type === "success" ? (
+                                    <CheckCircle className="w-5 h-5 mr-2" />
+                                ) : (
+                                    <AlertCircle className="w-5 h-5 mr-2" />
+                                )}
+                                {message.text}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Modal dépôts */}
+                    {showDepotList && (
+                        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4">
+                            <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden">
+                                <div className="p-6 border-b border-slate-200">
+                                    <div className="flex justify-between items-center mb-4">
+                                        <h3 className="text-2xl font-bold text-slate-800">Sélectionner les dépôts</h3>
+                                        <button
+                                            className="text-slate-400 hover:text-slate-600 transition-colors p-2"
+                                            onClick={() => setShowDepotList(false)}
+                                        >
+                                            <X size={24} />
+                                        </button>
+                                    </div>
+                                    <div className="relative">
+                                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400" size={20} />
+                                        <input
+                                            type="text"
+                                            placeholder="Rechercher par code, nom, région ou wilaya..."
+                                            className="w-full pl-10 pr-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                            value={searchDepot}
+                                            onChange={(e) => setSearchDepot(e.target.value)}
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="p-6 overflow-y-auto max-h-[60vh]">
+                                    {filteredDepots.length === 0 ? (
+                                        <p className="text-center text-slate-500 py-8">Aucun dépôt trouvé.</p>
+                                    ) : (
+                                        <div className="space-y-2">
+                                            {filteredDepots.map((d) => {
+                                                const estInterdit = depotsInterdits.includes(d.codeDepot);
+                                                const estDejaAffecte = depotsStatus[d.codeDepot];
+                                                const estDejaSelectionne = depotsAffectes.includes(d.codeDepot);
+                                                
+                                                return (
+                                                    <div
+                                                        key={d.codeDepot}
+                                                        className={`flex items-center p-4 border border-slate-200 rounded-xl transition-all duration-200 cursor-pointer ${
+                                                            estInterdit || estDejaAffecte 
+                                                                ? "bg-slate-100 border-slate-300 cursor-not-allowed" 
+                                                                : estDejaSelectionne 
+                                                                    ? "bg-blue-50 border-blue-300 hover:bg-blue-100" 
+                                                                    : "hover:bg-blue-50 hover:border-blue-300"
+                                                        }`}
+                                                        onClick={() => {
+                                                            if (!estInterdit && !estDejaAffecte) {
+                                                                if (estDejaSelectionne) {
+                                                                    handleRemoveDepot(d.codeDepot);
+                                                                } else {
+                                                                    setDepotsAffectes([...depotsAffectes, d.codeDepot]);
+                                                                }
+                                                            }
+                                                        }}
+                                                    >
+                                                        <div className={`w-5 h-5 rounded border-2 mr-4 flex items-center justify-center ${
+                                                            estDejaSelectionne 
+                                                                ? "bg-blue-600 border-blue-600" 
+                                                                : "border-slate-300"
+                                                        } ${
+                                                            estInterdit || estDejaAffecte ? "opacity-50" : ""
+                                                        }`}>
+                                                            {estDejaSelectionne && (
+                                                                <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                                                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                                                </svg>
+                                                            )}
+                                                        </div>
+                                                        <div className="flex-1">
+                                                            <div className="font-semibold text-slate-800">
+                                                                {d.codeDepot} - {d.nomDepot}
+                                                            </div>
+                                                            <div className="text-sm text-slate-600">
+                                                                Région: {d.region} • Wilaya: {d.wilaya}
+                                                            </div>
+                                                            {estInterdit && (
+                                                                <div className="text-xs text-red-500 mt-1">
+                                                                    Ce dépôt est déjà affecté à un autre {utilisateurData?.role}
+                                                                </div>
+                                                            )}
+                                                            {estDejaAffecte && !estInterdit && (
+                                                                <div className="text-xs text-orange-500 mt-1">
+                                                                    Ce dépôt est déjà affecté
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                    )}
+                                </div>
+
+                                <div className="p-4 border-t border-slate-200 bg-slate-50 flex justify-end">
+                                    <button
+                                        onClick={() => setShowDepotList(false)}
+                                        className="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors"
+                                    >
+                                        Valider la sélection
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </div>
             </div>
-
-
-        </div>
+        </AdminLayout>
     );
-
-
 };
 
 export default AffectationDepot;
@@ -1116,677 +498,3 @@ export default AffectationDepot;
 
 
 
-
-
-
-
-
-
-
-// return (
-//     <div className="flex flex-col lg:flex-row p-6 gap-8">
-//         <div className="max-w-md flex flex-col gap-4">
-//             <h2 className="text-xl font-bold">Affecter des dépôts à un utilisateur</h2>
-
-
-
-//             <select
-//                 value={selectedUtilisateur}
-//                 onChange={(e) => {
-//                     setSelectedUtilisateur(e.target.value);
-//                     setDepotsAffectes([]);
-//                     setUtilisateurData(null);
-//                     setMessage("");
-//                 }}
-//                 className="border p-2 rounded"
-//             >
-//                 <option value="">Sélectionnez un utilisateur</option>
-
-//                 <optgroup label="Administrateurs de dépôt">
-//                     {utilisateurs
-//                         .filter((u) => u.role === "Admin Dépôt") // adapte selon ta structure
-//                         .map((u) => (
-//                             <option key={u.codeUtilisateur} value={u.codeUtilisateur}>
-//                                 {u.nom} {u.prenom} ({u.codeUtilisateur})
-//                             </option>
-//                         ))}
-//                 </optgroup>
-
-//                 <optgroup label="Gestionnaires de dépôt">
-//                     {utilisateurs
-//                         .filter((u) => u.role === "Gestionnaire Dépôt") // adapte selon ta structure
-//                         .map((u) => (
-//                             <option key={u.codeUtilisateur} value={u.codeUtilisateur}>
-//                                 {u.nom} {u.prenom} ({u.codeUtilisateur})
-//                             </option>
-//                         ))}
-//                 </optgroup>
-//             </select>
-
-
-
-
-
-//             {selectedUtilisateur && utilisateurData && (
-//                 <>
-//                     <div className="mt-4">
-//                         <h3 className="text-lg font-semibold">Utilisateur sélectionné :</h3>
-//                         <p>Nom : {utilisateurData.nom} {utilisateurData.prenom}</p>
-//                         <p>Code utilisateur : {utilisateurData.codeUtilisateur}</p>
-//                     </div>
-
-//                     <div className="mt-6">
-//                         <h3 className="text-lg font-semibold">Dépôts affectés :</h3>
-//                         {depotsAffectes.length === 0 ? (
-//                             <p>Aucun dépôt affecté à cet utilisateur.</p>
-//                         ) : (
-//                             <ul className="list-disc ml-5">
-//                                 {depotsAffectes.map((code) => {
-//                                     const depot = depots.find((d) => d.codeDepot === code);
-//                                     return (
-//                                         <li key={code} className="flex items-center justify-between">
-//                                             {depot?.nomDepot || code}
-//                                             <button
-//                                                 onClick={() => handleRemoveDepot(code)}
-//                                                 className="ml-2 text-red-600 hover:underline text-sm"
-//                                             >
-//                                                 Supprimer
-//                                             </button>
-//                                         </li>
-//                                     );
-//                                 })}
-//                             </ul>
-//                         )}
-//                     </div>
-
-//                     <div className="mt-4">
-
-
-//                         <select
-//                             value={selectedDepot}
-//                             onChange={(e) => setSelectedDepot(e.target.value)}
-//                             className="border p-2 rounded"
-//                         >
-//                             <option value="">Sélectionnez un dépôt</option>
-//                             {depots.map((depot) => (
-//                                 <option
-//                                     key={depot.codeDepot}
-//                                     value={depot.codeDepot}
-//                                     disabled={depotsStatus[depot.codeDepot]}
-//                                 >
-//                                     {depot.nomDepot}
-//                                 </option>
-//                             ))}
-//                         </select>
-
-//                         {/* Bouton pour ajouter le dépôt */}
-//                         <button
-//                             onClick={handleAddDepot}
-//                             className="mt-2 px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"
-//                             disabled={!selectedDepot || depotsInterdits.includes(selectedDepot)}
-//                         >
-//                             Ajouter ce dépôt
-//                         </button>
-
-
-
-//                     </div>
-//                 </>
-//             )}
-
-//             {message && (
-//                 <div className="p-3 rounded bg-blue-100 border border-blue-400 text-blue-800 mt-4">
-//                     {message}
-//                 </div>
-//             )}
-
-//             <button
-//                 onClick={handleAffectation}
-//                 className="mt-4 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-//             >
-//                 Valider l’affectation
-//             </button>
-//         </div>
-
-
-
-//         <div className="mt-10">
-//             <h2 className="text-xl font-bold mb-4">Utilisateurs avec leurs dépôts affectés</h2>
-//             {utilisateursAvecDepots.length === 0 ? (
-//                 <p>Aucune affectation trouvée.</p>
-//             ) : (
-//                 <ul className="space-y-4">
-//                     {utilisateursAvecDepots.map((utilisateur) => (
-//                         <li key={utilisateur.codeUtilisateur} className="border p-4 rounded shadow">
-//                             <p className="font-semibold">
-//                                 {utilisateur.nom} {utilisateur.prenom} ({utilisateur.codeUtilisateur})
-//                             </p>
-//                             {(utilisateur.depots && utilisateur.depots.length > 0) ? (
-//                                 <ul className="list-disc ml-5 mt-2">
-//                                     {utilisateur.depots.map((depot) => (
-//                                         <li key={depot.codeDepot}>
-//                                             {depot.nomDepot} ({depot.codeDepot}) - {depot.region}, {depot.wilaya}
-//                                         </li>
-//                                     ))}
-//                                 </ul>
-//                             ) : (
-//                                 <p className="text-sm text-gray-500">Aucun dépôt affecté.</p>
-//                             )}
-//                         </li>
-//                     ))}
-//                 </ul>
-//             )}
-//         </div>
-//     </div>
-// );
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-{/* <select
-                                value={selectedDepot}
-                                onChange={(e) => setSelectedDepot(e.target.value)}
-                                className="border p-2 rounded w-full"
-                            >
-                                <option value="">Sélectionnez un dépôt à ajouter</option>
-                                {depots.map((d) => {
-                                    const isDisabled = depotsStatus[d.codeDepot];
-                                    return (
-                                        <option
-                                            key={d.codeDepot}
-                                            value={d.codeDepot}
-                                            disabled={isDisabled}
-                                            className={`${isDisabled ? "text-gray-400" : ""}`}
-                                        >
-                                            {d.nomDepot} ({d.codeDepot}) {isDisabled ? " - Déjà affecté" : ""}
-                                        </option>
-                                    );
-                                })}
-                            </select> */}
-
-
-
-{/* <select
-                                value={selectedDepot}
-                                onChange={(e) => setSelectedDepot(e.target.value)}
-                                className="border p-2 rounded"
-                            >
-                                <option value="">Sélectionnez un dépôt</option>
-                                {depots.map((depot) => {
-                                    let disabled = false;
-
-                                    if (utilisateurData?.role === "Gestionnaire Dépôt") {
-                                        const depotsGestionnaires = getDepotsAffectesParRole("Gestionnaire Dépôt");
-                                        disabled = depotsGestionnaires.includes(depot.codeDepot) &&
-                                            !depotsAffectes.includes(depot.codeDepot); // autorise s'il est déjà sélectionné pour cette affectation
-                                    }
-
-                                    if (utilisateurData?.role === "Admin Dépôt") {
-                                        const depotsAdmins = getDepotsAffectesParRole("Admin Dépôt");
-                                        disabled = depotsAdmins.includes(depot.codeDepot) &&
-                                            !depotsAffectes.includes(depot.codeDepot);
-                                    }
-
-                                    return (
-                                        <option
-                                            key={depot.codeDepot}
-                                            value={depot.codeDepot}
-                                            disabled={disabled}
-                                        >
-                                            {depot.nom} ({depot.codeDepot})
-                                        </option>
-                                    );
-                                })}
-                            </select> */}
-
-
-
-{/* 
-                            <select
-                                value={selectedDepot}
-                                onChange={(e) => setSelectedDepot(e.target.value)}
-                                className="border p-2 rounded"
-                            >
-                                <option value="">Sélectionnez un dépôt</option>
-                                {depots.map((depot) => {
-                                    const depotsGrises = getDepotsInterditsParRole();
-                                    const estGrise = depotsGrises.includes(depot.codeDepot);
-                                    return (
-                                        <option key={depot.codeDepot} value={depot.codeDepot} disabled={estGrise}>
-                                            {depot.nomDepot} {estGrise ? "(déjà affecté)" : ""}
-                                        </option>
-                                    );
-                                })}
-                            </select> */}
-
-
-{/* <select
-                                value={selectedDepot}
-                                onChange={(e) => setSelectedDepot(e.target.value)}
-                                className="border p-2 rounded"
-                            >
-                                <option value="">Sélectionnez un dépôt</option>
-                                {depots.map((depot) => (
-                                    <option
-                                        key={depot.codeDepot}
-                                        value={depot.codeDepot}
-                                        disabled={depotsInterdits.includes(depot.codeDepot)}
-                                    >
-                                        {depot.nomDepot} ({depot.codeDepot})
-                                    </option>
-                                ))}
-                            </select> */}
-
-
-
-
-
-
-
-
-
-
-{/* <select
-                    value={selectedUtilisateur}
-                    onChange={(e) => {
-                        setSelectedUtilisateur(e.target.value);
-                        setDepotsAffectes([]);
-                        setUtilisateurData(null);
-                        setMessage("");
-                    }}
-                    className="border p-2 rounded"
-                >
-
-                    <option value="">Sélectionnez un utilisateur</option>
-                    {utilisateurs && utilisateurs.length > 0 && utilisateurs.map((u) => (
-                        <option key={u.codeUtilisateur} value={u.codeUtilisateur}>
-                            {u.nom} {u.prenom} ({u.codeUtilisateur})
-                        </option>
-                    ))}
-
-                    
-                </select> */}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import React, { useEffect, useState } from "react";
-// import axios from "axios";
-
-// const AffectationDepot = () => {
-//     const [depots, setDepots] = useState([]);
-//     const [utilisateurs, setUtilisateurs] = useState([]);
-//     const [selectedUtilisateur, setSelectedUtilisateur] = useState("");
-//     const [selectedDepot, setSelectedDepot] = useState("");
-//     const [depotsAffectes, setDepotsAffectes] = useState([]);
-//     const [message, setMessage] = useState("");
-//     const [utilisateurData, setUtilisateurData] = useState(null);
-//     const [utilisateursAvecDepots, setUtilisateursAvecDepots] = useState([]);
-
-//     useEffect(() => {
-//         const fetchData = async () => {
-//             try {
-//                 const resDepots = await axios.get("http://localhost:5000/depot");
-//                 const resUsers = await axios.get("http://localhost:5000/utilisateur/utilisateurs-depot-groupe");
-//                 const resUtilDepots = await axios.get("http://localhost:5000/depot/utilisateurs-avec-depots");
-
-//                 const { admins, gestionnaires } = resUsers.data;
-//                 setDepots(resDepots.data);
-//                 setUtilisateurs([...admins, ...gestionnaires]);
-//                 setUtilisateursAvecDepots(resUtilDepots.data);
-//             } catch (error) {
-//                 console.error("Erreur lors du chargement des données:", error);
-//             }
-//         };
-//         fetchData();
-//     }, []);
-
-//     useEffect(() => {
-//         if (selectedUtilisateur) {
-//             const fetchUtilisateur = async () => {
-//                 try {
-//                     const res = await axios.get(`http://localhost:5000/utilisateur/${selectedUtilisateur}`);
-//                     setUtilisateurData(res.data);
-//                     setDepotsAffectes(res.data.depots || []);
-//                 } catch (error) {
-//                     console.error("Erreur lors de la récupération de l'utilisateur :", error);
-//                 }
-//             };
-//             fetchUtilisateur();
-//         }
-//     }, [selectedUtilisateur]);
-
-//     const getAllDepotsAffectes = () => {
-//         let tous = [];
-//         utilisateursAvecDepots.forEach((u) => {
-//             if (u.depots) {
-//                 tous = [...tous, ...u.depots];
-//             }
-//         });
-//         return tous;
-//     };
-
-//     const handleAddDepot = () => {
-//         if (selectedDepot && !depotsAffectes.includes(selectedDepot)) {
-//             setDepotsAffectes([...depotsAffectes, selectedDepot]);
-//             setSelectedDepot("");
-//         }
-//     };
-
-//     const handleRemoveDepot = (codeDepot) => {
-//         setDepotsAffectes(depotsAffectes.filter((d) => d !== codeDepot));
-//     };
-
-//     const handleAffectation = async () => {
-//         if (!selectedUtilisateur || depotsAffectes.length === 0) {
-//             setMessage("Veuillez sélectionner un utilisateur et au moins un dépôt.");
-//             return;
-//         }
-//         try {
-//             const res = await axios.post("http://localhost:5000/depot/affecter-multiple", {
-//                 codeUtilisateur: selectedUtilisateur,
-//                 codesDepot: depotsAffectes,
-//             });
-//             if (res.status === 200) {
-//                 setMessage("Dépôts affectés avec succès !");
-//                 setDepotsAffectes([]);
-//                 const resUtilDepots = await axios.get("http://localhost:5000/depot/utilisateurs-avec-depots");
-//                 setUtilisateursAvecDepots(resUtilDepots.data);
-//             }
-//         } catch (error) {
-//             setMessage(error.response?.data?.message || "Erreur lors de l'affectation.");
-//         }
-//     };
-
-//     const allDepotsAffectes = getAllDepotsAffectes();
-
-//     return (
-//         <div className="p-6 space-y-6">
-//             <h2 className="text-xl font-bold">Affecter des dépôts</h2>
-//             <select
-//                 value={selectedUtilisateur}
-//                 onChange={(e) => {
-//                     setSelectedUtilisateur(e.target.value);
-//                     setDepotsAffectes([]);
-//                     setUtilisateurData(null);
-//                     setMessage("");
-//                 }}
-//                 className="border p-2 rounded"
-//             >
-//                 <option value="">Sélectionnez un utilisateur</option>
-//                 <optgroup label="Administrateurs">
-//                     {utilisateurs.filter(u => u.role === "Admin Dépôt").map(u => (
-//                         <option key={u.codeUtilisateur} value={u.codeUtilisateur}>
-//                             {u.nom} {u.prenom} ({u.codeUtilisateur})
-//                         </option>
-//                     ))}
-//                 </optgroup>
-//                 <optgroup label="Gestionnaires">
-//                     {utilisateurs.filter(u => u.role === "Gestionnaire Dépôt").map(u => (
-//                         <option key={u.codeUtilisateur} value={u.codeUtilisateur}>
-//                             {u.nom} {u.prenom} ({u.codeUtilisateur})
-//                         </option>
-//                     ))}
-//                 </optgroup>
-//             </select>
-
-//             <div>
-//                 <h3 className="font-semibold">Sélectionnez un dépôt à affecter :</h3>
-//                 <select
-//                     value={selectedDepot}
-//                     onChange={(e) => setSelectedDepot(e.target.value)}
-//                     className="border p-2 rounded"
-//                 >
-//                     <option value="">-- Choisir un dépôt --</option>
-//                     {depots.map(depot => {
-//                         const isAlreadyAffecte = allDepotsAffectes.includes(depot.codeDepot);
-//                         const isDisabled = isAlreadyAffecte && !depotsAffectes.includes(depot.codeDepot);
-//                         return (
-//                             <option
-//                                 key={depot.codeDepot}
-//                                 value={depot.codeDepot}
-//                                 disabled={isDisabled}
-//                             >
-//                                 {depot.nomDepot} {isDisabled ? "(Déjà affecté)" : ""}
-//                             </option>
-//                         );
-//                     })}
-//                 </select>
-//                 <button onClick={handleAddDepot} className="ml-2 bg-blue-500 text-white px-3 py-1 rounded">
-//                     Ajouter
-//                 </button>
-//             </div>
-
-//             <div>
-//                 <h3 className="font-semibold">Dépôts affectés :</h3>
-//                 <ul>
-//                     {depotsAffectes.map(code => (
-//                         <li key={code} className="flex items-center gap-2">
-//                             {code}
-//                             <button
-//                                 onClick={() => handleRemoveDepot(code)}
-//                                 className="text-red-500 hover:underline"
-//                             >
-//                                 Supprimer
-//                             </button>
-//                         </li>
-//                     ))}
-//                 </ul>
-//             </div>
-
-//             <button onClick={handleAffectation} className="bg-green-600 text-white px-4 py-2 rounded">
-//                 Affecter les dépôts
-//             </button>
-
-//             {message && <p className="text-sm text-blue-600 mt-2">{message}</p>}
-//         </div>
-//     );
-// };
-
-// export default AffectationDepot;

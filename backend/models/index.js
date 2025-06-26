@@ -14,11 +14,10 @@ const ArticleDepot = require("./ArticleDepot");
 const Entree = require("./Entree");
 const CommandePlanifie = require("./CommandePlanifie");
 const BonLivraison = require("./BonLivraison");
-const LivraisonPlanifiee = require("./LivraisonPlanifiee");
 const ArticlesEntree = require("./ArticlesEntree");
 
 
-const db = { sequelize, Utilisateur, Depot, AffectationDepot, Vehicule, Famille, SousFamille, Article, Client, CommandeClient, ArticleCommandeClient, ArticleDepot,BonLivraison, Entree ,CommandePlanifie, LivraisonPlanifiee, ArticlesEntree};
+const db = { sequelize, Utilisateur, Depot, AffectationDepot, Vehicule, Famille, SousFamille, Article, Client, CommandeClient, ArticleCommandeClient, ArticleDepot,BonLivraison, Entree ,CommandePlanifie, ArticlesEntree};
 
 
 

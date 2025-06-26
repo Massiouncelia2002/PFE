@@ -11,7 +11,7 @@ const AdminFonctionnel = () => {
   // Données statiques pour les graphiques
   const pieData = [
     { name: 'Admin Fonctionnel', value: 5 },
-    { name: 'Gestionnaire Dépôt', value: 3 },
+    { name: 'Planificateur', value: 3 },
     { name: 'Admin Dépôt', value: 2 },
   ];
 

@@ -16,7 +16,7 @@ const AffectationDepot = sequelize.define('AffectationDepot', {
     type: DataTypes.STRING,
     allowNull: false,
     validate: {
-      isIn: [['Gestionnaire Dépôt', 'Admin Dépôt']]
+      isIn: [['Planificateur', 'Admin Dépôt']]
     }
   }
 }, {

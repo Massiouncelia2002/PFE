@@ -1,1047 +1,128 @@
-// import React, { useState } from "react";
-// import * as XLSX from "xlsx";
-// import AdminLayout from "../pages/AdminLayout";
-// import { Button } from "../components/ui/Button";
-// import Input from "../components/ui/Input";
-// import { useNavigate } from "react-router-dom";
-
-// const AjouterClientForm = ({ onSubmit, onShowClients }) => {
-//   const [formData, setFormData] = useState({
-//     codeClient: "",
-//     nomClient: "",
-//     email: "",
-//     adress: "",
-//     tel: "",
-//   });
-
-//   const [message, setMessage] = useState("");
-//   const navigate = useNavigate();
-
-//   const handleChange = (e) => {
-//     const { name, value } = e.target;
-//     setFormData((prev) => ({
-//       ...prev,
-//       [name]: value,
-//     }));
-//   };
-
-//   const handleSubmit = (e) => {
-//     e.preventDefault();
-
-//     onSubmit(formData);
-
-//     setMessage("✅ Client ajouté avec succès !");
-//     setFormData({
-//       codeClient: "",
-//       nomClient: "",
-//       email: "",
-//       adress: "",
-//       tel: "",
-//     });
-//   };
-
-//   const handleFileUpload = (e) => {
-//     const file = e.target.files[0];
-//     const reader = new FileReader();
-
-//     reader.onload = (event) => {
-//       const data = new Uint8Array(event.target.result);
-//       const workbook = XLSX.read(data, { type: "array" });
-//       const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-//       const jsonData = XLSX.utils.sheet_to_json(worksheet, { defval: "" });
-
-//       jsonData.forEach((row) => {
-//         onSubmit({
-//           codeClient: row.codeClient || "",
-//           nomClient: row.nomClient || "",
-//           email: row.email || "",
-//           adress: row.adress || "",
-//           tel: row.tel || "",
-//         });
-//       });
-
-//       setMessage(`✅ ${jsonData.length} clients importés depuis Excel.`);
-//     };
-
-//     if (file) {
-//       reader.readAsArrayBuffer(file);
-//     }
-//   };
-
-//   return (
-//     <AdminLayout>
-//       <div className="p-6 space-y-6">
-//         <h2 className="text-2xl font-bold">Ajouter un client</h2>
-
-//         <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4 max-w-3xl">
-//           <Input name="codeClient" placeholder="Code Client" value={formData.codeClient} onChange={handleChange} />
-//           <Input name="nomClient" placeholder="Nom Client" value={formData.nomClient} onChange={handleChange} />
-//           <Input type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} />
-//           <Input name="adress" placeholder="Adresse" value={formData.adress} onChange={handleChange} />
-//           <Input name="tel" placeholder="Numéro de téléphone" value={formData.tel} onChange={handleChange} />
-
-//           <div className="col-span-2">
-//             <Button type="submit">Enregistrer</Button>
-//           </div>
-//         </form>
-
-//         <div className="flex items-center space-x-4 mt-4">
-//           <Button onClick={() => document.getElementById("excelInput").click()}>
-//             Importer depuis Excel
-//           </Button>
-//           <input
-//             type="file"
-//             id="excelInput"
-//             accept=".xlsx, .xls"
-//             onChange={handleFileUpload}
-//             style={{ display: "none" }}
-//           />
-//           <Button variant="outline" onClick={() => navigate("/clients")}>
-//             Afficher les clients
-//           </Button>
-//         </div>
-
-//       </div>
-//     </AdminLayout>
-//   );
-// };
-
-// export default AjouterClientForm;
-
-
-
-
-
-// import React, { useState } from "react";
-// import * as XLSX from "xlsx";
-// import AdminLayout from "../pages/AdminLayout";
-// import { Button } from "../components/ui/Button";
-// import Input from "../components/ui/Input";
-// import { useNavigate } from "react-router-dom";
-
-// const AjouterClientForm = ({ onSubmit }) => {
-//   const [formData, setFormData] = useState({
-//     nomClient: "",
-//     email: "",
-//     adress: "",
-//     tel: "",
-//   });
-
-//   const [message, setMessage] = useState("");
-//   const navigate = useNavigate();
-
-//   const handleChange = (e) => {
-//     const { name, value } = e.target;
-//     setFormData((prev) => ({
-//       ...prev,
-//       [name]: value,
-//     }));
-//   };
-
-//   const handleSubmit = (e) => {
-//     e.preventDefault();
-
-//     onSubmit(formData);
-
-//     setMessage("✅ Client ajouté avec succès !");
-//     setFormData({
-//       nomClient: "",
-//       email: "",
-//       adress: "",
-//       tel: "",
-//     });
-//   };
-
-//   const handleFileUpload = (e) => {
-//     const file = e.target.files[0];
-//     const reader = new FileReader();
-
-//     reader.onload = (event) => {
-//       const data = new Uint8Array(event.target.result);
-//       const workbook = XLSX.read(data, { type: "array" });
-//       const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-//       const jsonData = XLSX.utils.sheet_to_json(worksheet, { defval: "" });
-
-//       jsonData.forEach((row) => {
-//         onSubmit({
-//           nomClient: row.nomClient || "",
-//           email: row.email || "",
-//           adress: row.adress || "",
-//           tel: row.tel || "",
-//         });
-//       });
-
-//       setMessage(`✅ ${jsonData.length} clients importés depuis Excel.`);
-//     };
-
-//     if (file) {
-//       reader.readAsArrayBuffer(file);
-//     }
-//   };
-
-//   return (
-//     <AdminLayout>
-//       <div className="p-6 space-y-6">
-//         <h2 className="text-2xl font-bold">Ajouter un client</h2>
-
-//         <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4 max-w-3xl">
-//           {/* Suppression du champ codeClient */}
-//           <Input name="nomClient" placeholder="Nom Client" value={formData.nomClient} onChange={handleChange} />
-//           <Input type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} />
-//           <Input name="adress" placeholder="Adresse" value={formData.adress} onChange={handleChange} />
-//           <Input name="tel" placeholder="Numéro de téléphone" value={formData.tel} onChange={handleChange} />
-
-//           <div className="col-span-2">
-//             <Button type="submit">Enregistrer</Button>
-//           </div>
-//         </form>
-
-//         <div className="flex items-center space-x-4 mt-4">
-//           <Button onClick={() => document.getElementById("excelInput").click()}>
-//             Importer depuis Excel
-//           </Button>
-//           <input
-//             type="file"
-//             id="excelInput"
-//             accept=".xlsx, .xls"
-//             onChange={handleFileUpload}
-//             style={{ display: "none" }}
-//           />
-//           <Button variant="outline" onClick={() => navigate("/clients")}>
-//             Afficher les clients
-//           </Button>
-//         </div>
-
-//         {message && <p className="text-green-600 mt-4">{message}</p>}
-//       </div>
-//     </AdminLayout>
-//   );
-// };
-
-// export default AjouterClientForm;
-
-
-
-
-
-
-
-// import React, { useState, useEffect } from "react";
-// import * as XLSX from "xlsx";
-// import AdminLayout from "../pages/AdminLayout";
-// import { Button } from "../components/ui/Button";
-// import Input from "../components/ui/Input";
-// import { useNavigate } from "react-router-dom";
-
-// const AjouterClientForm = ({ onSubmit }) => {
-//   const [formData, setFormData] = useState({
-//     nomClient: "",
-//     email: "",
-//     adress: "",
-//     tel: "",
-//     codeDepot: "", // Champ pour le dépôt sélectionné
-//   });
-
-//   const [message, setMessage] = useState("");
-//   const [depots, setDepots] = useState([]); // Liste des dépôts
-//   const navigate = useNavigate();
-
-//   // Simulation des dépôts disponibles
-//   const depotsDisponibles = [
-//     { codeDepot: "DEP01", nomDepot: "Depot Bejaia" },
-//     { codeDepot: "DEP02", nomDepot: "Depot Algiers" },
-//     { codeDepot: "DEP03", nomDepot: "Depot Oran" },
-//   ];
-
-//   useEffect(() => {
-//     // Logique pour déterminer le dépôt à affecter selon l'adresse
-//     const depotParDefaut = getDepotFromAddress(formData.adress);
-//     setFormData((prev) => ({
-//       ...prev,
-//       codeDepot: depotParDefaut ? depotParDefaut.codeDepot : "", // Sélectionner le dépôt par défaut
-//     }));
-
-//     // Définir les dépôts disponibles
-//     setDepots(depotsDisponibles);
-//   }, [formData.adress]);
-
-//   const handleChange = (e) => {
-//     const { name, value } = e.target;
-//     setFormData((prev) => ({
-//       ...prev,
-//       [name]: value,
-//     }));
-//   };
-
-//   // Fonction pour déterminer le dépôt basé sur l'adresse
-//   const getDepotFromAddress = (address) => {
-//     // Simple logique basée sur l'adresse, exemple : si l'adresse contient "Bejaia"
-//     if (address.toLowerCase().includes("bejaia")) {
-//       return depotsDisponibles.find((depot) => depot.codeDepot === "DEP01");
-//     }
-//     // Si l'adresse ne correspond pas à Bejaia, retourner null (aucun dépôt sélectionné par défaut)
-//     return null;
-//   };
-
-//   const handleSubmit = (e) => {
-//     e.preventDefault();
-//     onSubmit(formData);
-//     setMessage("✅ Client ajouté avec succès !");
-//     setFormData({
-//       nomClient: "",
-//       email: "",
-//       adress: "",
-//       tel: "",
-//       codeDepot: "", // Réinitialiser le dépôt après soumission
-//     });
-//   };
-
-//   const handleFileUpload = (e) => {
-//     const file = e.target.files[0];
-//     const reader = new FileReader();
-
-//     reader.onload = (event) => {
-//       const data = new Uint8Array(event.target.result);
-//       const workbook = XLSX.read(data, { type: "array" });
-//       const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-//       const jsonData = XLSX.utils.sheet_to_json(worksheet, { defval: "" });
-
-//       jsonData.forEach((row) => {
-//         onSubmit({
-//           nomClient: row.nomClient || "",
-//           email: row.email || "",
-//           adress: row.adress || "",
-//           tel: row.tel || "",
-//         });
-//       });
-
-//       setMessage(`✅ ${jsonData.length} clients importés depuis Excel.`);
-//     };
-
-//     if (file) {
-//       reader.readAsArrayBuffer(file);
-//     }
-//   };
-
-//   return (
-//     <AdminLayout>
-//       <div className="p-6 space-y-6">
-//         <h2 className="text-2xl font-bold">Ajouter un client</h2>
-
-//         <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4 max-w-3xl">
-//           <Input
-//             name="nomClient"
-//             placeholder="Nom Client"
-//             value={formData.nomClient}
-//             onChange={handleChange}
-//           />
-//           <Input
-//             type="email"
-//             name="email"
-//             placeholder="Email"
-//             value={formData.email}
-//             onChange={handleChange}
-//           />
-//           <Input
-//             name="adress"
-//             placeholder="Adresse"
-//             value={formData.adress}
-//             onChange={handleChange}
-//           />
-//           <Input
-//             name="tel"
-//             placeholder="Numéro de téléphone"
-//             value={formData.tel}
-//             onChange={handleChange}
-//           />
-
-//           {/* Sélection du dépôt */}
-//           <div className="col-span-2">
-//             <label htmlFor="codeDepot" className="block text-sm font-medium text-gray-700">
-//               Sélectionner le dépôt
-//             </label>
-//             <select
-//               name="codeDepot"
-//               id="codeDepot"
-//               value={formData.codeDepot}
-//               onChange={handleChange}
-//               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-//             >
-//               <option value="">Sélectionnez un dépôt</option>
-//               {depots.map((depot) => (
-//                 <option key={depot.codeDepot} value={depot.codeDepot}>
-//                   {depot.nomDepot}
-//                 </option>
-//               ))}
-//             </select>
-//           </div>
-
-//           <div className="col-span-2">
-//             <Button type="submit">Enregistrer</Button>
-//           </div>
-//         </form>
-
-//         <div className="flex items-center space-x-4 mt-4">
-//           <Button onClick={() => document.getElementById("excelInput").click()}>
-//             Importer depuis Excel
-//           </Button>
-//           <input
-//             type="file"
-//             id="excelInput"
-//             accept=".xlsx, .xls"
-//             onChange={handleFileUpload}
-//             style={{ display: "none" }}
-//           />
-//           <Button variant="outline" onClick={() => navigate("/clients")}>
-//             Afficher les clients
-//           </Button>
-//         </div>
-
-//         {message && <p className="text-green-600 mt-4">{message}</p>}
-//       </div>
-//     </AdminLayout>
-//   );
-// };
-
-// export default AjouterClientForm;
-
-
-
-
-
-
-
-
-
-
-
-
-// import React, { useState, useEffect } from "react";
-// import * as XLSX from "xlsx";
-// import AdminLayout from "../pages/AdminLayout";
-// import { Button } from "../components/ui/Button";
-// import Input from "../components/ui/Input";
-// import { useNavigate } from "react-router-dom";
-
-// const AjouterClientForm = ({ onSubmit }) => {
-//   const [formData, setFormData] = useState({
-//     nomClient: "",
-//     email: "",
-//     adress: "",
-//     tel: "",
-//     codeDepot: "", // Champ pour le dépôt sélectionné
-//   });
-
-//   const [message, setMessage] = useState("");
-//   const [depots, setDepots] = useState([]); // Liste des dépôts
-//   const navigate = useNavigate();
-
-//   // Simulation des dépôts disponibles depuis la BDD (remplacez cette partie par un appel API réel)
-//   useEffect(() => {
-//     // Remplacez ceci par un appel API pour récupérer les dépôts depuis la BDD
-//     fetch("/api/depots")
-//       .then(response => response.json())
-//       .then(data => setDepots(data))
-//       .catch(error => console.error("Erreur lors de la récupération des dépôts:", error));
-//   }, []);
-
-//   useEffect(() => {
-//     // Logique pour déterminer le dépôt à affecter selon l'adresse
-//     const depotParDefaut = getDepotFromAddress(formData.adress);
-//     setFormData((prev) => ({
-//       ...prev,
-//       codeDepot: depotParDefaut ? depotParDefaut.codeDepot : "", // Sélectionner le dépôt par défaut
-//     }));
-//   }, [formData.adress]);
-
-//   const handleChange = (e) => {
-//     const { name, value } = e.target;
-//     setFormData((prev) => ({
-//       ...prev,
-//       [name]: value,
-//     }));
-//   };
-
-//   // Fonction pour déterminer le dépôt basé sur l'adresse
-//   const getDepotFromAddress = (address) => {
-//     // Ici, vous pouvez adapter la logique pour faire une recherche dans les dépôts de la BDD.
-//     return depots.find(depot => address.toLowerCase().includes(depot.nomDepot.toLowerCase()));
-//   };
-
-//   const handleSubmit = (e) => {
-//     e.preventDefault();
-//     onSubmit(formData);
-//     setMessage("✅ Client ajouté avec succès !");
-//     setFormData({
-//       nomClient: "",
-//       email: "",
-//       adress: "",
-//       tel: "",
-//       codeDepot: "", // Réinitialiser le dépôt après soumission
-//     });
-//   };
-
-//   const handleFileUpload = (e) => {
-//     const file = e.target.files[0];
-//     const reader = new FileReader();
-
-//     reader.onload = (event) => {
-//       const data = new Uint8Array(event.target.result);
-//       const workbook = XLSX.read(data, { type: "array" });
-//       const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-//       const jsonData = XLSX.utils.sheet_to_json(worksheet, { defval: "" });
-
-//       jsonData.forEach((row) => {
-//         onSubmit({
-//           nomClient: row.nomClient || "",
-//           email: row.email || "",
-//           adress: row.adress || "",
-//           tel: row.tel || "",
-//         });
-//       });
-
-//       setMessage(`✅ ${jsonData.length} clients importés depuis Excel.`);
-//     };
-
-//     if (file) {
-//       reader.readAsArrayBuffer(file);
-//     }
-//   };
-
-//   return (
-//     <AdminLayout>
-//       <div className="p-6 space-y-6">
-//         <h2 className="text-2xl font-bold">Ajouter un client</h2>
-
-//         <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4 max-w-3xl">
-//           <Input
-//             name="nomClient"
-//             placeholder="Nom Client"
-//             value={formData.nomClient}
-//             onChange={handleChange}
-//           />
-//           <Input
-//             type="email"
-//             name="email"
-//             placeholder="Email"
-//             value={formData.email}
-//             onChange={handleChange}
-//           />
-//           <Input
-//             name="adress"
-//             placeholder="Adresse"
-//             value={formData.adress}
-//             onChange={handleChange}
-//           />
-//           <Input
-//             name="tel"
-//             placeholder="Numéro de téléphone"
-//             value={formData.tel}
-//             onChange={handleChange}
-//           />
-
-//           {/* Sélection du dépôt */}
-//           <div className="col-span-2">
-//             <label htmlFor="codeDepot" className="block text-sm font-medium text-gray-700">
-//               Sélectionner le dépôt
-//             </label>
-//             <select
-//               name="codeDepot"
-//               id="codeDepot"
-//               value={formData.codeDepot}
-//               onChange={handleChange}
-//               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-//             >
-//               <option value="">Sélectionnez un dépôt</option>
-//               {depots.map((depot) => (
-//                 <option key={depot.codeDepot} value={depot.codeDepot}>
-//                   {depot.nomDepot}
-//                 </option>
-//               ))}
-//             </select>
-//           </div>
-
-//           <div className="col-span-2">
-//             <Button type="submit">Enregistrer</Button>
-//           </div>
-//         </form>
-
-//         <div className="flex items-center space-x-4 mt-4">
-//           <Button onClick={() => document.getElementById("excelInput").click()}>
-//             Importer depuis Excel
-//           </Button>
-//           <input
-//             type="file"
-//             id="excelInput"
-//             accept=".xlsx, .xls"
-//             onChange={handleFileUpload}
-//             style={{ display: "none" }}
-//           />
-//           <Button variant="outline" onClick={() => navigate("/clients")}>
-//             Afficher les clients
-//           </Button>
-//         </div>
-
-//         {message && <p className="text-green-600 mt-4">{message}</p>}
-//       </div>
-//     </AdminLayout>
-//   );
-// };
-
-// export default AjouterClientForm;
-
-
-
-
-
-
-
-
-
-
-// import React, { useState, useEffect } from "react";
-// import * as XLSX from "xlsx";
-// import AdminLayout from "../pages/AdminLayout";
-// import { Button } from "../components/ui/Button";
-// import Input from "../components/ui/Input";
-// import { useNavigate } from "react-router-dom";
-
-// const AjouterClientForm = ({ onSubmit }) => {
-//   const [formData, setFormData] = useState({
-//     nomClient: "",
-//     email: "",
-//     adress: "",
-//     tel: "",
-//     codeDepot: "", // Sélection du dépôt
-//   });
-
-//   const [message, setMessage] = useState("");
-//   const [depots, setDepots] = useState([]);
-//   const navigate = useNavigate();
-
-//   // Récupérer les dépôts depuis l'API
-//   useEffect(() => {
-//     fetch("/depot")
-//       .then((res) => res.json())
-//       .then((data) => setDepots(data))
-//       .catch((err) =>
-//         console.error("Erreur lors de la récupération des dépôts:", err)
-//       );
-//   }, []);
-
-//   // Affecter automatiquement un dépôt en fonction de l'adresse
-//   useEffect(() => {
-//     if (formData.adress && depots.length > 0) {
-//       const depotParDefaut = getDepotFromAddress(formData.adress);
-//       if (depotParDefaut) {
-//         setFormData((prev) => ({
-//           ...prev,
-//           codeDepot: depotParDefaut.codeDepot,
-//         }));
-//       }
-//     }
-//   }, [formData.adress, depots]);
-
-//   const handleChange = (e) => {
-//     const { name, value } = e.target;
-//     setFormData((prev) => ({
-//       ...prev,
-//       [name]: value,
-//     }));
-//   };
-
-//   // Trouver un dépôt dont le nom apparaît dans l'adresse
-//   const getDepotFromAddress = (address) => {
-//     return depots.find((depot) =>
-//       address.toLowerCase().includes(depot.nomDepot.toLowerCase())
-//     );
-//   };
-
-//   const handleSubmit = (e) => {
-//     e.preventDefault();
-//     onSubmit(formData);
-//     setMessage("✅ Client ajouté avec succès !");
-//     setFormData({
-//       nomClient: "",
-//       email: "",
-//       adress: "",
-//       tel: "",
-//       codeDepot: "",
-//     });
-//   };
-
-//   const handleFileUpload = (e) => {
-//     const file = e.target.files[0];
-//     const reader = new FileReader();
-
-//     reader.onload = (event) => {
-//       const data = new Uint8Array(event.target.result);
-//       const workbook = XLSX.read(data, { type: "array" });
-//       const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-//       const jsonData = XLSX.utils.sheet_to_json(worksheet, { defval: "" });
-
-//       jsonData.forEach((row) => {
-//         const matchedDepot = getDepotFromAddress(row.adress || "");
-//         onSubmit({
-//           nomClient: row.nomClient || "",
-//           email: row.email || "",
-//           adress: row.adress || "",
-//           tel: row.tel || "",
-//           codeDepot: matchedDepot ? matchedDepot.codeDepot : "",
-//         });
-//       });
-
-//       setMessage(`✅ ${jsonData.length} clients importés depuis Excel.`);
-//     };
-
-//     if (file) {
-//       reader.readAsArrayBuffer(file);
-//     }
-//   };
-
-//   return (
-//     <AdminLayout>
-//       <div className="p-6 space-y-6">
-//         <h2 className="text-2xl font-bold">Ajouter un client</h2>
-
-//         <form
-//           onSubmit={handleSubmit}
-//           className="grid grid-cols-2 gap-4 max-w-3xl"
-//         >
-//           <Input
-//             name="nomClient"
-//             placeholder="Nom Client"
-//             value={formData.nomClient}
-//             onChange={handleChange}
-//           />
-//           <Input
-//             type="email"
-//             name="email"
-//             placeholder="Email"
-//             value={formData.email}
-//             onChange={handleChange}
-//           />
-//           <Input
-//             name="adress"
-//             placeholder="Adresse"
-//             value={formData.adress}
-//             onChange={handleChange}
-//           />
-//           <Input
-//             name="tel"
-//             placeholder="Numéro de téléphone"
-//             value={formData.tel}
-//             onChange={handleChange}
-//           />
-
-//           {/* Sélection du dépôt */}
-//           <div className="col-span-2">
-//             <label
-//               htmlFor="codeDepot"
-//               className="block text-sm font-medium text-gray-700"
-//             >
-//               Sélectionner le dépôt
-//             </label>
-//             <select
-//               name="codeDepot"
-//               id="codeDepot"
-//               value={formData.codeDepot}
-//               onChange={handleChange}
-//               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-//             >
-//               <option value="">Sélectionnez un dépôt</option>
-//               {depots.map((depot) => (
-//                 <option key={depot.codeDepot} value={depot.codeDepot}>
-//                   {depot.nomDepot} - {depot.wilaya}  {/* Affichage de la wilaya */}
-//                 </option>
-//               ))}
-//             </select>
-//           </div>
-
-//           <div className="col-span-2">
-//             <Button type="submit">Enregistrer</Button>
-//           </div>
-//         </form>
-
-//         <div className="flex items-center space-x-4 mt-4">
-//           <Button onClick={() => document.getElementById("excelInput").click()}>
-//             Importer depuis Excel
-//           </Button>
-//           <input
-//             type="file"
-//             id="excelInput"
-//             accept=".xlsx, .xls"
-//             onChange={handleFileUpload}
-//             style={{ display: "none" }}
-//           />
-//           <Button variant="outline" onClick={() => navigate("/clients")}>
-//             Afficher les clients
-//           </Button>
-//         </div>
-
-//         {message && <p className="text-green-600 mt-4">{message}</p>}
-//       </div>
-//     </AdminLayout>
-//   );
-// };
-
-// export default AjouterClientForm;
-
-
-
-
-
-
-
-// import React, { useState, useEffect } from "react";
-// import * as XLSX from "xlsx";
-// import AdminLayout from "../pages/AdminLayout";
-// import { Button } from "../components/ui/Button";
-// import Input from "../components/ui/Input";
-// import { useNavigate } from "react-router-dom";
-
-// const AjouterClientForm = ({ onSubmit }) => {
-//   const [formData, setFormData] = useState({
-//     nomClient: "",
-//     email: "",
-//     adress: "",
-//     tel: "",
-//     codeDepot: "", // Sélection du dépôt
-//   });
-
-//   const [message, setMessage] = useState("");
-//   const [depots, setDepots] = useState([]);
-//   const navigate = useNavigate();
-
-//   // Récupérer les dépôts depuis l'API
-//   useEffect(() => {
-//     fetch("/depot")
-//       .then((res) => res.json())
-//       .then((data) => setDepots(data))
-//       .catch((err) =>
-//         console.error("Erreur lors de la récupération des dépôts:", err)
-//       );
-//   }, []);
-
-//   // Affecter automatiquement un dépôt en fonction de l'adresse
-//   useEffect(() => {
-//     if (formData.adress && depots.length > 0) {
-//       const wilaya = extractWilayaFromAddress(formData.adress);
-//       const depotParWilaya = getDepotByWilaya(wilaya);
-//       if (depotParWilaya) {
-//         setFormData((prev) => ({
-//           ...prev,
-//           codeDepot: depotParWilaya.codeDepot,
-//         }));
-//       }
-//     }
-//   }, [formData.adress, depots]);
-
-//   const handleChange = (e) => {
-//     const { name, value } = e.target;
-//     setFormData((prev) => ({
-//       ...prev,
-//       [name]: value,
-//     }));
-//   };
-
-//   // Extraire la wilaya de l'adresse
-//   const extractWilayaFromAddress = (address) => {
-//     // Par exemple, si l'adresse contient "Alger", "Oran", etc., vous pouvez ajuster cette logique selon votre besoin
-//     const wilayas = depots.map((depot) => depot.wilaya);
-//     for (let wilaya of wilayas) {
-//       if (address.toLowerCase().includes(wilaya.toLowerCase())) {
-//         return wilaya;
-//       }
-//     }
-//     return ""; // Retourner une chaîne vide si aucune wilaya n'est trouvée
-//   };
-
-//   // Trouver un dépôt en fonction de la wilaya
-//   const getDepotByWilaya = (wilaya) => {
-//     return depots.find((depot) => depot.wilaya.toLowerCase() === wilaya.toLowerCase());
-//   };
-
-//   const handleSubmit = (e) => {
-//     e.preventDefault();
-//     onSubmit(formData);
-//     setMessage("✅ Client ajouté avec succès !");
-//     setFormData({
-//       nomClient: "",
-//       email: "",
-//       adress: "",
-//       tel: "",
-//       codeDepot: "",
-//     });
-//   };
-
-//   const handleFileUpload = (e) => {
-//     const file = e.target.files[0];
-//     const reader = new FileReader();
-
-//     reader.onload = (event) => {
-//       const data = new Uint8Array(event.target.result);
-//       const workbook = XLSX.read(data, { type: "array" });
-//       const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-//       const jsonData = XLSX.utils.sheet_to_json(worksheet, { defval: "" });
-
-//       jsonData.forEach((row) => {
-//         const wilaya = extractWilayaFromAddress(row.adress || "");
-//         const matchedDepot = getDepotByWilaya(wilaya);
-//         onSubmit({
-//           nomClient: row.nomClient || "",
-//           email: row.email || "",
-//           adress: row.adress || "",
-//           tel: row.tel || "",
-//           codeDepot: matchedDepot ? matchedDepot.codeDepot : "",
-//         });
-//       });
-
-//       setMessage(`✅ ${jsonData.length} clients importés depuis Excel.`);
-//     };
-
-//     if (file) {
-//       reader.readAsArrayBuffer(file);
-//     }
-//   };
-
-//   return (
-//     <AdminLayout>
-//       <div className="p-6 space-y-6">
-//         <h2 className="text-2xl font-bold">Ajouter un client</h2>
-
-//         <form
-//           onSubmit={handleSubmit}
-//           className="grid grid-cols-2 gap-4 max-w-3xl"
-//         >
-//           <Input
-//             name="nomClient"
-//             placeholder="Nom Client"
-//             value={formData.nomClient}
-//             onChange={handleChange}
-//           />
-//           <Input
-//             type="email"
-//             name="email"
-//             placeholder="Email"
-//             value={formData.email}
-//             onChange={handleChange}
-//           />
-//           <Input
-//             name="adress"
-//             placeholder="Adresse"
-//             value={formData.adress}
-//             onChange={handleChange}
-//           />
-//           <Input
-//             name="tel"
-//             placeholder="Numéro de téléphone"
-//             value={formData.tel}
-//             onChange={handleChange}
-//           />
-
-//           {/* Sélection du dépôt */}
-//           <div className="col-span-2">
-//             <label
-//               htmlFor="codeDepot"
-//               className="block text-sm font-medium text-gray-700"
-//             >
-//               Sélectionner le dépôt
-//             </label>
-//             <select
-//               name="codeDepot"
-//               id="codeDepot"
-//               value={formData.codeDepot}
-//               onChange={handleChange}
-//               className="mt-1 block w-full h-12 rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-//             >
-//               <option value="">Sélectionnez un dépôt</option>
-//               {depots.map((depot) => (
-//                 <option key={depot.codeDepot} value={depot.codeDepot}>
-//                   {depot.nomDepot} - {depot.wilaya}  {/* Affichage de la wilaya */}
-//                 </option>
-//               ))}
-//             </select>
-//           </div>
-
-//           <div className="col-span-2">
-//             <Button type="submit">Enregistrer</Button>
-//           </div>
-//         </form>
-
-//         <div className="flex items-center space-x-4 mt-4">
-//           <Button onClick={() => document.getElementById("excelInput").click()}>
-//             Importer depuis Excel
-//           </Button>
-//           <input
-//             type="file"
-//             id="excelInput"
-//             accept=".xlsx, .xls"
-//             onChange={handleFileUpload}
-//             style={{ display: "none" }}
-//           />
-//           <Button variant="outline" onClick={() => navigate("/clients")}>
-//             Afficher les clients
-//           </Button>
-//         </div>
-
-//         {message && <p className="text-green-600 mt-4">{message}</p>}
-//       </div>
-//     </AdminLayout>
-//   );
-// };
-
-// export default AjouterClientForm;
-
-
-
-
-
-
-
-
-
-
-
-
-
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import * as XLSX from "xlsx";
 import AdminLayout from "../pages/AdminLayout";
-import { Button } from "../components/ui/Button";
-import Input from "../components/ui/Input";
+import { User, Mail, MapPin, Phone, Truck, Check, AlertCircle, Upload, Users } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-const AjouterClientForm = ({ onSubmit }) => {
-  const [formData, setFormData] = useState({
+// Composant InputField optimisé
+const InputField = React.memo(({ icon: Icon, error, label, className = "", ...props }) => {
+  const inputRef = useRef(null);
+  
+  useEffect(() => {
+    if (error && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [error]);
+
+  return (
+    <div className="relative group">
+      <label className="block text-sm font-medium text-gray-700 mb-1">
+        <Icon className="inline mr-2 w-4 h-4" />
+        {label}
+      </label>
+      <div className="relative">
+        <input
+          ref={inputRef}
+          {...props}
+          autoComplete="new-password"
+          className={`w-full pl-4 pr-4 py-3 bg-white border border-gray-200 rounded-xl text-gray-900 placeholder-gray-500 
+            focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
+            hover:border-gray-300 transition-all duration-200 ${error ? 'border-red-500 focus:ring-red-500' : ''} ${className}`}
+        />
+      </div>
+      {error && (
+        <div className="flex items-center mt-2 text-red-500 text-sm animate-in slide-in-from-top-2 duration-200">
+          <AlertCircle className="w-4 h-4 mr-1" />
+          {error}
+        </div>
+      )}
+    </div>
+  );
+});
+
+// Composant SelectField optimisé
+const SelectField = React.memo(({ icon: Icon, error, label, children, ...props }) => {
+  const selectRef = useRef(null);
+
+  return (
+    <div className="relative group">
+      <label className="block text-sm font-medium text-gray-700 mb-1">
+        <Icon className="inline mr-2 w-4 h-4" />
+        {label}
+      </label>
+      <div className="relative">
+        <select
+          ref={selectRef}
+          {...props}
+          autoComplete="off"
+          className={`w-full pl-4 pr-4 py-3 bg-white border border-gray-200 rounded-xl text-gray-900 
+            focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
+            hover:border-gray-300 transition-all duration-200 appearance-none cursor-pointer
+            ${error ? 'border-red-500 focus:ring-red-500' : ''}`}
+        >
+          {children}
+        </select>
+        <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+          <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
+        </div>
+      </div>
+      {error && (
+        <div className="flex items-center mt-2 text-red-500 text-sm animate-in slide-in-from-top-2 duration-200">
+          <AlertCircle className="w-4 h-4 mr-1" />
+          {error}
+        </div>
+      )}
+    </div>
+  );
+});
+
+const AjouterClientForm = React.memo(({ onSubmit }) => {
+  const navigate = useNavigate();
+  const formRef = useRef(null);
+
+  // État initial mémoïsé
+  const initialFormData = useMemo(() => ({
     nomClient: "",
     email: "",
     adress: "",
     tel: "",
     telType: "cellulaire",
     codeDepot: "",
-  });
+  }), []);
 
-  const [errors, setErrors] = useState({});
-  const [message, setMessage] = useState("");
+  const [formData, setFormData] = useState(initialFormData);
   const [depots, setDepots] = useState([]);
-  const navigate = useNavigate();
+  const [message, setMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [erreurs, setErreurs] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
 
-  // Récupération des dépôts depuis le backend
+  // Récupération des dépôts
   useEffect(() => {
-    fetch("/depot")
-      .then((res) => res.json())
-      .then((data) => setDepots(data))
-      .catch((err) => console.error("Erreur lors de la récupération des dépôts:", err));
+    const fetchDepots = async () => {
+      try {
+        const response = await fetch("/depot");
+        const data = await response.json();
+        setDepots(data);
+      } catch (err) {
+        console.error("Erreur lors de la récupération des dépôts:", err);
+        setErrorMessage("Erreur lors du chargement des dépôts");
+      }
+    };
+
+    fetchDepots();
   }, []);
 
-  // Mise à jour automatique du dépôt selon la wilaya détectée dans l'adresse
+  // Détection automatique du dépôt
   useEffect(() => {
     if (formData.adress && depots.length > 0) {
       const wilaya = extractWilayaFromAddress(formData.adress);
       const depotParWilaya = getDepotByWilaya(wilaya);
       if (depotParWilaya) {
-        setFormData((prev) => ({
+        setFormData(prev => ({
           ...prev,
           codeDepot: depotParWilaya.codeDepot,
         }));
@@ -1049,9 +130,7 @@ const AjouterClientForm = ({ onSubmit }) => {
     }
   }, [formData.adress, depots]);
 
-  
-
-  const extractWilayaFromAddress = (address) => {
+  const extractWilayaFromAddress = useCallback((address) => {
     const wilayas = depots.map((depot) => depot.wilaya);
     for (let wilaya of wilayas) {
       if (address.toLowerCase().includes(wilaya.toLowerCase())) {
@@ -1059,13 +138,14 @@ const AjouterClientForm = ({ onSubmit }) => {
       }
     }
     return "";
-  };
+  }, [depots]);
 
-  const getDepotByWilaya = (wilaya) => {
+  const getDepotByWilaya = useCallback((wilaya) => {
     return depots.find((depot) => depot.wilaya.toLowerCase() === wilaya.toLowerCase());
-  };
+  }, [depots]);
 
-  const validateForm = () => {
+  // Validation mémoïsée
+  const validateForm = useCallback(() => {
     const newErrors = {};
 
     if (!formData.nomClient.trim()) {
@@ -1080,7 +160,6 @@ const AjouterClientForm = ({ onSubmit }) => {
       newErrors.email = "L'email n'est pas valide.";
     }
 
-    const wilaya = extractWilayaFromAddress(formData.adress);
     if (!formData.adress.trim()) {
       newErrors.adress = "L'adresse est requise.";
     } 
@@ -1097,159 +176,320 @@ const AjouterClientForm = ({ onSubmit }) => {
       }
     }
 
-    setErrors(newErrors);
+    setErreurs(newErrors);
     return Object.keys(newErrors).length === 0;
-  };
+  }, [formData]);
 
-  const handleChange = (e) => {
+  // Gestion des changements optimisée
+  const handleChange = useCallback((e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
+    setFormData(prev => ({
       ...prev,
       [name]: value,
     }));
-  };
+    
+    if (erreurs[name]) {
+      setErreurs(prev => ({ ...prev, [name]: "" }));
+    }
+  }, [erreurs]);
 
-  const handleSubmit = (e) => {
+  // Soumission du formulaire
+  const handleSubmit = useCallback(async (e) => {
     e.preventDefault();
-    if (!validateForm()) return;
-    onSubmit(formData);
-    setMessage("✅ Client ajouté avec succès !");
-    setFormData({
-      nomClient: "",
-      email: "",
-      adress: "",
-      tel: "",
-      telType: "cellulaire",
-      codeDepot: "",
-    });
-    setErrors({});
-  };
+    setErrorMessage("");
+    setMessage("");
+    setIsSubmitting(true);
 
-  const handleFileUpload = (e) => {
+    if (validateForm()) {
+      try {
+        await onSubmit(formData);
+        
+        setShowSuccess(true);
+        setErreurs({});
+        setFormData(initialFormData);
+        
+        setTimeout(() => setShowSuccess(false), 3000);
+      } catch (error) {
+        if (error.response?.data) {
+          const { message, erreurs } = error.response.data;
+          setErrorMessage(message || "Une erreur est survenue.");
+          setErreurs(erreurs || {});
+        } else {
+          setErrorMessage("Une erreur réseau est survenue.");
+        }
+      }
+    }
+    setIsSubmitting(false);
+  }, [formData, initialFormData, onSubmit, validateForm]);
+
+  // Gestion du fichier Excel
+  const handleFileUpload = useCallback((e) => {
     const file = e.target.files[0];
     if (!file) return;
 
     const reader = new FileReader();
-    reader.onload = (evt) => {
-      const bstr = evt.target.result;
-      const workbook = XLSX.read(bstr, { type: "binary" });
-      const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-      const data = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+    reader.onload = (event) => {
+      const data = new Uint8Array(event.target.result);
+      const workbook = XLSX.read(data, { type: "array" });
+      const firstSheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[firstSheetName];
+      const jsonData = XLSX.utils.sheet_to_json(worksheet, { defval: "" });
 
-      // Traitement des lignes du fichier Excel
-      data.slice(1).forEach((row) => {
-        const [nomClient, email, adress, tel, telType] = row;
-        const wilaya = extractWilayaFromAddress(adress || "");
-        const depot = getDepotByWilaya(wilaya);
-
-        if (nomClient && email && adress && tel) {
-          const clientData = {
-            nomClient,
-            email,
-            adress,
-            tel,
-            telType: telType || "cellulaire",
-            codeDepot: depot ? depot.codeDepot : "",
-          };
-          onSubmit(clientData);
-        }
-      });
-
-      setMessage("✅ Importation depuis Excel réussie !");
+      onSubmit({
+        clients: jsonData.map((row) => ({
+          nomClient: row.nomClient || "",
+          email: row.email || "",
+          adress: row.adress || "",
+          tel: row.tel || "",
+          telType: row.telType || "cellulaire",
+          codeDepot: row.codeDepot || "",
+        })),
+      })
+        .then(() => {
+          setMessage(`${jsonData.length} clients importés avec succès.`);
+          setErreurs({});
+        })
+        .catch((error) => {
+          setMessage("");
+          if (error.response?.data?.erreurs) {
+            setErreurs(error.response.data.erreurs);
+          } else {
+            setErrorMessage("Erreur lors de l'importation.");
+          }
+        });
     };
-    reader.readAsBinaryString(file);
-  };
+    reader.readAsArrayBuffer(file);
+  }, [onSubmit]);
+
+  // Bouton réutilisable
+  const Button = React.memo(({ variant = "primary", className = "", children, ...props }) => {
+    const baseClasses = "px-6 py-3 rounded-xl font-medium transition-all duration-200 flex items-center justify-center space-x-2 transform hover:scale-105 active:scale-95";
+    const variants = {
+      primary: "bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 shadow-lg hover:shadow-xl",
+      secondary: "bg-white text-gray-700 border-2 border-gray-200 hover:border-gray-300 hover:bg-gray-50",
+      upload: "bg-gradient-to-r from-green-600 to-green-700 text-white hover:from-green-700 hover:to-green-800 shadow-lg hover:shadow-xl"
+    };
+    
+    return (
+      <button
+        className={`${baseClasses} ${variants[variant]} ${className}`}
+        {...props}
+      >
+        {children}
+      </button>
+    );
+  });
 
   return (
     <AdminLayout>
-      <div className="p-6 space-y-6">
-        <h2 className="text-2xl font-bold">Ajouter un client</h2>
-
-        <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4 max-w-3xl">
-          <div>
-          <label className="block text-sm font-medium text-gray-700">Nom du client</label>
-            <Input name="nomClient" placeholder="Nom Client" value={formData.nomClient} onChange={handleChange} />
-            {errors.nomClient && <p className="text-red-500 text-sm">{errors.nomClient}</p>}
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50 p-4">
+        <div className="max-w-4xl mx-auto">
+          {/* Header */}
+          <div className="text-center mb-8">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-600 to-blue-700 rounded-2xl mb-4 shadow-lg">
+              <User className="w-8 h-8 text-white" />
+            </div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Ajouter un client</h1>
+            <p className="text-gray-600">Créez un nouveau compte client pour votre organisation</p>
           </div>
 
-          <div>
-          <label className="block text-sm font-medium text-gray-700">Email</label>
-            <Input type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} />
-            {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
+          {/* Success Message */}
+          {showSuccess && (
+            <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl animate-in slide-in-from-top-4 duration-300">
+              <div className="flex items-center text-green-800">
+                <Check className="w-5 h-5 mr-2" />
+                <span className="font-medium">Client créé avec succès !</span>
+              </div>
+            </div>
+          )}
+
+          {/* Main Form Card */}
+          <div className="bg-white rounded-2xl shadow-xl p-8 mb-6 border border-gray-100">
+            <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
+              {/* Personal Info Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <InputField
+                  key="nomClient-field"
+                  icon={User}
+                  label="Nom du client"
+                  name="nomClient"
+                  placeholder="Nom du client"
+                  value={formData.nomClient}
+                  onChange={handleChange}
+                  error={erreurs.nomClient}
+                  required
+                />
+                
+                <InputField
+                  key="email-field"
+                  icon={Mail}
+                  label="Email"
+                  type="email"
+                  name="email"
+                  placeholder="Adresse email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  error={erreurs.email}
+                  required
+                />
+              </div>
+
+              {/* Contact Info */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <InputField
+                  key="adress-field"
+                  icon={MapPin}
+                  label="Adresse"
+                  name="adress"
+                  placeholder="Adresse complète"
+                  value={formData.adress}
+                  onChange={handleChange}
+                  error={erreurs.adress}
+                  required
+                />
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <SelectField
+                    key="telType-field"
+                    icon={Phone}
+                    label="Type de téléphone"
+                    name="telType"
+                    value={formData.telType}
+                    onChange={handleChange}
+                  >
+                    <option value="cellulaire">Cellulaire</option>
+                    <option value="fixe">Fixe</option>
+                  </SelectField>
+                  
+                  <InputField
+                    key="tel-field"
+                    icon={Phone}
+                    label="Numéro de téléphone"
+                    name="tel"
+                    placeholder="Numéro de téléphone"
+                    value={formData.tel}
+                    onChange={handleChange}
+                    error={erreurs.tel}
+                    required
+                  />
+                </div>
+              </div>
+
+              {/* Depot Selection */}
+              <SelectField
+                key="codeDepot-field"
+                icon={Truck}
+                label="Dépôt associé"
+                name="codeDepot"
+                value={formData.codeDepot}
+                onChange={handleChange}
+                error={erreurs.codeDepot}
+              >
+                <option value="">Sélectionner un dépôt</option>
+                {depots.map((depot) => (
+                  <option key={depot.codeDepot} value={depot.codeDepot}>
+                    {depot.nomDepot} - {depot.wilaya}
+                  </option>
+                ))}
+              </SelectField>
+
+              {/* Submit Button */}
+              <div className="pt-4">
+                <Button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      <span>Enregistrement...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Check className="w-5 h-5" />
+                      <span>Enregistrer le client</span>
+                    </>
+                  )}
+                </Button>
+              </div>
+            </form>
           </div>
 
-          <div>
-          <label className="block text-sm font-medium text-gray-700">Adress</label>
-            <Input name="adress" placeholder="Adresse" value={formData.adress} onChange={handleChange} />
-            {errors.adress && <p className="text-red-500 text-sm">{errors.adress}</p>}
+          {/* Action Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Import Excel Card */}
+            <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100 hover:shadow-xl transition-all duration-200 hover:scale-105">
+              <div className="flex items-center mb-4">
+                <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mr-4">
+                  <Upload className="w-6 h-6 text-green-600" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-gray-900">Import Excel</h3>
+                  <p className="text-sm text-gray-600">Importez plusieurs clients</p>
+                </div>
+              </div>
+              <Button 
+                variant="upload" 
+                className="w-full"
+                onClick={() => document.getElementById("excelInput").click()}
+              >
+                <Upload className="w-5 h-5" />
+                <span>Choisir un fichier Excel</span>
+              </Button>
+              <input
+                type="file"
+                id="excelInput"
+                accept=".xlsx, .xls"
+                onChange={handleFileUpload}
+                className="hidden"
+              />
+            </div>
+
+            {/* View Clients Card */}
+            <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100 hover:shadow-xl transition-all duration-200 hover:scale-105">
+              <div className="flex items-center mb-4">
+                <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mr-4">
+                  <Users className="w-6 h-6 text-blue-600" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-gray-900">Gérer les clients</h3>
+                  <p className="text-sm text-gray-600">Voir tous les clients</p>
+                </div>
+              </div>
+              <Button 
+                variant="secondary" 
+                className="w-full"
+                onClick={() => navigate("/clients")}
+              >
+                <Users className="w-5 h-5" />
+                <span>Afficher les clients</span>
+              </Button>
+            </div>
           </div>
 
-          
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Type de téléphone</label>
-            <select
-              name="telType"
-              value={formData.telType}
-              onChange={handleChange}
-              className="mt-1 block w-full h-10 rounded-md border-gray-300 shadow-sm"
-            >
-              <option value="cellulaire">Cellulaire</option>
-              <option value="fixe">Fixe</option>
-            </select>
-          </div>
+          {/* Messages */}
+          {message && (
+            <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-xl animate-in slide-in-from-top-4 duration-300">
+              <div className="flex items-center text-blue-800">
+                <Check className="w-5 h-5 mr-2" />
+                <span>{message}</span>
+              </div>
+            </div>
+          )}
 
-          <div>
-          <label className="block text-sm font-medium text-gray-700">Numero de téléphone</label>
-            <Input name="tel" placeholder="Numéro de téléphone" value={formData.tel} onChange={handleChange} />
-            {errors.tel && <p className="text-red-500 text-sm">{errors.tel}</p>}
-          </div>
-
-
-          <div className="col-span-2">
-            <label htmlFor="codeDepot" className="block text-sm font-medium text-gray-700">
-              Sélectionner le dépôt
-            </label>
-            <select
-              name="codeDepot"
-              id="codeDepot"
-              value={formData.codeDepot}
-              onChange={handleChange}
-              className="mt-1 block w-full h-12 rounded-md border-gray-300 shadow-sm"
-            >
-              <option value="">Sélectionnez un dépôt</option>
-              {depots.map((depot) => (
-                <option key={depot.codeDepot} value={depot.codeDepot}>
-                  {depot.nomDepot} - {depot.wilaya}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="col-span-2">
-            <Button type="submit">Enregistrer</Button>
-          </div>
-        </form>
-
-        <div className="flex items-center space-x-4 mt-4">
-          <Button onClick={() => document.getElementById("excelInput").click()}>
-            Importer depuis Excel
-          </Button>
-          <input
-            type="file"
-            id="excelInput"
-            accept=".xlsx, .xls"
-            onChange={handleFileUpload}
-            style={{ display: "none" }}
-          />
-          <Button variant="outline" onClick={() => navigate("/clients")}>
-            Afficher les clients
-          </Button>
+          {errorMessage && (
+            <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-xl animate-in slide-in-from-top-4 duration-300">
+              <div className="flex items-center text-red-800">
+                <AlertCircle className="w-5 h-5 mr-2" />
+                <span>{errorMessage}</span>
+              </div>
+            </div>
+          )}
         </div>
-
-        {message && <p className="text-green-600 mt-4">{message}</p>}
       </div>
     </AdminLayout>
   );
-};
+});
 
 export default AjouterClientForm;

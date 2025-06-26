@@ -4,6 +4,9 @@ const utilisateurController = require("../controllers/utilisateurController");
 const multer = require("multer");
 const path = require("path");
 const upload = multer({ dest: "uploads/" });
+const verifyToken = require("../middleware/authMiddleware");
+
+router.get("/profil", verifyToken, utilisateurController.getProfil);
 
 
 router.post("/import-excel", upload.single("file"), utilisateurController.importerDepuisExcel);

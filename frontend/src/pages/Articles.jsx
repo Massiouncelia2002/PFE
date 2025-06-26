@@ -1,182 +1,14 @@
 // import React, { useState, useEffect } from "react";
 // import axios from "axios";
 // import AdminLayout from "./AdminLayout";
-// import { Button } from "../components/ui/Button";
-// import Input from "../components/ui/Input";
-// import Select from "react-select";
-// import { useNavigate } from "react-router-dom"; 
-
-// const Articles = () => {
-//   const navigate = useNavigate(); 
-//   const [articles, setArticles] = useState([]);
-//   const [formData, setFormData] = useState({
-//     codeArticle: "",
-//     designation: "",
-//     statut: true, 
-//     um: "",
-//     codeFamille: "",
-//     codeSousFamille: "",
-//   });
-//   const [familles, setFamilles] = useState([]);
-//   const [selectedFamille, setSelectedFamille] = useState(null);
-//   const [filteredSousFamilles, setFilteredSousFamilles] = useState([]);
-//   const [selectedSousFamille, setSelectedSousFamille] = useState(null);
-
-
-//   const fetchArticles = async () => {
-//     try {
-//       const res = await axios.get("http://localhost:5000/api/articles");
-//       setArticles(res.data);
-//     } catch (error) {
-//       console.error("Erreur fetch articles", error);
-//     }
-//   };
-
-
-//   const fetchFamilles = async () => {
-//     try {
-//       const res = await axios.get("http://localhost:5000/api/familles/with-sous-familles");
-//       const famillesFormatted = res.data.map((f) => ({
-//         value: f.codeFamille,
-//         label: f.nomFamille,
-//         sousFamilles: f.SousFamilles.map((sf) => ({
-//           value: sf.codeSousFamille,
-//           label: sf.nomSousFamille,
-//         })),
-//       }));
-//       setFamilles(famillesFormatted);
-//     } catch (error) {
-//       console.error("Erreur récupération familles :", error);
-//     }
-//   };
-
-//   useEffect(() => {
-//     fetchFamilles();
-//   }, []);
-
-//   const handleChange = (e) => {
-//     setFormData({ ...formData, [e.target.name]: e.target.value });
-//   };
-
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-//     const data = {
-//       ...formData,
-//       codeFamille: selectedFamille?.value,
-//       codeSousFamille: selectedSousFamille?.value,
-//     };
-//     try {
-//       await axios.post("http://localhost:5000/api/articles", data);
-//       setFormData({
-//         codeArticle: "",
-//         designation: "",
-//         statut: true, 
-//         um: "",
-//         codeFamille: "",
-//         codeSousFamille: "",
-//       });
-//       setSelectedFamille(null);
-//       setSelectedSousFamille(null);
-//       navigate("/liste-articles"); 
-//     } catch (error) {
-//       console.error("Erreur ajout article", error);
-//     }
-//   };
-
-//   return (
-//     <AdminLayout>
-//       <div className="p-6 space-y-6">
-//         <h2 className="text-2xl font-bold">Ajouter un article</h2>
-//         <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4 max-w-2xl">
-//           <Input name="codeArticle" placeholder="Code" value={formData.codeArticle} onChange={handleChange} />
-//           <Input name="designation" placeholder="Désignation" value={formData.designation} onChange={handleChange} />
-          
-//           {/* Sélectionner le statut */}
-//           <div>
-//             <select
-//               name="statut"
-//               value={formData.statut}
-//               onChange={handleChange}
-//               className="w-full p-2 border border-gray-300 rounded-md"
-//             >
-//               <option value={true}>Actif</option>
-//               <option value={false}>Inactif</option>
-//             </select>
-//           </div>
-
-//           <Input name="um" placeholder="Unité" value={formData.um} onChange={handleChange} />
-
-//           {/* Sélectionner la famille */}
-//           <div>
-//             <Select
-//               options={familles}
-//               value={selectedFamille}
-//               onChange={(option) => {
-//                 setSelectedFamille(option);
-//                 setFilteredSousFamilles(option?.sousFamilles || []);
-//               }}
-//               placeholder="🔍 Rechercher une famille..."
-//               isClearable
-//             />
-//           </div>
-
-         
-//           <div>
-//             <Select
-//               options={filteredSousFamilles}
-//               value={selectedSousFamille}
-//               onChange={(option) => setSelectedSousFamille(option)}
-//               placeholder="🔍 Rechercher une sous-famille..."
-//               isDisabled={!selectedFamille}
-//               isClearable
-//             />
-//           </div>
-
-//           <div className="col-span-2">
-//             <Button type="submit">Ajouter</Button>
-            
-//           </div>
-//           <div>
-//           <Button onClick={() => navigate("/liste-articles")} className="bg-blue-500 text-white">
-//             Liste d'articles
-//           </Button>
-//           </div>
-           
-           
-//         </form>
-//       </div>
-//     </AdminLayout>
-//   );
-// };
-
-// export default Articles;
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import React, { useState, useEffect } from "react";
-// import axios from "axios";
-// import AdminLayout from "./AdminLayout";
-// import { Button } from "../components/ui/Button";
-// import Input from "../components/ui/Input";
 // import Select from "react-select";
 // import { useNavigate } from "react-router-dom";
+// import { Box, Search, List, Check, AlertCircle, Plus } from "lucide-react";
 
 // const Articles = () => {
 //   const navigate = useNavigate();
 //   const [formData, setFormData] = useState({
 //     designation: "",
-//     statut: true,
-//     um: "",
 //     codeFamille: "",
 //     codeSousFamille: "",
 //   });
@@ -185,6 +17,83 @@
 //   const [selectedFamille, setSelectedFamille] = useState(null);
 //   const [filteredSousFamilles, setFilteredSousFamilles] = useState([]);
 //   const [selectedSousFamille, setSelectedSousFamille] = useState(null);
+//   const [errors, setErrors] = useState({});
+//   const [message, setMessage] = useState("");
+//   const [errorMessage, setErrorMessage] = useState("");
+//   const [isSubmitting, setIsSubmitting] = useState(false);
+//   const [showSuccess, setShowSuccess] = useState(false);
+
+//   const InputField = ({ icon: Icon, error, label, className = "", ...props }) => (
+//     <div className="relative group">
+//       <label className="block text-sm font-medium text-gray-700 mb-1">
+//         <Icon className="inline mr-2 w-4 h-4" />
+//         {label}
+//       </label>
+//       <div className="relative">
+//         <input
+//           {...props}
+//           className={`w-full pl-4 pr-4 py-3 bg-white border border-gray-200 rounded-xl text-gray-900 placeholder-gray-500 
+//             focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
+//             hover:border-gray-300 transition-all duration-200 ${error ? 'border-red-500 focus:ring-red-500' : ''} ${className}`}
+//         />
+//       </div>
+//       {error && (
+//         <div className="flex items-center mt-2 text-red-500 text-sm animate-in slide-in-from-top-2 duration-200">
+//           <AlertCircle className="w-4 h-4 mr-1" />
+//           {error}
+//         </div>
+//       )}
+//     </div>
+//   );
+
+//   const SelectField = ({ icon: Icon, error, label, children, ...props }) => (
+//     <div className="relative group">
+//       <label className="block text-sm font-medium text-gray-700 mb-1">
+//         <Icon className="inline mr-2 w-4 h-4" />
+//         {label}
+//       </label>
+//       <div className="relative">
+//         <select
+//           {...props}
+//           className={`w-full pl-4 pr-4 py-3 bg-white border border-gray-200 rounded-xl text-gray-900 
+//             focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
+//             hover:border-gray-300 transition-all duration-200 appearance-none cursor-pointer
+//             ${error ? 'border-red-500 focus:ring-red-500' : ''}`}
+//         >
+//           {children}
+//         </select>
+//         <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+//           <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+//             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+//           </svg>
+//         </div>
+//       </div>
+//       {error && (
+//         <div className="flex items-center mt-2 text-red-500 text-sm animate-in slide-in-from-top-2 duration-200">
+//           <AlertCircle className="w-4 h-4 mr-1" />
+//           {error}
+//         </div>
+//       )}
+//     </div>
+//   );
+
+//   const Button = ({ variant = "primary", className = "", children, ...props }) => {
+//     const baseClasses = "px-6 py-3 rounded-xl font-medium transition-all duration-200 flex items-center justify-center space-x-2 transform hover:scale-105 active:scale-95";
+//     const variants = {
+//       primary: "bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 shadow-lg hover:shadow-xl",
+//       secondary: "bg-white text-gray-700 border-2 border-gray-200 hover:border-gray-300 hover:bg-gray-50",
+//       upload: "bg-gradient-to-r from-green-600 to-green-700 text-white hover:from-green-700 hover:to-green-800 shadow-lg hover:shadow-xl"
+//     };
+    
+//     return (
+//       <button
+//         className={`${baseClasses} ${variants[variant]} ${className}`}
+//         {...props}
+//       >
+//         {children}
+//       </button>
+//     );
+//   };
 
 //   const fetchFamilles = async () => {
 //     try {
@@ -200,6 +109,7 @@
 //       setFamilles(famillesFormatted);
 //     } catch (error) {
 //       console.error("Erreur récupération familles :", error);
+//       setErrorMessage("Erreur lors du chargement des familles");
 //     }
 //   };
 
@@ -209,87 +119,225 @@
 
 //   const handleChange = (e) => {
 //     setFormData({ ...formData, [e.target.name]: e.target.value });
+//     if (errors[e.target.name]) {
+//       setErrors(prev => ({ ...prev, [e.target.name]: "" }));
+//     }
+//   };
+
+//   const validateForm = () => {
+//     const newErrors = {};
+    
+//     if (!formData.designation) {
+//       newErrors.designation = "La désignation est requise.";
+//     } else if (!isNaN(formData.designation)) {
+//       newErrors.designation = "La désignation ne peut pas être uniquement des chiffres.";
+//     }
+
+//     if (!selectedFamille) {
+//       newErrors.codeFamille = "La famille est requise.";
+//     }
+
+//     if (!selectedSousFamille) {
+//       newErrors.codeSousFamille = "La sous-famille est requise.";
+//     }
+
+//     return newErrors;
 //   };
 
 //   const handleSubmit = async (e) => {
 //     e.preventDefault();
+//     setErrorMessage("");
+//     setMessage("");
+//     setIsSubmitting(true);
+
+//     const validationErrors = validateForm();
+//     if (Object.keys(validationErrors).length > 0) {
+//       setErrors(validationErrors);
+//       setIsSubmitting(false);
+//       return;
+//     }
+
 //     const data = {
 //       ...formData,
 //       codeFamille: selectedFamille?.value,
 //       codeSousFamille: selectedSousFamille?.value,
 //     };
+
 //     try {
 //       await axios.post("http://localhost:5000/api/articles", data);
+//       setShowSuccess(true);
 //       setFormData({
 //         designation: "",
-//         statut: true,
-//         um: "",
 //         codeFamille: "",
 //         codeSousFamille: "",
 //       });
 //       setSelectedFamille(null);
 //       setSelectedSousFamille(null);
-//       navigate("/liste-articles");
+//       setErrors({});
+//       setTimeout(() => setShowSuccess(false), 3000);
 //     } catch (error) {
 //       console.error("Erreur ajout article", error);
+//       setErrorMessage("Erreur lors de l'ajout de l'article");
+//     } finally {
+//       setIsSubmitting(false);
 //     }
 //   };
 
 //   return (
 //     <AdminLayout>
-//       <div className="p-6 space-y-6">
-//         <h2 className="text-2xl font-bold">Ajouter un article</h2>
-//         <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4 max-w-2xl">
-//           <Input name="designation" placeholder="Désignation" value={formData.designation} onChange={handleChange} />
-          
-//           <div>
-//             <select
-//               name="statut"
-//               value={formData.statut}
-//               onChange={handleChange}
-//               className="w-full p-2 border border-gray-300 rounded-md"
+//       <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50 p-4">
+//         <div className="max-w-4xl mx-auto">
+//           {/* Header */}
+//           <div className="text-center mb-8">
+//             <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-600 to-blue-700 rounded-2xl mb-4 shadow-lg">
+//               <Box className="w-8 h-8 text-white" />
+//             </div>
+//             <h1 className="text-3xl font-bold text-gray-900 mb-2">Ajouter un article</h1>
+//             <p className="text-gray-600">Créez un nouvel article pour votre catalogue</p>
+//           </div>
+
+//           {/* Success Message */}
+//           {showSuccess && (
+//             <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl animate-in slide-in-from-top-4 duration-300">
+//               <div className="flex items-center text-green-800">
+//                 <Check className="w-5 h-5 mr-2" />
+//                 <span className="font-medium">Article ajouté avec succès !</span>
+//               </div>
+//             </div>
+//           )}
+
+//           {/* Main Form Card */}
+//           <div className="bg-white rounded-2xl shadow-xl p-8 mb-6 border border-gray-100">
+//             <div className="space-y-6">
+//               {/* Article Info */}
+//               <div className="grid grid-cols-1 gap-6">
+//                 <InputField
+//                   icon={Box}
+//                   label="Désignation"
+//                   name="designation"
+//                   placeholder="Nom de l'article"
+//                   value={formData.designation}
+//                   onChange={handleChange}
+//                   error={errors.designation}
+//                   required
+//                 />
+//               </div>
+
+//               {/* Famille et Sous-famille */}
+//               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+//                 <div className="relative group">
+//                   <label className="block text-sm font-medium text-gray-700 mb-1">
+//                     <Search className="inline mr-2 w-4 h-4" />
+//                     Famille
+//                   </label>
+//                   <Select
+//                     options={familles}
+//                     value={selectedFamille}
+//                     onChange={(option) => {
+//                       setSelectedFamille(option);
+//                       setFilteredSousFamilles(option?.sousFamilles || []);
+//                       setSelectedSousFamille(null);
+//                     }}
+//                     placeholder="Rechercher une famille..."
+//                     isClearable
+//                     className={`react-select-container ${errors.codeFamille ? 'border-red-500' : ''}`}
+//                     classNamePrefix="react-select"
+//                   />
+//                   {errors.codeFamille && (
+//                     <div className="flex items-center mt-2 text-red-500 text-sm animate-in slide-in-from-top-2 duration-200">
+//                       <AlertCircle className="w-4 h-4 mr-1" />
+//                       {errors.codeFamille}
+//                     </div>
+//                   )}
+//                 </div>
+
+//                 <div className="relative group">
+//                   <label className="block text-sm font-medium text-gray-700 mb-1">
+//                     <Search className="inline mr-2 w-4 h-4" />
+//                     Sous-famille
+//                   </label>
+//                   <Select
+//                     options={filteredSousFamilles}
+//                     value={selectedSousFamille}
+//                     onChange={(option) => setSelectedSousFamille(option)}
+//                     placeholder="Rechercher une sous-famille..."
+//                     isDisabled={!selectedFamille}
+//                     isClearable
+//                     className={`react-select-container ${errors.codeSousFamille ? 'border-red-500' : ''}`}
+//                     classNamePrefix="react-select"
+//                   />
+//                   {errors.codeSousFamille && (
+//                     <div className="flex items-center mt-2 text-red-500 text-sm animate-in slide-in-from-top-2 duration-200">
+//                       <AlertCircle className="w-4 h-4 mr-1" />
+//                       {errors.codeSousFamille}
+//                     </div>
+//                   )}
+//                 </div>
+//               </div>
+
+//               {/* Submit Button */}
+//               <div className="pt-4">
+//                 <Button
+//                   onClick={handleSubmit}
+//                   disabled={isSubmitting}
+//                   className="w-full"
+//                 >
+//                   {isSubmitting ? (
+//                     <>
+//                       <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+//                       <span>Enregistrement...</span>
+//                     </>
+//                   ) : (
+//                     <>
+//                       <Plus className="w-5 h-5" />
+//                       <span>Ajouter l'article</span>
+//                     </>
+//                   )}
+//                 </Button>
+//               </div>
+//             </div>
+//           </div>
+
+//           {/* Action Card */}
+//           <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100 hover:shadow-xl transition-all duration-200 hover:scale-105">
+//             <div className="flex items-center mb-4">
+//               <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mr-4">
+//                 <List className="w-6 h-6 text-blue-600" />
+//               </div>
+//               <div>
+//                 <h3 className="font-semibold text-gray-900">Gérer les articles</h3>
+//                 <p className="text-sm text-gray-600">Voir tous les articles</p>
+//               </div>
+//             </div>
+//             <Button 
+//               variant="secondary" 
+//               className="w-full"
+//               onClick={() => navigate("/liste-articles")}
 //             >
-//               <option value={true}>Actif</option>
-//               <option value={false}>Inactif</option>
-//             </select>
-//           </div>
-
-//           <Input name="um" placeholder="Unité" value={formData.um} onChange={handleChange} />
-
-//           <div>
-//             <Select
-//               options={familles}
-//               value={selectedFamille}
-//               onChange={(option) => {
-//                 setSelectedFamille(option);
-//                 setFilteredSousFamilles(option?.sousFamilles || []);
-//               }}
-//               placeholder="🔍 Rechercher une famille..."
-//               isClearable
-//             />
-//           </div>
-
-//           <div>
-//             <Select
-//               options={filteredSousFamilles}
-//               value={selectedSousFamille}
-//               onChange={(option) => setSelectedSousFamille(option)}
-//               placeholder="🔍 Rechercher une sous-famille..."
-//               isDisabled={!selectedFamille}
-//               isClearable
-//             />
-//           </div>
-
-//           <div className="col-span-2">
-//             <Button type="submit">Ajouter</Button>
-//           </div>
-
-//           <div>
-//             <Button onClick={() => navigate("/liste-articles")} className="bg-blue-500 text-white">
-//               Liste d'articles
+//               <List className="w-5 h-5" />
+//               <span>Afficher les articles</span>
 //             </Button>
 //           </div>
-//         </form>
+
+//           {/* Messages */}
+//           {message && (
+//             <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-xl animate-in slide-in-from-top-4 duration-300">
+//               <div className="flex items-center text-blue-800">
+//                 <Check className="w-5 h-5 mr-2" />
+//                 <span>{message}</span>
+//               </div>
+//             </div>
+//           )}
+
+//           {errorMessage && (
+//             <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-xl animate-in slide-in-from-top-4 duration-300">
+//               <div className="flex items-center text-red-800">
+//                 <AlertCircle className="w-5 h-5 mr-2" />
+//                 <span>{errorMessage}</span>
+//               </div>
+//             </div>
+//           )}
+//         </div>
 //       </div>
 //     </AdminLayout>
 //   );
@@ -298,38 +346,91 @@
 // export default Articles;
 
 
-
-
-
-
-
-
-
-
-
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import axios from "axios";
 import AdminLayout from "./AdminLayout";
-import { Button } from "../components/ui/Button";
-import Input from "../components/ui/Input";
 import Select from "react-select";
 import { useNavigate } from "react-router-dom";
+import { Box, Search, List, Check, AlertCircle, Plus } from "lucide-react";
+
+// Composant InputField optimisé
+const InputField = React.memo(({ icon: Icon, error, label, className = "", ...props }) => {
+  const inputRef = React.useRef(null);
+  
+  React.useEffect(() => {
+    if (error && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [error]);
+
+  return (
+    <div className="relative group">
+      <label className="block text-sm font-medium text-gray-700 mb-1">
+        <Icon className="inline mr-2 w-4 h-4" />
+        {label}
+      </label>
+      <div className="relative">
+        <input
+          ref={inputRef}
+          {...props}
+          autoComplete="new-password"
+          className={`w-full pl-4 pr-4 py-3 bg-white border border-gray-200 rounded-xl text-gray-900 placeholder-gray-500 
+            focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
+            hover:border-gray-300 transition-all duration-200 ${error ? 'border-red-500 focus:ring-red-500' : ''} ${className}`}
+        />
+      </div>
+      {error && (
+        <div className="flex items-center mt-2 text-red-500 text-sm animate-in slide-in-from-top-2 duration-200">
+          <AlertCircle className="w-4 h-4 mr-1" />
+          {error}
+        </div>
+      )}
+    </div>
+  );
+});
+
+// Composant Button optimisé
+const Button = React.memo(({ variant = "primary", className = "", children, ...props }) => {
+  const baseClasses = "px-6 py-3 rounded-xl font-medium transition-all duration-200 flex items-center justify-center space-x-2 transform hover:scale-105 active:scale-95";
+  const variants = {
+    primary: "bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 shadow-lg hover:shadow-xl",
+    secondary: "bg-white text-gray-700 border-2 border-gray-200 hover:border-gray-300 hover:bg-gray-50",
+    upload: "bg-gradient-to-r from-green-600 to-green-700 text-white hover:from-green-700 hover:to-green-800 shadow-lg hover:shadow-xl"
+  };
+  
+  return (
+    <button
+      className={`${baseClasses} ${variants[variant]} ${className}`}
+      {...props}
+    >
+      {children}
+    </button>
+  );
+});
 
 const Articles = () => {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
+  
+  // État initial mémoïsé
+  const initialFormData = useMemo(() => ({
     designation: "",
     codeFamille: "",
     codeSousFamille: "",
-  });
+  }), []);
 
+  const [formData, setFormData] = useState(initialFormData);
   const [familles, setFamilles] = useState([]);
   const [selectedFamille, setSelectedFamille] = useState(null);
   const [filteredSousFamilles, setFilteredSousFamilles] = useState([]);
   const [selectedSousFamille, setSelectedSousFamille] = useState(null);
   const [errors, setErrors] = useState({});
+  const [message, setMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
 
-  const fetchFamilles = async () => {
+  // Récupération des familles
+  const fetchFamilles = useCallback(async () => {
     try {
       const res = await axios.get("http://localhost:5000/api/familles/with-sous-familles");
       const famillesFormatted = res.data.map((f) => ({
@@ -343,56 +444,60 @@ const Articles = () => {
       setFamilles(famillesFormatted);
     } catch (error) {
       console.error("Erreur récupération familles :", error);
+      setErrorMessage("Erreur lors du chargement des familles");
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchFamilles();
-  }, []);
+  }, [fetchFamilles]);
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  // Gestion des changements optimisée
+  const handleChange = useCallback((e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value,
+    }));
+    
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: "" }));
+    }
+  }, [errors]);
 
-  // Validation des données du formulaire
-  const validateForm = () => {
+  // Validation mémoïsée
+  const validateForm = useCallback(() => {
     const newErrors = {};
     
-    // Vérification de la désignation
     if (!formData.designation) {
       newErrors.designation = "La désignation est requise.";
     } else if (!isNaN(formData.designation)) {
       newErrors.designation = "La désignation ne peut pas être uniquement des chiffres.";
     }
 
-    // // Vérification du statut
-    // if (!formData.statut) {
-    //   newErrors.statut = "Le statut est requis.";
-    // }
-
-    
-
-    // Vérification de la famille
     if (!selectedFamille) {
       newErrors.codeFamille = "La famille est requise.";
     }
 
-    // Vérification de la sous-famille
     if (!selectedSousFamille) {
       newErrors.codeSousFamille = "La sous-famille est requise.";
     }
 
     return newErrors;
-  };
+  }, [formData.designation, selectedFamille, selectedSousFamille]);
 
-  const handleSubmit = async (e) => {
+  // Soumission du formulaire
+  const handleSubmit = useCallback(async (e) => {
     e.preventDefault();
+    setErrorMessage("");
+    setMessage("");
+    setIsSubmitting(true);
 
-    // Validation du formulaire
     const validationErrors = validateForm();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
-      return; // Si des erreurs sont présentes, on arrête la soumission
+      setIsSubmitting(false);
+      return;
     }
 
     const data = {
@@ -403,90 +508,197 @@ const Articles = () => {
 
     try {
       await axios.post("http://localhost:5000/api/articles", data);
-      setFormData({
-        designation: "",
-        statut: true,
-        codeFamille: "",
-        codeSousFamille: "",
-      });
+      setShowSuccess(true);
+      setFormData(initialFormData);
       setSelectedFamille(null);
       setSelectedSousFamille(null);
-      setErrors({}); // Réinitialiser les erreurs
-      navigate("/liste-articles");
+      setErrors({});
+      setTimeout(() => setShowSuccess(false), 3000);
     } catch (error) {
       console.error("Erreur ajout article", error);
+      setErrorMessage("Erreur lors de l'ajout de l'article");
+    } finally {
+      setIsSubmitting(false);
     }
-  };
+  }, [formData, initialFormData, selectedFamille, selectedSousFamille, validateForm]);
+
+  // Gestion de la sélection de famille
+  const handleFamilleChange = useCallback((option) => {
+    setSelectedFamille(option);
+    setFilteredSousFamilles(option?.sousFamilles || []);
+    setSelectedSousFamille(null);
+    
+    if (errors.codeFamille) {
+      setErrors(prev => ({ ...prev, codeFamille: "" }));
+    }
+  }, [errors.codeFamille]);
+
+  // Gestion de la sélection de sous-famille
+  const handleSousFamilleChange = useCallback((option) => {
+    setSelectedSousFamille(option);
+    
+    if (errors.codeSousFamille) {
+      setErrors(prev => ({ ...prev, codeSousFamille: "" }));
+    }
+  }, [errors.codeSousFamille]);
 
   return (
     <AdminLayout>
-      <div className="p-6 space-y-6">
-        <h2 className="text-2xl font-bold">Ajouter un article</h2>
-        <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4 max-w-2xl">
-          <div>
-            <Input
-              name="designation"
-              placeholder="Désignation"
-              value={formData.designation}
-              onChange={handleChange}
-            />
-            {errors.designation && <p style={{ color: "red" }}>{errors.designation}</p>}
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50 p-4">
+        <div className="max-w-4xl mx-auto">
+          {/* Header */}
+          <div className="text-center mb-8">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-600 to-blue-700 rounded-2xl mb-4 shadow-lg">
+              <Box className="w-8 h-8 text-white" />
+            </div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Ajouter un article</h1>
+            <p className="text-gray-600">Créez un nouvel article pour votre catalogue</p>
           </div>
-          
-          {/* <div>
-            <select
-              name="statut"
-              value={formData.statut}
-              onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded-md"
+
+          {/* Success Message */}
+          {showSuccess && (
+            <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl animate-in slide-in-from-top-4 duration-300">
+              <div className="flex items-center text-green-800">
+                <Check className="w-5 h-5 mr-2" />
+                <span className="font-medium">Article ajouté avec succès !</span>
+              </div>
+            </div>
+          )}
+
+          {/* Main Form Card */}
+          <div className="bg-white rounded-2xl shadow-xl p-8 mb-6 border border-gray-100">
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Article Info */}
+              <div className="grid grid-cols-1 gap-6">
+                <InputField
+                  key="designation-field"
+                  icon={Box}
+                  label="Désignation"
+                  name="designation"
+                  placeholder="Nom de l'article"
+                  value={formData.designation}
+                  onChange={handleChange}
+                  error={errors.designation}
+                  required
+                />
+              </div>
+
+              {/* Famille et Sous-famille */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="relative group">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <Search className="inline mr-2 w-4 h-4" />
+                    Famille
+                  </label>
+                  <Select
+                    key="famille-select"
+                    options={familles}
+                    value={selectedFamille}
+                    onChange={handleFamilleChange}
+                    placeholder="Rechercher une famille..."
+                    isClearable
+                    className={`react-select-container ${errors.codeFamille ? 'border-red-500' : ''}`}
+                    classNamePrefix="react-select"
+                  />
+                  {errors.codeFamille && (
+                    <div className="flex items-center mt-2 text-red-500 text-sm animate-in slide-in-from-top-2 duration-200">
+                      <AlertCircle className="w-4 h-4 mr-1" />
+                      {errors.codeFamille}
+                    </div>
+                  )}
+                </div>
+
+                <div className="relative group">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <Search className="inline mr-2 w-4 h-4" />
+                    Sous-famille
+                  </label>
+                  <Select
+                    key="sous-famille-select"
+                    options={filteredSousFamilles}
+                    value={selectedSousFamille}
+                    onChange={handleSousFamilleChange}
+                    placeholder="Rechercher une sous-famille..."
+                    isDisabled={!selectedFamille}
+                    isClearable
+                    className={`react-select-container ${errors.codeSousFamille ? 'border-red-500' : ''}`}
+                    classNamePrefix="react-select"
+                  />
+                  {errors.codeSousFamille && (
+                    <div className="flex items-center mt-2 text-red-500 text-sm animate-in slide-in-from-top-2 duration-200">
+                      <AlertCircle className="w-4 h-4 mr-1" />
+                      {errors.codeSousFamille}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Submit Button */}
+              <div className="pt-4">
+                <Button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      <span>Enregistrement...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Plus className="w-5 h-5" />
+                      <span>Ajouter l'article</span>
+                    </>
+                  )}
+                </Button>
+              </div>
+            </form>
+          </div>
+
+          {/* Action Card */}
+          <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100 hover:shadow-xl transition-all duration-200 hover:scale-105">
+            <div className="flex items-center mb-4">
+              <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mr-4">
+                <List className="w-6 h-6 text-blue-600" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-gray-900">Gérer les articles</h3>
+                <p className="text-sm text-gray-600">Voir tous les articles</p>
+              </div>
+            </div>
+            <Button 
+              variant="secondary" 
+              className="w-full"
+              onClick={() => navigate("/liste-articles")}
             >
-              <option value={true}>Actif</option>
-              <option value={false}>Inactif</option>
-            </select>
-            {errors.statut && <p style={{ color: "red" }}>{errors.statut}</p>}
-          </div> */}
-
-          
-
-          <div>
-            <Select
-              options={familles}
-              value={selectedFamille}
-              onChange={(option) => {
-                setSelectedFamille(option);
-                setFilteredSousFamilles(option?.sousFamilles || []);
-              }}
-              placeholder="🔍 Rechercher une famille..."
-              isClearable
-            />
-            {errors.codeFamille && <p style={{ color: "red" }}>{errors.codeFamille}</p>}
-          </div>
-
-          <div>
-            <Select
-              options={filteredSousFamilles}
-              value={selectedSousFamille}
-              onChange={(option) => setSelectedSousFamille(option)}
-              placeholder="🔍 Rechercher une sous-famille..."
-              isDisabled={!selectedFamille}
-              isClearable
-            />
-            {errors.codeSousFamille && <p style={{ color: "red" }}>{errors.codeSousFamille}</p>}
-          </div>
-
-          <div className="col-span-2">
-            <Button type="submit">Ajouter</Button>
-          </div>
-
-          <div>
-            <Button onClick={() => navigate("/liste-articles")} className="bg-blue-500 text-white">
-              Liste d'articles
+              <List className="w-5 h-5" />
+              <span>Afficher les articles</span>
             </Button>
           </div>
-        </form>
+
+          {/* Messages */}
+          {message && (
+            <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-xl animate-in slide-in-from-top-4 duration-300">
+              <div className="flex items-center text-blue-800">
+                <Check className="w-5 h-5 mr-2" />
+                <span>{message}</span>
+              </div>
+            </div>
+          )}
+
+          {errorMessage && (
+            <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-xl animate-in slide-in-from-top-4 duration-300">
+              <div className="flex items-center text-red-800">
+                <AlertCircle className="w-5 h-5 mr-2" />
+                <span>{errorMessage}</span>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </AdminLayout>
   );
 };
 
-export default Articles;
+export default React.memo(Articles);

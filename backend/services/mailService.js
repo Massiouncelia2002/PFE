@@ -40,7 +40,7 @@ Votre compte a été créé avec succès.
 
 Voici vos identifiants de connexion :
 - Email : ${email}
-- Mot de passe temporaire : ${mdpTemporaire}
+- Mot de passe permanent : ${mdpTemporaire}
 
 Merci de vous connecter et de changer votre mot de passe dès que possible.
 
@@ -57,9 +57,10 @@ L'équipe CEVITAL
       <p>Voici vos identifiants de connexion :</p>
       <ul>
         <li><strong>Email :</strong> ${email}</li>
-        <li><strong>Mot de passe temporaire :</strong> ${mdpTemporaire}</li>
+        <li><strong>Mot de passe permanent :</strong> ${mdpTemporaire}</li>
       </ul>
-      <p>Veuillez vous connecter et changer votre mot de passe dès que possible.</p>
+      <p>Contactez l'admin système pour toute réinitialisation.</p>
+      <p>Modification directe désactivée (politique de sécurité).</p>
       <p style="margin-top: 20px; font-size: 13px; color: #555;">
         📩 Pour garantir la bonne réception de nos emails, ajoutez cette adresse à vos contacts :
         <strong>servicecomptescevital@gmail.com</strong>
