@@ -51,7 +51,15 @@ const Vehicule = sequelize.define("Vehicule", {
     type: DataTypes.ENUM('disponible', 'non_disponible'),
     allowNull: false,
     defaultValue: 'disponible'
-  }
+  },
+  codeDepot: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    references: {
+      model: "depots", // nom de la table liée
+      key: "codeDepot"
+    }
+    }
 }, {
   tableName: "vehicules",
   timestamps: false

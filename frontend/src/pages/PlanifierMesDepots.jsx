@@ -146,10 +146,14 @@
 // export default PlanifierMesDepots;
 
 
+
+
+
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { ChevronDown, Package, TrendingUp, AlertTriangle, CheckCircle, Calendar, BarChart3 } from "lucide-react";
+import AdminLayoutPlannificateur from './AdminLayoutPlannificateur'; 
 
 const PlanifierMesDepots = () => {
   const navigate = useNavigate();
@@ -207,6 +211,8 @@ const PlanifierMesDepots = () => {
     });
   };
 
+  
+
   const getStockStatus = (article) => {
     const ok = article.quantiteDemandeeTotale <= article.quantiteStockee;
     const isLowStock = article.quantiteStockee <= article.stockAlert;
@@ -229,6 +235,7 @@ const PlanifierMesDepots = () => {
   const articlesWarning = articles.filter(a => a.quantiteStockee <= a.stockAlert && a.quantiteDemandeeTotale <= a.quantiteStockee).length;
 
   return (
+    <AdminLayoutPlannificateur>
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
       {/* Header avec gradient */}
       <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-blue-700 shadow-2xl">
@@ -436,6 +443,7 @@ const PlanifierMesDepots = () => {
         )}
       </div>
     </div>
+    </AdminLayoutPlannificateur>
   );
 };
 

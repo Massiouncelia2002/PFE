@@ -241,16 +241,20 @@ const Sidebar = ({ isOpen = true, closeSidebar = () => {} }) => {
           name: 'Livraison',
           icon: Truck,
           children: [
-            { name: 'Afficher planification', to: '/liste-articles' },
-            { name: 'Gérer les documents', to: '/articles' },
+            { name: 'Consulter les commandes planifiees', to: '/AffichePlanificationAdmin' },
           ],
         },
          {
-                  name: 'Consulter les commandes planifiees',
-                  icon:  Layers,
-                  to: '/AffichePlanificationAdmin',
-                },
+             name: 'Gerer retours',
+             icon:  Layers,
+             to: '/GestionRetours',
+         },
         
+         {
+             name: 'consulter prediction',
+             icon:  Layers,
+             to: '/PrevisionsParUtilisateur',
+         },
         
         
       ],

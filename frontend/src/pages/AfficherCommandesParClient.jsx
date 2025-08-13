@@ -969,6 +969,7 @@ import {
   MapPin,
   Weight
 } from "lucide-react";
+import AdminLayoutPlannificateur from './AdminLayoutPlannificateur'; 
 
 const AfficherCommandesParClient = () => {
     const navigate = useNavigate();
@@ -1142,67 +1143,139 @@ const AfficherCommandesParClient = () => {
         }
     }, [vehicules]);
 
-    const getHeuresOccupees = (matricule, date, skipAffectation = null) => {
-        const heuresOccupees = new Set();
+    // const getHeuresOccupees = (matricule, date, skipAffectation = null) => {
+    //     const heuresOccupees = new Set();
 
-        commandesParClient.forEach(client => {
-            client.commandes.forEach(cmd => {
-                cmd.affectations.forEach(aff => {
-                    const currentKey = `${client.codeClient}-${cmd.codeArticle}-${cmd.affectations.indexOf(aff)}`;
-                    if (
-                        aff.matricule === matricule &&
-                        aff.datePrevue === date &&
-                        aff.heurePrevue &&
-                        aff.dureePrevue &&
-                        (!skipAffectation || skipAffectation !== currentKey)
-                    ) {
-                        const debut = parseInt(aff.heurePrevue.split(':')[0]);
-                        const fin = debut + parseInt(aff.dureePrevue);
-                        for (let h = debut; h < fin; h++) {
-                            heuresOccupees.add(`${h.toString().padStart(2, '0')}:00`);
-                        }
+    //     commandesParClient.forEach(client => {
+    //         client.commandes.forEach(cmd => {
+    //             cmd.affectations.forEach(aff => {
+    //                 const currentKey = `${client.codeClient}-${cmd.codeArticle}-${cmd.affectations.indexOf(aff)}`;
+    //                 if (
+    //                     aff.matricule === matricule &&
+    //                     aff.datePrevue === date &&
+    //                     aff.heurePrevue &&
+    //                     aff.dureePrevue &&
+    //                     (!skipAffectation || skipAffectation !== currentKey)
+    //                 ) {
+    //                     const debut = parseInt(aff.heurePrevue.split(':')[0]);
+    //                     const fin = debut + parseInt(aff.dureePrevue);
+    //                     for (let h = debut; h < fin; h++) {
+    //                         heuresOccupees.add(`${h.toString().padStart(2, '0')}:00`);
+    //                     }
+    //                 }
+    //             });
+    //         });
+    //     });
+
+
+    const getHeuresOccupees = (matricule, date, skipAffectation = null, codeClientRef = null) => {
+    const heuresOccupees = new Set();
+
+    commandesParClient.forEach(client => {
+        client.commandes.forEach(cmd => {
+            cmd.affectations.forEach((aff, idx) => {
+                const currentKey = `${client.codeClient}-${cmd.codeArticle}-${idx}`;
+
+                // 👉 Ne pas bloquer si c’est le même client
+                if (
+                    aff.matricule === matricule &&
+                    aff.datePrevue === date &&
+                    aff.heurePrevue &&
+                    aff.dureePrevue &&
+                    (!skipAffectation || skipAffectation !== currentKey) &&
+                    client.codeClient !== codeClientRef // << ignore si c’est le même client
+                ) {
+                    const debut = parseInt(aff.heurePrevue.split(':')[0]);
+                    const fin = debut + parseInt(aff.dureePrevue);
+                    for (let h = debut; h < fin; h++) {
+                        heuresOccupees.add(`${h.toString().padStart(2, '0')}:00`);
                     }
-                });
+                }
             });
         });
+    });
 
-        planificationsTemporaires.forEach(planif => {
-            if (
-                planif.matricule === matricule &&
-                planif.date === date &&
-                planif.heure &&
-                planif.duree &&
-                (!skipAffectation || skipAffectation !== `${matricule}-${planif.date}-${planif.heure}`)
-            ) {
-                const debut = parseInt(planif.heure);
-                const fin = debut + parseInt(planif.duree);
-                for (let h = debut; h < fin; h++) {
-                    heuresOccupees.add(`${h.toString().padStart(2, '0')}:00`);
-                }
-            }
-        });
-
-        if (plagesOccupeesDB[matricule] && plagesOccupeesDB[matricule][date]) {
-            plagesOccupeesDB[matricule][date].forEach(h => heuresOccupees.add(h));
-        }
-
-        return heuresOccupees;
-    };
-
-    const validerConflits = (matricule, date, heure, duree, skipKey) => {
-        const heuresOccupees = getHeuresOccupees(matricule, date, skipKey);
-        const debut = parseInt(heure.split(':')[0]);
-        const fin = debut + parseInt(duree);
-
-        for (let h = debut; h < fin; h++) {
-            const heureTest = `${h.toString().padStart(2, '0')}:00`;
-            if (heuresOccupees.has(heureTest)) {
-                return `Conflit avec la plage horaire ${heureTest}`;
+    planificationsTemporaires.forEach(planif => {
+        if (
+            planif.matricule === matricule &&
+            planif.date === date &&
+            planif.heure &&
+            planif.duree &&
+            (!skipAffectation || skipAffectation !== `${matricule}-${planif.date}-${planif.heure}`)
+        ) {
+            const debut = parseInt(planif.heure);
+            const fin = debut + parseInt(planif.duree);
+            for (let h = debut; h < fin; h++) {
+                heuresOccupees.add(`${h.toString().padStart(2, '0')}:00`);
             }
         }
+    });
 
-        return null;
-    };
+    if (plagesOccupeesDB[matricule] && plagesOccupeesDB[matricule][date]) {
+        plagesOccupeesDB[matricule][date].forEach(h => heuresOccupees.add(h));
+    }
+
+    return heuresOccupees;
+};
+
+
+
+
+
+    //     planificationsTemporaires.forEach(planif => {
+    //         if (
+    //             planif.matricule === matricule &&
+    //             planif.date === date &&
+    //             planif.heure &&
+    //             planif.duree &&
+    //             (!skipAffectation || skipAffectation !== `${matricule}-${planif.date}-${planif.heure}`)
+    //         ) {
+    //             const debut = parseInt(planif.heure);
+    //             const fin = debut + parseInt(planif.duree);
+    //             for (let h = debut; h < fin; h++) {
+    //                 heuresOccupees.add(`${h.toString().padStart(2, '0')}:00`);
+    //             }
+    //         }
+    //     });
+
+    //     if (plagesOccupeesDB[matricule] && plagesOccupeesDB[matricule][date]) {
+    //         plagesOccupeesDB[matricule][date].forEach(h => heuresOccupees.add(h));
+    //     }
+
+    //     return heuresOccupees;
+    // };
+
+    // const validerConflits = (matricule, date, heure, duree, skipKey) => {
+    //     const heuresOccupees = getHeuresOccupees(matricule, date, skipKey);
+    //     const debut = parseInt(heure.split(':')[0]);
+    //     const fin = debut + parseInt(duree);
+
+    //     for (let h = debut; h < fin; h++) {
+    //         const heureTest = `${h.toString().padStart(2, '0')}:00`;
+    //         if (heuresOccupees.has(heureTest)) {
+    //             return `Conflit avec la plage horaire ${heureTest}`;
+    //         }
+    //     }
+
+    //     return null;
+    // };
+
+
+    const validerConflits = (matricule, date, heure, duree, skipKey, codeClientRef) => {
+    const heuresOccupees = getHeuresOccupees(matricule, date, skipKey, codeClientRef);
+    const debut = parseInt(heure.split(':')[0]);
+    const fin = debut + parseInt(duree);
+
+    for (let h = debut; h < fin; h++) {
+        const heureTest = `${h.toString().padStart(2, '0')}:00`;
+        if (heuresOccupees.has(heureTest)) {
+            return `Conflit avec la plage horaire ${heureTest}`;
+        }
+    }
+
+    return null;
+};
+
 
     useEffect(() => {
         const nouvellesErreurs = {};
@@ -1259,7 +1332,8 @@ const AfficherCommandesParClient = () => {
                             aff.datePrevue,
                             aff.heurePrevue,
                             aff.dureePrevue,
-                            `${client.codeClient}-${cmd.codeArticle}-${idx}`
+                            `${client.codeClient}-${cmd.codeArticle}-${idx}`,
+                            client.codeClient 
                         );
 
                         if (conflit) {
@@ -1519,6 +1593,7 @@ const AfficherCommandesParClient = () => {
     }
 
     return (
+        <AdminLayoutPlannificateur>
         <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
             {/* Header */}
             <div className="bg-white/80 backdrop-blur-sm border-b border-slate-200 sticky top-0 z-40">
@@ -1786,6 +1861,7 @@ const AfficherCommandesParClient = () => {
                 )}
             </div>
         </div>
+        </AdminLayoutPlannificateur>
     );
 };
 

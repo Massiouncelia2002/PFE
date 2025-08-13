@@ -14,10 +14,11 @@ const ArticleDepot = require("./ArticleDepot");
 const Entree = require("./Entree");
 const CommandePlanifie = require("./CommandePlanifie");
 const BonLivraison = require("./BonLivraison");
+const BonRetour = require("./BonRetour");
 const ArticlesEntree = require("./ArticlesEntree");
 
 
-const db = { sequelize, Utilisateur, Depot, AffectationDepot, Vehicule, Famille, SousFamille, Article, Client, CommandeClient, ArticleCommandeClient, ArticleDepot,BonLivraison, Entree ,CommandePlanifie, ArticlesEntree};
+const db = { sequelize, Utilisateur, Depot, AffectationDepot, Vehicule, Famille, SousFamille, Article, Client, CommandeClient, ArticleCommandeClient, ArticleDepot,BonLivraison,BonRetour, Entree ,CommandePlanifie, ArticlesEntree};
 
 
 
@@ -211,13 +212,112 @@ CommandePlanifie.belongsTo(Vehicule, {
 
 
 
-// Relation avec BonLivraison (1-1)
+// // Relation avec BonLivraison (1-1)
+// CommandePlanifie.hasOne(BonLivraison, {
+//   foreignKey: 'commandePlanifieId'
+// });
+
+// BonLivraison.belongsTo(CommandePlanifie, {
+//   foreignKey: 'commandePlanifieId'
+// });
+
+
+
+// CommandePlanifie.hasOne(BonLivraison, {
+//   foreignKey: 'codeCommande',
+//   sourceKey: 'codeCommande', // correspondance des colonnes
+//   as: 'bonLivraison'
+// });
+
+// BonLivraison.belongsTo(CommandePlanifie, {
+//   foreignKey: 'codeCommande',
+//   targetKey: 'codeCommande'
+// });
+
+
+
+
+
+// // Relation : BonLivraison 1 <--> 0..1 BonRetour
+// BonLivraison.hasOne(BonRetour, {
+//   foreignKey: "codeBon",
+//   sourceKey: "codeBon",
+//   onDelete: "CASCADE"
+// });
+
+// BonRetour.belongsTo(BonLivraison, {
+//   foreignKey: "codeBon",
+//   targetKey: "codeBon"
+// });
+
+
+
+
+// // bon retor commandeplanifie 
+// CommandePlanifie.hasOne(BonRetour, {
+//   foreignKey: 'codeBon',
+//   sourceKey: 'codeCommande', 
+//   as: 'bonRetour'
+// });
+// BonRetour.belongsTo(CommandePlanifie, {
+//   foreignKey: 'codeBon',
+//   targetKey: 'codeCommande',
+//   as: 'commandePlanifie'
+// });
+
+
+
+
+
+//  Associations entre CommandePlanifie et BonLivraison
 CommandePlanifie.hasOne(BonLivraison, {
-  foreignKey: 'commandePlanifieId'
+  foreignKey: 'commandePlanifieId',
+  as: 'bonLivraison'
+});
+BonLivraison.belongsTo(CommandePlanifie, {
+  foreignKey: 'commandePlanifieId',
+  as: 'commandePlanifie'
 });
 
-BonLivraison.belongsTo(CommandePlanifie, {
-  foreignKey: 'commandePlanifieId'
+//  Associations entre BonLivraison et BonRetour
+BonLivraison.hasOne(BonRetour, {
+  foreignKey: 'codeBon',
+  sourceKey: 'codeBon',
+  as: 'bonRetour'
+});
+BonRetour.belongsTo(BonLivraison, {
+  foreignKey: 'codeBon',
+  targetKey: 'codeBon',
+  as: 'bonLivraison'
+});
+
+
+// CommandePlanifie <-> BonRetour (via commandePlanifieId)
+CommandePlanifie.hasOne(BonRetour, {
+  foreignKey: 'commandePlanifieId',
+  as: 'bonRetour'
+});
+BonRetour.belongsTo(CommandePlanifie, {
+  foreignKey: 'commandePlanifieId',
+  as: 'commandePlanifie'
+});
+
+
+
+
+
+
+
+// Un dépôt peut avoir plusieurs véhicules
+Depot.hasMany(Vehicule, {
+  foreignKey: "codeDepot",
+  sourceKey: "codeDepot"
+});
+
+// Un véhicule appartient à un seul dépôt
+Vehicule.belongsTo(Depot, {
+  foreignKey: "codeDepot",
+  targetKey: "codeDepot"
 });
 
 

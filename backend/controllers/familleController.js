@@ -127,15 +127,35 @@ exports.getFamilles = async (req, res) => {
   }
 };
 
+// exports.createFamille = async (req, res) => {
+//   try {
+//     const { nomFamille } = req.body;
+//     const nouvelleFamille = await Famille.create({ nomFamille });
+//     res.status(201).json(nouvelleFamille);
+//   } catch (error) {
+//     res.status(500).json({ message: "Erreur ajout famille", error });
+//   }
+// };
+
+
 exports.createFamille = async (req, res) => {
   try {
     const { nomFamille } = req.body;
+
+    if (!nomFamille || !/[a-zA-ZÀ-ÿ]/.test(nomFamille)) {
+      return res.status(400).json({
+        message: "Le nom de la famille est invalide. Il doit contenir au moins une lettre.",
+      });
+    }
+
     const nouvelleFamille = await Famille.create({ nomFamille });
     res.status(201).json(nouvelleFamille);
   } catch (error) {
     res.status(500).json({ message: "Erreur ajout famille", error });
   }
 };
+
+
 
 exports.getFamilleById = async (req, res) => {
   try {
@@ -148,21 +168,51 @@ exports.getFamilleById = async (req, res) => {
   }
 };
 
+// exports.updateFamille = async (req, res) => {
+//   try {
+//     const codeFamille = req.params.code;
+//     const { nomFamille } = req.body;
+
+//     const famille = await Famille.findByPk(codeFamille);
+//     if (!famille) return res.status(404).json({ message: "Famille non trouvée" });
+
+//     // Met à jour le nom
+//     await famille.update({ nomFamille });
+
+//     // Regénère le codeFamille
+//     const randomNumber = String(Math.floor(100 + Math.random() * 900));
+//     const nouveauCode = `F-${randomNumber}-${nomFamille.replace(/\s+/g, '').toUpperCase()}`;
+    
+//     await famille.update({ codeFamille: nouveauCode });
+
+//     res.json(famille);
+//   } catch (error) {
+//     res.status(500).json({ message: "Erreur mise à jour famille", error });
+//   }
+// };
+
+
+
 exports.updateFamille = async (req, res) => {
   try {
     const codeFamille = req.params.code;
     const { nomFamille } = req.body;
 
+    if (!nomFamille || !/[a-zA-ZÀ-ÿ]/.test(nomFamille)) {
+      return res.status(400).json({
+        message: "Le nom de la famille est invalide. Il doit contenir au moins une lettre.",
+      });
+    }
+
     const famille = await Famille.findByPk(codeFamille);
     if (!famille) return res.status(404).json({ message: "Famille non trouvée" });
 
-    // Met à jour le nom
+    // Mise à jour du nom
     await famille.update({ nomFamille });
 
-    // Regénère le codeFamille
+    // Regénération du code
     const randomNumber = String(Math.floor(100 + Math.random() * 900));
     const nouveauCode = `F-${randomNumber}-${nomFamille.replace(/\s+/g, '').toUpperCase()}`;
-    
     await famille.update({ codeFamille: nouveauCode });
 
     res.json(famille);
@@ -170,6 +220,7 @@ exports.updateFamille = async (req, res) => {
     res.status(500).json({ message: "Erreur mise à jour famille", error });
   }
 };
+
 
 exports.deleteFamille = async (req, res) => {
   try {

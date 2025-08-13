@@ -221,8 +221,7 @@ const Sidebar = ({ isOpen = true, closeSidebar = () => {} }) => {
     {
       title: null,
       items: [
-        { name: 'Dashboard', icon: Home, to: '/admin-depot' },
-        { name: 'Settings', icon: Settings, to: '/settings' },
+        { name: 'Dashboard', icon: Home, to: '/gestionnaire-depot' },
       ],
     },
     {
@@ -238,10 +237,32 @@ const Sidebar = ({ isOpen = true, closeSidebar = () => {} }) => {
           icon: BarChart3,
           children: [
             { name: 'Planifier mes commandes', to: '/PlanifierMesDepots' },
-            { name: 'Prédictions', to: '/PrevisionsParUtilisateur' },
         
           ],
         },
+      ],
+    },
+
+     {
+      title: 'Prédictions',
+      items: [
+        {
+          name: 'afficher les prédictions',
+          icon: Layers,
+          to: '/PrevisionsParUtilisateur',
+        },
+        
+      ],
+    },
+    {
+      title: 'Reapprovisionement',
+      items: [
+        {
+          name: 'effectuer le reapprovisionement',
+          icon: Layers,
+          to: '/SmartRestockInterface',
+        },
+        
       ],
     },
   ];

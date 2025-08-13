@@ -500,7 +500,6 @@ exports.planifierCommande = async (req, res) => {
 
 
 
-
 exports.getCommandesPlanificationStatut = async (req, res) => {
   try {
     const { codeDepot } = req.query;
@@ -555,5 +554,124 @@ exports.getCommandesPlanificationStatut = async (req, res) => {
   } catch (error) {
     console.error("Erreur récupération planification/statut:", error);
     res.status(500).json({ message: "Erreur serveur" });
+  }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+exports.getCommandesParClientAvecSuggestions = async (req, res) => {
+  const { codeDepot } = req.query;
+
+  if (!codeDepot) {
+    return res.status(400).json({ message: "Code dépôt manquant." });
+  }
+
+  try {
+    // Étape 1 : Récupérer toutes les commandes clients actives pour ce dépôt
+    const commandes = await CommandeClient.findAll({
+      include: [
+        {
+          model: Client,
+          as: 'client',
+          where: { codeDepot },
+          attributes: ['codeClient', 'nomClient']
+        },
+        {
+          model: ArticleCommandeClient,
+          as: 'articlesCommande',
+          attributes: ['codeArticle', 'quantiteCommandee']
+        }
+      ]
+    });
+
+    // Étape 2 : Grouper les commandes par client
+    const regroupementParClient = {};
+
+    for (const cmd of commandes) {
+      const { codeClient, nomClient } = cmd.client;
+      if (!regroupementParClient[codeClient]) {
+        regroupementParClient[codeClient] = {
+          codeClient,
+          nomClient,
+          commandes: []
+        };
+      }
+
+      for (const art of cmd.articlesCommande) {
+        regroupementParClient[codeClient].commandes.push({
+          codeCommande: cmd.codeCommande,
+          dateCommande: cmd.dateCommande,
+          codeArticle: art.codeArticle,
+          quantiteCommandee: parseFloat(art.quantiteCommandee),
+        });
+      }
+    }
+
+    // Étape 3 : Récupérer le stock pour chaque article du dépôt
+    const codesArticles = [
+      ...new Set(commandes.flatMap(cmd => cmd.articlesCommande.map(ac => ac.codeArticle)))
+    ];
+
+    const articlesDepot = await ArticleDepot.findAll({
+      where: {
+        codeDepot,
+        codeArticle: codesArticles
+      }
+    });
+
+    const stockDisponibleParArticle = {};
+    articlesDepot.forEach(a => {
+      stockDisponibleParArticle[a.codeArticle] = parseFloat(a.quantiteStockee || 0);
+    });
+
+    // Étape 4 : Calculer la quantité à livrer par client + article (répartition simple)
+    const totalDemandesParArticle = {};
+    for (const client of Object.values(regroupementParClient)) {
+      for (const cmd of client.commandes) {
+        totalDemandesParArticle[cmd.codeArticle] =
+          (totalDemandesParArticle[cmd.codeArticle] || 0) + cmd.quantiteCommandee;
+      }
+    }
+
+    for (const client of Object.values(regroupementParClient)) {
+      client.commandes = client.commandes.map(cmd => {
+        const stock = stockDisponibleParArticle[cmd.codeArticle] || 0;
+        const totalDemande = totalDemandesParArticle[cmd.codeArticle] || 1;
+
+        const proportion = cmd.quantiteCommandee / totalDemande;
+        const quantiteALivrer = parseFloat((stock * proportion).toFixed(2));
+
+        return {
+          ...cmd,
+          quantiteALivrer,
+          quantiteStockee: stock
+        };
+      });
+    }
+
+    return res.status(200).json({
+      data: Object.values(regroupementParClient)
+    });
+
+  } catch (error) {
+    console.error("❌ Erreur lors de la récupération des commandes clients :", error);
+    return res.status(500).json({
+      message: "Erreur serveur lors de la récupération des commandes par client",
+      error: error.message
+    });
   }
 };

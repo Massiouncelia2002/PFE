@@ -10,7 +10,7 @@ import {
 } from '@heroicons/react/outline';
 import { Menu } from '@headlessui/react';
 import { useNavigate } from 'react-router-dom';
-import SidebarDepot from './SidebarPlanificateur';
+import Sidebar from './SidebarPlanificateur';
 
 const AdminLayoutDepot = ({ children }) => {
   const [darkMode, setDarkMode] = useState(false);
@@ -45,7 +45,7 @@ const AdminLayoutDepot = ({ children }) => {
     <div className={darkMode ? 'dark' : ''}>
       <div className="min-h-screen bg-white dark:bg-gray-900">
         <div className="flex">
-          <SidebarDepot isOpen={isSidebarOpen} closeSidebar={() => setIsSidebarOpen(false)} />
+          <Sidebar isOpen={isSidebarOpen} closeSidebar={() => setIsSidebarOpen(false)} />
 
           <main className="flex-1 lg:ml-64">
             {/* Topbar */}

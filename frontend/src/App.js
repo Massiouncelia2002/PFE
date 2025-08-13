@@ -5,7 +5,8 @@ import Login from "./pages/Login";
 
 import AdminFonctionnel from "./pages/AdminFonctionnel";
 import AdminDepot from "./pages/AdminDepot";
-import PlanificateurDepot from "./pages/PlanificateurDepot";
+
+import PlannificateurDashboard from "./pages/plannificateur";
 
 
 import PlanifierMesDepots from "./pages/PlanifierMesDepots";
@@ -39,7 +40,7 @@ import AffectationDepot from "./pages/AffectationDepot";
 
 import ImporterCommandes from "./pages/ImporterCommandes";
 
-import AffecterUnitesArticle from "./pages/AffecterUnitesArticle";
+// import AffecterUnitesArticle from "./pages/AffecterUnitesArticle";
 
 import ArticleDepot from "./pages/ArticleDepot";
 
@@ -63,7 +64,7 @@ import Previsions from "./pages/Previsions";
 
 import PrevisionsParUtilisateur from "./pages/PrevisionsParUtilisateur";
 
-import Reapprovisionnement from './pages/RapportReapprovisionnement';
+// import reapprovisionnement from './pages/reapprovisionnement';
 
 import AffichePlanificationAdmin from "./pages/AffichePlanificationAdmin";
 
@@ -71,6 +72,12 @@ import AffichePlanificationAdmin from "./pages/AffichePlanificationAdmin";
 import ProtectedRouteByRole from "./components/ProtectedRouteByRole";
 import PageProfil from "./pages/PageProfil";
 import Unauthorized from "./pages/Unauthorized";
+
+import GestionRetours from "./pages/GestionRetours";
+
+
+
+import SmartRestockInterface from "./pages/SmartRestockInterface";
 
 
 
@@ -85,17 +92,17 @@ export default function App() {
         <Routes>
           <Route path="/unauthorized" element={<Unauthorized />} />
           <Route path="/" element={<Login />} />
-      
+
           <Route path="/profil" element={<PageProfil />} />
 
           {/* <Route path="/admin-fonctionnel" element={<AdminFonctionnel />} /> */}
-          <Route path="/admin-depot" element={<AdminDepot/>} />
-          <Route path="/gestionnaire-depot" element={<PlanificateurDepot/>} />
+          <Route path="/admin-depot" element={<AdminDepot />} />
+          <Route path="/gestionnaire-depot" element={<PlannificateurDashboard />} />
 
 
-          <Route path="/PlanifierMesDepots" element={<PlanifierMesDepots/>} />
+          <Route path="/PlanifierMesDepots" element={<PlanifierMesDepots />} />
 
-{/* 
+          {/* 
           <Route path="/articles" element={<Articles />} />
           <Route path="/liste-articles" element={<ListeArticles />} />
           <Route path="/articles/modifier-article/:codeArticle" element={<ModifierArticle />} />
@@ -125,184 +132,186 @@ export default function App() {
 
         <Route path="/AffecterDepotArticle" element={<AffecterDepotArticle />} /> */}
 
-{/* 🔐 Routes accessibles uniquement à l'Admin Fonctionnel */}
-<Route
-  path="/admin-fonctionnel"
-  element={
-    <ProtectedRouteByRole allowedRoles={["Admin Fonctionnel"]}>
-      <AdminFonctionnel />
-    </ProtectedRouteByRole>
-  }
-/>
+          {/* 🔐 Routes accessibles uniquement à l'Admin Fonctionnel */}
+          <Route
+            path="/admin-fonctionnel"
+            element={
+              <ProtectedRouteByRole allowedRoles={["Admin Fonctionnel"]}>
+                <AdminFonctionnel />
+              </ProtectedRouteByRole>
+            }
+          />
 
-<Route
-  path="/articles"
-  element={
-    <ProtectedRouteByRole allowedRoles={["Admin Fonctionnel"]}>
-      <Articles />
-    </ProtectedRouteByRole>
-  }
-/>
+          <Route
+            path="/articles"
+            element={
+              <ProtectedRouteByRole allowedRoles={["Admin Fonctionnel"]}>
+                <Articles />
+              </ProtectedRouteByRole>
+            }
+          />
 
-<Route
-  path="/liste-articles"
-  element={
-    <ProtectedRouteByRole allowedRoles={["Admin Fonctionnel"]}>
-      <ListeArticles />
-    </ProtectedRouteByRole>
-  }
-/>
+          <Route
+            path="/liste-articles"
+            element={
+              <ProtectedRouteByRole allowedRoles={["Admin Fonctionnel"]}>
+                <ListeArticles />
+              </ProtectedRouteByRole>
+            }
+          />
 
-<Route
-  path="/articles/modifier-article/:codeArticle"
-  element={
-    <ProtectedRouteByRole allowedRoles={["Admin Fonctionnel"]}>
-      <ModifierArticle />
-    </ProtectedRouteByRole>
-  }
-/>
+          <Route
+            path="/articles/modifier-article/:codeArticle"
+            element={
+              <ProtectedRouteByRole allowedRoles={["Admin Fonctionnel"]}>
+                <ModifierArticle />
+              </ProtectedRouteByRole>
+            }
+          />
 
-<Route
-  path="/ajouter-utilisateur"
-  element={
-    <ProtectedRouteByRole allowedRoles={["Admin Fonctionnel"]}>
-      <AjouterUtilisateur />
-    </ProtectedRouteByRole>
-  }
-/>
+          <Route
+            path="/ajouter-utilisateur"
+            element={
+              <ProtectedRouteByRole allowedRoles={["Admin Fonctionnel"]}>
+                <AjouterUtilisateur />
+              </ProtectedRouteByRole>
+            }
+          />
 
-<Route
-  path="/utilisateurs"
-  element={
-    <ProtectedRouteByRole allowedRoles={["Admin Fonctionnel"]}>
-      <ListeUtilisateurs />
-    </ProtectedRouteByRole>
-  }
-/>
+          <Route
+            path="/utilisateurs"
+            element={
+              <ProtectedRouteByRole allowedRoles={["Admin Fonctionnel"]}>
+                <ListeUtilisateurs />
+              </ProtectedRouteByRole>
+            }
+          />
 
-<Route
-  path="/modifier-utilisateur/:id"
-  element={
-    <ProtectedRouteByRole allowedRoles={["Admin Fonctionnel"]}>
-      <ModifierUtilisateur />
-    </ProtectedRouteByRole>
-  }
-/>
+          <Route
+            path="/modifier-utilisateur/:id"
+            element={
+              <ProtectedRouteByRole allowedRoles={["Admin Fonctionnel"]}>
+                <ModifierUtilisateur />
+              </ProtectedRouteByRole>
+            }
+          />
 
-<Route
-  path="/famillesSousFamillespage"
-  element={
-    <ProtectedRouteByRole allowedRoles={["Admin Fonctionnel"]}>
-      <FamillesSousFamillesPage />
-    </ProtectedRouteByRole>
-  }
-/>
+          <Route
+            path="/famillesSousFamillespage"
+            element={
+              <ProtectedRouteByRole allowedRoles={["Admin Fonctionnel"]}>
+                <FamillesSousFamillesPage />
+              </ProtectedRouteByRole>
+            }
+          />
 
-<Route
-  path="/ajouter-depot"
-  element={
-    <ProtectedRouteByRole allowedRoles={["Admin Fonctionnel"]}>
-      <AjouterDepot />
-    </ProtectedRouteByRole>
-  }
-/>
+          <Route
+            path="/ajouter-depot"
+            element={
+              <ProtectedRouteByRole allowedRoles={["Admin Fonctionnel"]}>
+                <AjouterDepot />
+              </ProtectedRouteByRole>
+            }
+          />
 
-<Route
-  path="/depots"
-  element={
-    <ProtectedRouteByRole allowedRoles={["Admin Fonctionnel"]}>
-      <ListeDepots />
-    </ProtectedRouteByRole>
-  }
-/>
+          <Route
+            path="/depots"
+            element={
+              <ProtectedRouteByRole allowedRoles={["Admin Fonctionnel"]}>
+                <ListeDepots />
+              </ProtectedRouteByRole>
+            }
+          />
 
-<Route
-  path="/modifier-depot/:id"
-  element={
-    <ProtectedRouteByRole allowedRoles={["Admin Fonctionnel"]}>
-      <ModifierDepot />
-    </ProtectedRouteByRole>
-  }
-/>
+          <Route
+            path="/modifier-depot/:id"
+            element={
+              <ProtectedRouteByRole allowedRoles={["Admin Fonctionnel"]}>
+                <ModifierDepot />
+              </ProtectedRouteByRole>
+            }
+          />
 
-<Route
-  path="/ajouter-client"
-  element={
-    <ProtectedRouteByRole allowedRoles={["Admin Fonctionnel"]}>
-      <AjouterClient />
-    </ProtectedRouteByRole>
-  }
-/>
+          <Route
+            path="/ajouter-client"
+            element={
+              <ProtectedRouteByRole allowedRoles={["Admin Fonctionnel"]}>
+                <AjouterClient />
+              </ProtectedRouteByRole>
+            }
+          />
 
-<Route
-  path="/clients"
-  element={
-    <ProtectedRouteByRole allowedRoles={["Admin Fonctionnel"]}>
-      <ListeClients />
-    </ProtectedRouteByRole>
-  }
-/>
+          <Route
+            path="/clients"
+            element={
+              <ProtectedRouteByRole allowedRoles={["Admin Fonctionnel"]}>
+                <ListeClients />
+              </ProtectedRouteByRole>
+            }
+          />
 
-<Route
-  path="/modifier-client/:id"
-  element={
-    <ProtectedRouteByRole allowedRoles={["Admin Fonctionnel"]}>
-      <ModifierClient />
-    </ProtectedRouteByRole>
-  }
-/>
+          <Route
+            path="/modifier-client/:id"
+            element={
+              <ProtectedRouteByRole allowedRoles={["Admin Fonctionnel"]}>
+                <ModifierClient />
+              </ProtectedRouteByRole>
+            }
+          />
 
-<Route
-  path="/ajouter-vehicule"
-  element={
-    <ProtectedRouteByRole allowedRoles={["Admin Fonctionnel"]}>
-      <AjouterVehicule />
-    </ProtectedRouteByRole>
-  }
-/>
+          <Route
+            path="/ajouter-vehicule"
+            element={
+              <ProtectedRouteByRole allowedRoles={["Admin Fonctionnel"]}>
+                <AjouterVehicule />
+              </ProtectedRouteByRole>
+            }
+          />
 
-<Route
-  path="/vehicules"
-  element={
-    <ProtectedRouteByRole allowedRoles={["Admin Fonctionnel"]}>
-      <ListeVehicules />
-    </ProtectedRouteByRole>
-  }
-/>
+          <Route
+            path="/vehicules"
+            element={
+              <ProtectedRouteByRole allowedRoles={["Admin Fonctionnel"]}>
+                <ListeVehicules />
+              </ProtectedRouteByRole>
+            }
+          />
 
-<Route
-  path="/modifier-vehicule/:id"
-  element={
-    <ProtectedRouteByRole allowedRoles={["Admin Fonctionnel"]}>
-      <ModifierVehicule />
-    </ProtectedRouteByRole>
-  }
-/>
+          <Route
+            path="/modifier-vehicule/:id"
+            element={
+              <ProtectedRouteByRole allowedRoles={["Admin Fonctionnel"]}>
+                <ModifierVehicule />
+              </ProtectedRouteByRole>
+            }
+          />
 
-<Route
-  path="/affecter-depot"
-  element={
-    <ProtectedRouteByRole allowedRoles={["Admin Fonctionnel"]}>
-      <AffectationDepot />
-    </ProtectedRouteByRole>
-  }
-/>
+          <Route
+            path="/affecter-depot"
+            element={
+              <ProtectedRouteByRole allowedRoles={["Admin Fonctionnel"]}>
+                <AffectationDepot />
+              </ProtectedRouteByRole>
+            }
+          />
 
-<Route
-  path="/AffecterDepotArticle"
-  element={
-    <ProtectedRouteByRole allowedRoles={["Admin Fonctionnel"]}>
-      <AffecterDepotArticle />
-    </ProtectedRouteByRole>
-  }
-/>
+          <Route
+            path="/AffecterDepotArticle"
+            element={
+              <ProtectedRouteByRole allowedRoles={["Admin Fonctionnel"]}>
+                <AffecterDepotArticle />
+              </ProtectedRouteByRole>
+            }
+          />
+
+        
 
 
           <Route path="/article-depot" element={<ArticleDepot />} />
 
           <Route path="/import-commandes" element={<ImporterCommandes />} />
 
-      
+
           <Route path="/StockModifier" element={<StockModifier />} />
 
           <Route path="/EntreeStock" element={<EntreeStock />} />
@@ -317,7 +326,7 @@ export default function App() {
 
           <Route path="/PrevisionsParUtilisateur" element={<PrevisionsParUtilisateur />} />
 
-          <Route path="/RapportReapprovisionnement" element={<Reapprovisionnement />} />
+         
 
           <Route path="/AfficherCommandesParClient" element={<AfficherCommandesParClient />} />
 
@@ -325,14 +334,19 @@ export default function App() {
 
           <Route path="/AffichePlanificationAdmin" element={<AffichePlanificationAdmin />} />
 
-         
 
-          
+          <Route path="/GestionRetours" element={<GestionRetours />} />
 
-          
-      
 
-          
+
+           <Route path="/SmartRestockInterface" element={<SmartRestockInterface />} />
+
+
+
+
+
+
+
         </Routes>
       </Router>
     </>

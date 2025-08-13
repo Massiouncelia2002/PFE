@@ -1068,6 +1068,7 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
+import AdminLayoutPlannificateur from './AdminLayoutPlannificateur'; 
 
 const PlanifierCommandes = () => {
   const { state } = useLocation();
@@ -1132,6 +1133,7 @@ const PlanifierCommandes = () => {
   if (!article) return <p>❌ Aucun article sélectionné.</p>;
 
   return (
+    <AdminLayoutPlannificateur>
     <div className="container mt-4">
       <h3>
         Planification pour l'article : {article.designation} ({article.codeArticle})
@@ -1182,6 +1184,7 @@ const PlanifierCommandes = () => {
         <p className="text-muted mt-3">Aucune commande à planifier pour cet article.</p>
       )}
     </div>
+    </AdminLayoutPlannificateur>
   );
 };
 
