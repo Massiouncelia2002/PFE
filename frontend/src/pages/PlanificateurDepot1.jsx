@@ -7,7 +7,7 @@ const AdminDepot = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(false);
 
-  // Données fictives pour les graphiques
+ 
   const pieData = [
     { name: 'Livraisons effectuées', value: 60 },
     { name: 'Réapprovisionnements', value: 30 },

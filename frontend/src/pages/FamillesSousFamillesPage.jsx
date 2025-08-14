@@ -4,8 +4,7 @@ import { Button } from "../components/ui/Button";
 import Input from "../components/ui/Input";
 import AdminLayout from "./AdminLayout";
 import { Edit3, Trash2, Plus, X, ChevronRight, Folder, FolderOpen } from "lucide-react";
-
-// Composant Card optimisé
+     
 const Card = React.memo(({ children, className = "", ...props }) => (
   <div
     className={`bg-white rounded-2xl shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-300 ${className}`}
@@ -16,7 +15,7 @@ const Card = React.memo(({ children, className = "", ...props }) => (
 ));
 
 const FamillesSousFamillesPage = () => {
-  // États initiaux
+ 
   const [familles, setFamilles] = useState([]);
   const [allSousFamilles, setAllSousFamilles] = useState([]);
   const [selectedFamille, setSelectedFamille] = useState(null);
@@ -27,14 +26,14 @@ const FamillesSousFamillesPage = () => {
   const [familleError, setFamilleError] = useState("");
   const [sousFamilleError, setSousFamilleError] = useState("");
 
-  // Sous-familles filtrées mémoïsées
+
   const sousFamilles = useMemo(() => {
     return selectedFamille
       ? allSousFamilles.filter(sf => sf.codeFamille === selectedFamille.codeFamille)
       : [];
   }, [selectedFamille, allSousFamilles]);
 
-  // Chargement des données
+
   const fetchData = useCallback(async () => {
     try {
       const [famillesRes, sousFamillesRes] = await Promise.all([
@@ -52,44 +51,7 @@ const FamillesSousFamillesPage = () => {
     fetchData();
   }, [fetchData]);
 
-  // // Gestion des familles
-  // const handleFamilleSubmit = useCallback(async (e) => {
-  //   e.preventDefault();
-
-
-  //   try {
-  //     if (editingFamille) {
-  //       const hasSousFamilles = allSousFamilles.some(sf => sf.codeFamille === editingFamille.codeFamille);
-  //       if (hasSousFamilles) {
-  //         alert("Impossible de modifier une famille avec des sous-familles");
-  //         return;
-  //       }
-
-  //       const res = await axios.put(
-  //         `http://localhost:5000/api/familles/${editingFamille.codeFamille}`,
-  //         { nomFamille: familleForm.nomFamille }
-  //       );
-  //       setFamilles(prev =>
-  //         prev.map(f => f.codeFamille === res.data.codeFamille ? res.data : f)
-  //       );
-  //       setEditingFamille(null);
-  //     } else {
-  //       const res = await axios.post(
-  //         "http://localhost:5000/api/familles",
-  //         familleForm
-  //       );
-  //       setFamilles(prev => [...prev, res.data]);
-  //     }
-  //     setFamilleForm({ nomFamille: "" });
-  //   } catch (error) {
-  //     console.error("Erreur :", error.response?.data || error.message);
-  //   }
-  // }, [editingFamille, familleForm, allSousFamilles]);
-
-
-
-
-
+  
   const handleFamilleSubmit = useCallback(async (e) => {
   e.preventDefault();
 
@@ -128,93 +90,6 @@ const FamillesSousFamillesPage = () => {
     console.error("Erreur :", error.response?.data || error.message);
   }
 }, [editingFamille, familleForm, allSousFamilles]);
-
-
-
-//   const handleFamilleSubmit = useCallback(async (e) => {
-//   e.preventDefault();
-
-//   const nom = familleForm.nomFamille.trim();
-//   if (!/[a-zA-Z]/.test(nom)) {
-//     setFamilleError("Le nom doit contenir au moins une lettre.");
-//     return;
-//   }
-//   setFamilleError("");
-
-//   try {
-//     if (editingFamille) {
-//       const hasSousFamilles = allSousFamilles.some(sf => sf.codeFamille === editingFamille.codeFamille);
-//       if (hasSousFamilles) {
-//         alert("Impossible de modifier une famille avec des sous-familles");
-//         return;
-//       }
-
-//       const res = await axios.put(
-//         `http://localhost:5000/api/familles/${editingFamille.codeFamille}`,
-//         { nomFamille: nom }
-//       );
-//       setFamilles(prev =>
-//         prev.map(f => f.codeFamille === res.data.codeFamille ? res.data : f)
-//       );
-//       setEditingFamille(null);
-//     } else {
-//       const res = await axios.post(
-//         "http://localhost:5000/api/familles",
-//         { nomFamille: nom }
-//       );
-//       setFamilles(prev => [...prev, res.data]);
-//     }
-//     setFamilleForm({ nomFamille: "" });
-//   } catch (error) {
-//     console.error("Erreur :", error.response?.data || error.message);
-//   }
-// }, [editingFamille, familleForm, allSousFamilles]);
-
-
-
-
-
-  // // Gestion des sous-familles
-  // const handleSousFamilleSubmit = useCallback(async (e) => {
-  //   e.preventDefault();
-
-  //   if (!selectedFamille) return;
-
-  //   try {
-  //     const payload = {
-  //       nomSousFamille: sousFamilleForm.nomSousFamille,
-  //       codeFamille: selectedFamille.codeFamille
-  //     };
-
-  //     if (editingSousFamille) {
-  //       const res = await axios.put(
-  //         `http://localhost:5000/api/sous-familles/${editingSousFamille.codeSousFamille}`,
-  //         payload
-  //       );
-  //       // setAllSousFamilles(prev =>
-  //       //   prev.map(sf => sf.codeSousFamille === res.data.codeSousFamille ? res.data : sf)
-  //       // );
-  //       setAllSousFamilles(prev =>
-  //         prev
-  //           .filter(sf => sf.codeSousFamille !== editingSousFamille.codeSousFamille)
-  //           .concat(res.data)
-  //       );
-  //       setEditingSousFamille(null);
-  //     } else {
-  //       const res = await axios.post(
-  //         "http://localhost:5000/api/sous-familles",
-  //         payload
-  //       );
-  //       setAllSousFamilles(prev => [...prev, res.data]);
-  //     }
-  //     setSousFamilleForm({ nomSousFamille: "" });
-  //   } catch (error) {
-  //     console.error("Erreur :", error.response?.data || error.message);
-  //   }
-  // }, [selectedFamille, sousFamilleForm, editingSousFamille]);
-
-
-
 
 
   const handleSousFamilleSubmit = useCallback(async (e) => {
@@ -260,55 +135,6 @@ const FamillesSousFamillesPage = () => {
   }
 }, [selectedFamille, sousFamilleForm, editingSousFamille]);
 
-
-
-//   // Gestion des sous-familles
-// const handleSousFamilleSubmit = useCallback(async (e) => {
-//   e.preventDefault();
-
-//   const nom = sousFamilleForm.nomSousFamille.trim();
-//   if (!/[a-zA-Z]/.test(nom)) {
-//     setSousFamilleError("Le nom doit contenir au moins une lettre.");
-//     return;
-//   }
-//   setSousFamilleError("");
-
-//   if (!selectedFamille) return;
-
-//   try {
-//     const payload = {
-//       nomSousFamille: nom,
-//       codeFamille: selectedFamille.codeFamille
-//     };
-
-//     if (editingSousFamille) {
-//       const res = await axios.put(
-//         `http://localhost:5000/api/sous-familles/${editingSousFamille.codeSousFamille}`,
-//         payload
-//       );
-//       setAllSousFamilles(prev =>
-//         prev
-//           .filter(sf => sf.codeSousFamille !== editingSousFamille.codeSousFamille)
-//           .concat(res.data)
-//       );
-//       setEditingSousFamille(null);
-//     } else {
-//       const res = await axios.post(
-//         "http://localhost:5000/api/sous-familles",
-//         payload
-//       );
-//       setAllSousFamilles(prev => [...prev, res.data]);
-//     }
-
-//     setSousFamilleForm({ nomSousFamille: "" });
-//   } catch (error) {
-//     console.error("Erreur :", error.response?.data || error.message);
-//   }
-// }, [selectedFamille, sousFamilleForm, editingSousFamille]);
-
-
-
-  // Suppression d'une famille
   const handleDeleteFamille = useCallback(async (famille) => {
     if (!window.confirm(`Supprimer la famille ${famille.nomFamille} ?`)) return;
 
@@ -340,7 +166,7 @@ const FamillesSousFamillesPage = () => {
     }
   }, []);
 
-  // Suppression d'une sous-famille
+ 
   const handleDeleteSousFamille = useCallback(async (sousFamille) => {
     if (!window.confirm("Supprimer cette sous-famille ?")) return;
 
@@ -352,14 +178,14 @@ const FamillesSousFamillesPage = () => {
     }
   }, []);
 
-  // Gestion de la sélection de famille
+ 
   const handleSelectFamille = useCallback((famille) => {
     setSelectedFamille(famille);
     setEditingFamille(null);
     setFamilleForm({ nomFamille: "" });
   }, []);
 
-  // Gestion de l'édition de famille
+
   const handleEditFamille = useCallback((famille, e) => {
     e.stopPropagation();
     const sousFamilleCount = allSousFamilles.filter(sf => sf.codeFamille === famille.codeFamille).length;
@@ -369,7 +195,7 @@ const FamillesSousFamillesPage = () => {
     }
   }, [allSousFamilles]);
 
-  // Gestion de l'édition de sous-famille
+
   const handleEditSousFamille = useCallback((sousFamille) => {
     setEditingSousFamille(sousFamille);
     setSousFamilleForm({ nomSousFamille: sousFamille.nomSousFamille });
@@ -379,7 +205,7 @@ const FamillesSousFamillesPage = () => {
     <AdminLayout>
       <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50">
         <div className="container mx-auto px-4 py-8 max-w-7xl">
-          {/* Header */}
+          
           <div className="mb-8 text-center">
             <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent mb-4">
               Gestion des Familles & Sous-Familles
@@ -390,7 +216,7 @@ const FamillesSousFamillesPage = () => {
           </div>
 
           <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
-            {/* Section Familles */}
+ 
             <Card className="p-6 space-y-6">
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-blue-100 rounded-lg">
@@ -504,7 +330,7 @@ const FamillesSousFamillesPage = () => {
               </div>
             </Card>
 
-            {/* Section Sous-Familles */}
+           
             <Card className="p-6 space-y-6">
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-green-100 rounded-lg">
@@ -608,7 +434,7 @@ const FamillesSousFamillesPage = () => {
               )}
             </Card>
 
-            {/* Tableau Récapitulatif */}
+           
             <Card className="p-6 space-y-6">
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-purple-100 rounded-lg">

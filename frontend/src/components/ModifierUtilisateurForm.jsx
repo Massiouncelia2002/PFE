@@ -1,5 +1,3 @@
-
-
 import React, { useState, useEffect } from "react";
 import { ArrowLeft, User, Mail, Briefcase, Building, Calendar, Shield, Check, X } from "lucide-react";
 import AdminLayout from "../pages/AdminLayout";
@@ -66,7 +64,7 @@ const ModifierUtilisateurForm = ({ onSubmit, initialData }) => {
     <AdminLayout>
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 p-6">
         <div className="max-w-4xl mx-auto">
-          {/* Header */}
+         
           <div className="flex items-center justify-between mb-8">
             <button
               onClick={handleBack}
@@ -81,9 +79,9 @@ const ModifierUtilisateurForm = ({ onSubmit, initialData }) => {
             </div>
           </div>
 
-          {/* Carte principale */}
+          
           <div className="bg-white/90 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/30 overflow-hidden">
-            {/* Header de la carte */}
+           
             <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-6 text-white">
               <div className="flex items-center space-x-3">
                 <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
@@ -96,10 +94,10 @@ const ModifierUtilisateurForm = ({ onSubmit, initialData }) => {
               </div>
             </div>
 
-            {/* Formulaire */}
+            
             <div className="p-8">
               <form onSubmit={handleSubmit} className="space-y-6">
-                {/* Informations personnelles */}
+              
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="group">
                     <label className="block text-sm font-semibold text-slate-700 mb-2 flex items-center space-x-2">
@@ -133,7 +131,7 @@ const ModifierUtilisateurForm = ({ onSubmit, initialData }) => {
                     />
                   </div>
 
-                  {/* Champ email en lecture seule */}
+                 
                   <div className="group">
                     <label className="block text-sm font-semibold text-slate-700 mb-2 flex items-center space-x-2">
                       <Mail className="w-4 h-4 text-blue-500" />
@@ -196,7 +194,7 @@ const ModifierUtilisateurForm = ({ onSubmit, initialData }) => {
                   </div>
                 </div>
 
-                {/* Rôle */}
+              
                 <div className="group">
                   <label className="block text-sm font-semibold text-slate-700 mb-2 flex items-center space-x-2">
                     <Shield className="w-4 h-4 text-blue-500" />
@@ -216,7 +214,7 @@ const ModifierUtilisateurForm = ({ onSubmit, initialData }) => {
                   </select>
                 </div>
 
-                {/* Statut */}
+                
                 <div className="bg-slate-50/50 rounded-2xl p-6 border border-slate-200">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
@@ -261,7 +259,7 @@ const ModifierUtilisateurForm = ({ onSubmit, initialData }) => {
                   )}
                 </div>
 
-                {/* Boutons d'action */}
+               
                 <div className="flex flex-col sm:flex-row gap-4 pt-6">
                   <button
                     type="submit"
@@ -296,7 +294,7 @@ const ModifierUtilisateurForm = ({ onSubmit, initialData }) => {
                 </div>
               </form>
 
-              {/* Message de succès */}
+              
               {message && (
                 <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-xl animate-in slide-in-from-top-4 duration-300">
                   <p className="text-green-800 font-medium text-center">{message}</p>

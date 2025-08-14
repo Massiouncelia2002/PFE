@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -136,7 +135,7 @@ const Login = () => {
       if (newTentatives >= 3) {
         const now = Date.now();
         localStorage.setItem("blockedAt", now.toString());
-        setRemainingTime(1 * 60); // 15 minutes en secondes
+        setRemainingTime(1 * 60);
       }
 
       toast.error(error.message, { theme: darkMode ? "dark" : "light", position: "top-center" });

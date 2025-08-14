@@ -1,97 +1,3 @@
-// import React, { useState, useEffect } from "react";
-// import axios from "axios";
-// import { Pencil, Trash2 } from "lucide-react";
-// import { useNavigate } from "react-router-dom";
-// import { toast } from "react-toastify";
-// import AdminLayout from "./AdminLayout";
-
-// const ListeArticles = () => {
-//   const [articles, setArticles] = useState([]);
-//   const navigate = useNavigate();
-
-//   const fetchArticles = async () => {
-//     try {
-//       const res = await axios.get("http://localhost:5000/api/articles");
-//       setArticles(res.data);
-//     } catch (error) {
-//       toast.error("Erreur lors du chargement des articles");
-//       console.error("Erreur fetch articles", error);
-//     }
-//   };
-
-//   const handleDelete = async (id) => {
-//     if (window.confirm("Êtes-vous sûr de vouloir supprimer cet article ?")) {
-//       try {
-//         await axios.delete(`http://localhost:5000/api/articles/${id}`);
-//         toast.success("Article supprimé avec succès");
-//         fetchArticles();
-//       } catch (error) {
-//         toast.error("Échec de la suppression de l'article");
-//         console.error("Erreur suppression article", error);
-//       }
-//     }
-//   };
-
-//   const handleEdit = (article) => {
-//     navigate(`/articles/modifier-article/${article.codeArticle}`);
-//   };
-
-//   useEffect(() => {
-//     fetchArticles();
-//   }, []);
-
-//   return (
-//     <AdminLayout>
-//       <div className="p-6 space-y-6">
-//         <h2 className="text-2xl font-bold mb-4">Liste des articles</h2>
-//         <div className="overflow-auto rounded-lg shadow border">
-//           <table className="min-w-full bg-white text-sm text-left">
-//             <thead className="bg-gray-100 text-gray-700 uppercase text-xs">
-//               <tr>
-//                 <th className="px-6 py-3">Code Article</th>
-//                 <th className="px-6 py-3">Désignation</th>
-//                 <th className="px-6 py-3">Famille</th>
-//                 <th className="px-6 py-3">Sous-Famille</th>
-//                 <th className="px-6 py-3">Unite Stockage</th>
-//                 <th className="px-6 py-3 text-center"></th>
-//               </tr>
-//             </thead>
-//             <tbody>
-//               {articles.map((article) => (
-//                 <tr
-//                   key={article.codeArticle}
-//                   className="border-t hover:bg-gray-50 group transition"
-//                 >
-//                   <td className="px-6 py-4">{article.codeArticle}</td>
-//                   <td className="px-6 py-4">{article.designation}</td>
-//                   <td className="px-6 py-4">{article.famille?.nomFamille || "—"}</td>
-//                   <td className="px-6 py-4">{article.sousFamille?.nomSousFamille || "—"}</td>
-//                   <td className="px-6 py-4">{article.uniteStockage}</td>
-//                   <td className="px-6 py-4 text-center flex justify-center gap-4">
-//                     <Pencil
-//                       className="h-5 w-5 text-blue-600 cursor-pointer opacity-0 group-hover:opacity-100 transition"
-//                       onClick={() => handleEdit(article.codeArticle)}
-//                     />
-//                     <Trash2
-//                       className="h-5 w-5 text-red-600 cursor-pointer opacity-0 group-hover:opacity-100 transition"
-//                       onClick={() => handleDelete(article.codeArticle)}
-//                     />
-//                   </td>
-//                 </tr>
-//               ))}
-//             </tbody>
-//           </table>
-//         </div>
-//       </div>
-//     </AdminLayout>
-//   );
-// };
-
-// export default ListeArticles;
-
-
-
-
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Pencil, Trash2, Search, Filter, Download, Box } from "lucide-react";
@@ -162,7 +68,7 @@ const ListeArticles = () => {
     <AdminLayout>
       <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50 p-4 sm:p-6">
         <div className="max-w-7xl mx-auto">
-          {/* Header */}
+  
           <div className="mb-6 sm:mb-8">
             <div className="flex flex-col sm:flex-row sm:items-center mb-4 gap-4 sm:gap-0">
               <div className="flex items-center">
@@ -176,7 +82,7 @@ const ListeArticles = () => {
               </div>
             </div>
 
-            {/* Search and Filter Bar */}
+            
             <div className="bg-white rounded-xl shadow-lg p-3 sm:p-4 border border-gray-100">
               <div className="flex flex-col gap-3 sm:gap-4">
                 <div className="relative flex-1">
@@ -203,7 +109,7 @@ const ListeArticles = () => {
             </div>
           </div>
 
-          {/* Table */}
+         
           <div className="bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full">
@@ -223,14 +129,13 @@ const ListeArticles = () => {
                       key={article.codeArticle}
                       className={`transition-all duration-200 ${index % 2 === 0 ? 'bg-gray-50/30' : 'bg-white'} hover:bg-blue-50`}
                     >
-                      {/* Code */}
+                      
                       <td className="px-3 sm:px-6 py-4">
                         <span className="font-mono text-sm text-gray-900 bg-gray-100 px-2 py-1 rounded">
                           {article.codeArticle}
                         </span>
                       </td>
 
-                      {/* Désignation */}
                       <td className="px-3 sm:px-6 py-4 font-medium text-gray-900">
                         {article.designation.length > 20 ? 
                           <span title={article.designation}>
@@ -240,24 +145,24 @@ const ListeArticles = () => {
                         }
                       </td>
 
-                      {/* Famille - hidden on medium and small screens */}
+                  
                       <td className="px-3 sm:px-6 py-4 text-gray-600 hidden md:table-cell">
                         {article.famille?.nomFamille || "—"}
                       </td>
 
-                      {/* Sous-Famille - hidden on large and smaller screens */}
+                  
                       <td className="px-3 sm:px-6 py-4 text-gray-600 hidden lg:table-cell">
                         {article.sousFamille?.nomSousFamille || "—"}
                       </td>
 
-                      {/* Unité Stockage - hidden on small screens */}
+                      
                       <td className="px-3 sm:px-6 py-4 hidden sm:table-cell">
                         <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-blue-100 text-blue-800 border border-blue-200">
                           {article.uniteStockage}
                         </span>
                       </td>
 
-                      {/* Actions */}
+                      
                       <td className="px-3 sm:px-6 py-4 text-center">
                         <div className="flex items-center justify-center space-x-1">
                           <ActionButton

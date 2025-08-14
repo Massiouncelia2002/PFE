@@ -8,13 +8,13 @@ const AjouterDepot = () => {
 
   const handleAddDepot = async (data) => {
     try {
-      // Vérification basique
+    
       if (!data || Object.keys(data).length === 0) {
         console.error("Les données du dépôt sont vides ou invalides.");
         return;
       }
 
-      // Requête POST vers le backend
+     
       const response = await axios.post("http://localhost:5000/depot", data);
 
       if (response.status === 200 || response.status === 201) {

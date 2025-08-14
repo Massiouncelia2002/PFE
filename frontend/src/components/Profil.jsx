@@ -1,97 +1,3 @@
-// import { useEffect, useState } from "react";
-// import axios from "axios";
-
-// const Profil = () => {
-//   const [profil, setProfil] = useState(null);
-//   const [loading, setLoading] = useState(true);
-//   const [error, setError] = useState(null);
-
-//   useEffect(() => {
-//     const fetchProfil = async () => {
-//       try {
-//         const token = localStorage.getItem("token");
-//         if (!token) {
-//           throw new Error("No authentication token found");
-//         }
-
-//         console.log("Fetching profile from:", `${process.env.REACT_APP_API_URL}/utilisateur/profil`);
-        
-//         const response = await axios.get(
-//           `${process.env.REACT_APP_API_URL}/utilisateur/profil`,
-//           {
-//             headers: {
-//               Authorization: `Bearer ${token}`,
-//             },
-//           }
-//         );
-
-//         if (!response.data) {
-//           throw new Error("Empty response from server");
-//         }
-
-//         console.log("Profile data received:", response.data);
-//         setProfil(response.data);
-//       } catch (err) {
-//         console.error("Profile fetch error:", {
-//           message: err.message,
-//           status: err.response?.status,
-//           data: err.response?.data,
-//           config: err.config,
-//         });
-//         setError(
-//           err.response?.data?.message ||
-//           err.message ||
-//           "Failed to load profile"
-//         );
-//       } finally {
-//         setLoading(false);
-//       }
-//     };
-
-//     fetchProfil();
-//   }, []);
-
-//   if (loading) {
-//     return <div className="p-4 text-gray-500">Loading profile...</div>;
-//   }
-
-//   if (error) {
-//     return <div className="p-4 text-red-500">Error: {error}</div>;
-//   }
-
-//   if (!profil) {
-//     return <div className="p-4 text-yellow-600">No profile data available</div>;
-//   }
-
-//   return (
-//     <div className="p-6 bg-white rounded-lg shadow-md max-w-2xl mx-auto">
-//       <h2 className="text-2xl font-bold mb-4 text-blue-800">Mon Profil</h2>
-//       <div className="space-y-3">
-//         <p><span className="font-semibold">Code utilisateur:</span> {profil.codeUtilisateur}</p>
-//         <p><span className="font-semibold">Nom:</span> {profil.nom}</p>
-//         <p><span className="font-semibold">Prénom:</span> {profil.prenom}</p>
-//         <p><span className="font-semibold">Email:</span> {profil.email}</p>
-//         <p><span className="font-semibold">Poste de travail:</span> {profil.posteTravail || "Non renseigné"}</p>
-//         <p><span className="font-semibold">Branche fonctionnelle:</span> {profil.brancheFonction || "Non renseignée"}</p>
-//         <p><span className="font-semibold">Rôle:</span> {profil.role}</p>
-//         <p><span className="font-semibold">Date création:</span> {new Date(profil.dateCreation).toLocaleDateString()}</p>
-//         {profil.dateFin && (
-//           <p><span className="font-semibold">Date fin:</span> {new Date(profil.dateFin).toLocaleDateString()}</p>
-//         )}
-//         <p>
-//           <span className="font-semibold">Statut:</span> 
-//           <span className={profil.statut ? "text-green-600" : "text-red-600"}>
-//             {profil.statut ? " Actif" : " Inactif"}
-//           </span>
-//         </p>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Profil;
-
-
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { User, Mail, Briefcase, Calendar, Shield, Building, Hash, Clock } from "lucide-react";
@@ -250,7 +156,7 @@ const Profil = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 py-8 px-4">
       <div className="max-w-4xl mx-auto">
-        {/* Header Section */}
+       
         <div className="text-center mb-12">
           <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-blue-900 to-blue-700 rounded-full mb-6 shadow-lg">
             <User className="w-10 h-10 text-white" />
@@ -259,9 +165,9 @@ const Profil = () => {
           <p className="text-gray-600 text-lg">Informations personnelles et professionnelles</p>
         </div>
 
-        {/* Main Profile Card */}
+       
         <div className="bg-white rounded-3xl shadow-2xl overflow-hidden">
-          {/* Status Banner */}
+          
           <div 
             className={`px-8 py-4 ${
               profil.statut 
@@ -282,7 +188,7 @@ const Profil = () => {
             </div>
           </div>
 
-          {/* Profile Information Grid */}
+         
           <div className="p-8">
             <div className="grid gap-6 md:grid-cols-2">
               {profileFields.map((field, index) => {
@@ -292,7 +198,7 @@ const Profil = () => {
                     key={index}
                     className="group relative bg-gradient-to-br from-gray-50 to-white rounded-2xl p-6 border border-gray-100 hover:border-blue-200 hover:shadow-lg transition-all duration-300 hover:-translate-y-1 cursor-pointer"
                   >
-                    {/* Hover effect overlay */}
+                    
                     <div className="absolute inset-0 bg-gradient-to-br from-blue-900/5 to-blue-700/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     
                     <div className="relative z-10">
@@ -314,7 +220,7 @@ const Profil = () => {
                         </div>
                       </div>
                       
-                      {/* Special styling for different field types */}
+                      
                       {field.type === 'name' && (
                         <div className="mt-3 pt-3 border-t border-gray-100">
                           <div className="flex items-center space-x-2 text-sm text-gray-500">
@@ -338,7 +244,7 @@ const Profil = () => {
             </div>
           </div>
 
-          {/* Footer Actions */}
+        
           <div className="bg-gray-50 px-8 py-6 border-t border-gray-100">
             <div className="flex flex-col sm:flex-row gap-4 justify-between items-center">
               <div className="text-sm text-gray-500">
@@ -356,7 +262,6 @@ const Profil = () => {
           </div>
         </div>
 
-        {/* Quick Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
           <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300 border-l-4 border-blue-900">
             <div className="flex items-center justify-between">

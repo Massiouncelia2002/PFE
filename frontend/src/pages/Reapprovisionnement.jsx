@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { Download, AlertTriangle, TrendingUp, Package, CheckCircle, Edit3 } from 'lucide-react';
 
-import AdminLayoutPlannificateur from './AdminLayoutPlannificateur'; 
-
 const SmartRestockInterface = () => {
   const [currentStep, setCurrentStep] = useState('depot-selection');
   const [selectedDepot, setSelectedDepot] = useState(null);
@@ -10,17 +8,17 @@ const SmartRestockInterface = () => {
   const [restockQuantities, setRestockQuantities] = useState({});
   const [editingArticle, setEditingArticle] = useState(null);
 
-
+  
   const depots = [
-    { id: 'CLR-OUE-3199', name: 'Clr5', location: 'Est' },
-    { id: 'CLR-SUD-5247', name: 'Clr3', location: 'Est' },
-    { id: 'CLR-EST-8854', name: 'Clr4', location: 'Est' }
+    { id: 'CLR-OUE-8043', name: 'Dépôt Ouest Cevital', location: 'Ouest' },
+    { id: 'CLR-SUD-9221', name: 'Dépôt Sud Cevital', location: 'Sud' },
+    { id: 'DRP-EST-2379', name: 'Dépôt Est Cevital', location: 'Est' }
   ];
 
 
   const stockData = [
-    { articleId: "SF-F-649-TCHINA-JUSFRUIT1L001", depotId: "CLR-EST-8854", currentStock: 0, alertThreshold: 0, suggestedRestock: 50 },
-    { articleId: "SF-F-143-BOISSON-EAU1L001", depotId: "CLR-EST-8854", currentStock: 50, alertThreshold: 0, suggestedRestock: 20 },
+    { articleId: "SF-F-143-BOISSON-EAU1L001", depotId: "CLR-OUE-8043", currentStock: 0, alertThreshold: 0, suggestedRestock: 50 },
+    { articleId: "SF-F-143-BOISSON-EAU1L001", depotId: "CLR-SUD-9221", currentStock: 50, alertThreshold: 0, suggestedRestock: 50 },
     { articleId: "SF-F-395-HUILE-FLEURIAL5L001", depotId: "CLR-OUE-8043", currentStock: 0, alertThreshold: 0, suggestedRestock: 10 },
     { articleId: "SF-F-395-HUILE-FLEURIAL5L001", depotId: "CLR-SUD-9221", currentStock: 5, alertThreshold: 0, suggestedRestock: 10 },
     { articleId: "SF-F-395-HUILE-LABELLE500GR001", depotId: "CLR-OUE-8043", currentStock: 0, alertThreshold: 0, suggestedRestock: 30 },
@@ -28,12 +26,12 @@ const SmartRestockInterface = () => {
     { articleId: "SF-F-395-HUILE-LABELLE500GR002", depotId: "CLR-OUE-8043", currentStock: 0, alertThreshold: 0, suggestedRestock: 20 },
     { articleId: "SF-F-395-HUILE-LABELLE500GR002", depotId: "CLR-SUD-9221", currentStock: 5, alertThreshold: 0, suggestedRestock: 20 },
     { articleId: "SF-F-395-HUILE-LABELLE500GR003", depotId: "CLR-OUE-8043", currentStock: 0, alertThreshold: 0, suggestedRestock: 30 },
-    { articleId: "SF-F-762-LALAKHEDIJA-EAUGAZEUX33CL001", depotId: "CLR-EST-8854", currentStock: 50, alertThreshold: 0, suggestedRestock: 30 },
-    { articleId: "SF-F-762-LALAKHEDIJA-EAUMINIRALLE33CL001", depotId: "CLR-EST-8854", currentStock: 0, alertThreshold: 0, suggestedRestock: 30 },
-    { articleId: "SF-F-762-LALAKHEDIJA-EAUMINIRALLE5L001", depotId: "CLR-EST-8854", currentStock: 0, alertThreshold: 0, suggestedRestock: 20 },
-    { articleId: "SF-F-684-ELIO-HUILE5L001", depotId: "CLR-EST-8854", currentStock: 0, alertThreshold: 0, suggestedRestock: 20 },
-    { articleId: "SF-F-917-MATINA-SMEN500G001", depotId: "CLR-EST-8854", currentStock: 0, alertThreshold: 0, suggestedRestock: 20 },
-    { articleId: "SF-F-917-MATINA-MARGARINE1KG001", depotId: "CLR-EST-8854", currentStock: 0, alertThreshold: 0, suggestedRestock: 20 },
+    { articleId: "SF-F-395-HUILE-LABELLE500GR003", depotId: "CLR-SUD-9221", currentStock: 50, alertThreshold: 0, suggestedRestock: 30 },
+    { articleId: "SF-F-395-HUILE-LABELLE500GR003", depotId: "DRP-EST-2379", currentStock: 0, alertThreshold: 0, suggestedRestock: 30 },
+    { articleId: "SF-F-395-HUILE-LABELLE500GR004", depotId: "CLR-OUE-8043", currentStock: 0, alertThreshold: 0, suggestedRestock: 20 },
+    { articleId: "SF-F-395-HUILE-LABELLE500GR004", depotId: "CLR-SUD-9221", currentStock: 0, alertThreshold: 0, suggestedRestock: 20 },
+    { articleId: "SF-F-395-HUILE-LABELLE500GR004", depotId: "DRP-EST-2379", currentStock: 0, alertThreshold: 0, suggestedRestock: 20 },
+    { articleId: "SF-F-395-HUILE-LABELLE500GR005", depotId: "CLR-OUE-8043", currentStock: 0, alertThreshold: 0, suggestedRestock: 20 },
     { articleId: "SF-F-395-HUILE-LABELLE500GR005", depotId: "CLR-SUD-9221", currentStock: 0, alertThreshold: 0, suggestedRestock: 20 }
   ];
 
@@ -326,15 +324,15 @@ const SmartRestockInterface = () => {
         </>
       )}
     </div>
-  ); 
+  );
 
   return (
-    <AdminLayoutPlannificateur  >
+     
     <div className="min-h-screen bg-gray-100">
       {currentStep === 'depot-selection' && renderDepotSelection()}
       {currentStep === 'alert-articles' && renderAlertArticles()}
     </div>
-    </AdminLayoutPlannificateur>
+
   );
 };
 

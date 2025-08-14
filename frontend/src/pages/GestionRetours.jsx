@@ -1,198 +1,3 @@
-
-// import React, { useEffect, useState } from "react";
-// import axios from "axios";
-// import { toast } from "react-toastify";
-
-// const GestionRetours = () => {
-//     const [planifications, setPlanifications] = useState([]);
-
-//     useEffect(() => {
-//         axios
-//             .get("http://localhost:5000/api/commandePlanifie/affichePlanificationPourAdminDepot", {
-//                 headers: {
-//                     Authorization: `Bearer ${localStorage.getItem("token")}`,
-//                 },
-//             })
-//             .then((res) => {
-//                 const planifs = res.data.data.map((p) => ({
-//                     ...p,
-//                     statutLivraison: p.statutLivraison || "en_cours",
-//                     quantiteRetourne: p.statutLivraison === "annule" ? p.quantiteTransporte : 0,
-//                     bonRetourGenere: !!p.bonRetour, // true si déjà généré côté backend
-//                 }));
-//                 setPlanifications(planifs);
-//             })
-//             .catch((err) => {
-//                 toast.error("Erreur lors du chargement des planifications");
-//                 console.error(err);
-//             });
-//     }, []);
-
-//     const handleStatutChange = (index, newStatut) => {
-//         const updated = [...planifications];
-//         updated[index].statutLivraison = newStatut;
-//         updated[index].quantiteRetourne =
-//             newStatut === "annule" ? updated[index].quantiteTransporte : newStatut === "retourne" ? 0 : "";
-//         updated[index].bonRetourGenere = false; // annuler le bouton PDF si statut changé
-//         setPlanifications(updated);
-//     };
-
-//     const handleQuantiteRetourneChange = (index, value) => {
-//         const updated = [...planifications];
-//         updated[index].quantiteRetourne = value;
-//         setPlanifications(updated);
-//     };
-
-
-//     const handleEnregistrer = async (planif, index) => {
-//         const quantiteRetourne = parseFloat(planif.quantiteRetourne);
-//         const quantiteTransporte = planif.quantiteTransporte;
-
-//         // ✅ Vérification côté frontend avant l’appel API
-//         if (
-//             planif.statutLivraison === "retourne" &&
-//             (isNaN(quantiteRetourne) || quantiteRetourne <= 0 || quantiteRetourne >= quantiteTransporte)
-//         ) {
-//             toast.warn("⚠️ Quantité retournée invalide : doit être > 0 et < quantité transportée.");
-//             return;
-//         }
-
-//         try {
-//             await axios.post(
-//                 `http://localhost:5000/api/commandePlanifie/gererRetour/${planif.commandePlanifieId}`,
-//                 {
-//                     statut: planif.statutLivraison,
-//                     quantiteRetourne: quantiteRetourne,
-//                 },
-//                 {
-//                     headers: {
-//                         Authorization: `Bearer ${localStorage.getItem("token")}`,
-//                     },
-//                 }
-//             );
-
-//             toast.success("✅ Retour enregistré !");
-//             const updated = [...planifications];
-//             updated[index].bonRetourGenere = true;
-//             setPlanifications(updated);
-//         } catch (error) {
-//             // ✅ Affichage du message exact du backend si présent
-//             if (error.response?.data?.message) {
-//                 toast.error(error.response.data.message);
-//             } else {
-//                 toast.error("❌ Erreur d'enregistrement.");
-//             }
-//             console.error("Erreur lors de l'enregistrement :", error);
-//         }
-//     };
-
-
-
-
-//     const handleGenererBonRetour = async (planif) => {
-//         try {
-//             const response = await axios.post(
-//                 `http://localhost:5000/api/commandePlanifie/genererBonRetour/${planif.commandePlanifieId}`,
-//                 {},
-//                 {
-//                     headers: {
-//                         Authorization: `Bearer ${localStorage.getItem("token")}`,
-//                     },
-//                     responseType: "blob",
-//                 }
-//             );
-//             const blob = new Blob([response.data], { type: "application/pdf" });
-//             const link = document.createElement("a");
-//             link.href = window.URL.createObjectURL(blob);
-//             link.download = `BonRetour_${planif.commandePlanifieId}.pdf`;
-//             link.click();
-//         } catch (error) {
-//             toast.error("❌ Erreur PDF bon de retour");
-//             console.error(error);
-//         }
-//     };
-
-//     return (
-//         <div className="container mt-5">
-//             <h2 className="mb-4">Gestion des Retours</h2>
-//             <table className="table table-bordered">
-//                 <thead className="table-light">
-//                     <tr>
-//                         <th>Commande</th>
-//                         <th>Client</th>
-//                         <th>Véhicule</th>
-//                         <th>Qté Transportée</th>
-//                         <th>Statut</th>
-//                         <th>Qté Retournée</th>
-//                         <th>Actions</th>
-//                     </tr>
-//                 </thead>
-//                 <tbody>
-//                     {planifications.map((p, i) => (
-//                         <tr key={p.commandePlanifieId}>
-//                             <td>{p.commande.codeCommande}</td>
-//                             <td>{p.commande.client.nomClient}</td>
-//                             <td>{p.vehicule.matricule}</td>
-//                             <td>{p.quantiteTransporte}</td>
-//                             <td>
-//                                 <select
-//                                     className="form-select"
-//                                     value={p.statutLivraison}
-//                                     onChange={(e) => handleStatutChange(i, e.target.value)}
-//                                 >
-//                                     <option value="livre">Livré</option>
-//                                     <option value="annule">Annulé</option>
-//                                     <option value="retourne">Retourné</option>
-//                                 </select>
-//                             </td>
-//                             <td>
-//                                 <input
-//                                     type="number"
-//                                     className="form-control"
-//                                     value={p.quantiteRetourne}
-//                                     onChange={(e) => handleQuantiteRetourneChange(i, e.target.value)}
-//                                     disabled={p.statutLivraison !== "retourne"}
-//                                     min="0"
-//                                     max={p.quantiteTransporte}
-//                                     step="0.01"
-//                                 />
-//                             </td>
-//                             <td className="d-flex flex-column gap-2">
-//                                 <button className="btn btn-success" onClick={() => handleEnregistrer(p, i)}>
-//                                     Enregistrer
-//                                 </button>
-//                                 <button
-//                                     className="btn btn-primary"
-//                                     disabled={!p.bonRetourGenere}
-//                                     onClick={() => handleGenererBonRetour(p)}
-//                                 >
-//                                     Générer Bon de Retour
-//                                 </button>
-//                             </td>
-//                         </tr>
-//                     ))}
-//                 </tbody>
-//             </table>
-//         </div>
-//     );
-// };
-
-// export default GestionRetours;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -352,7 +157,7 @@ const GestionRetours = () => {
         <AdminLayoutDepot>
         <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-4 sm:p-6 lg:p-8">
             <div className="max-w-7xl mx-auto">
-                {/* Header */}
+            
                 <div className="mb-8">
                     <div className="flex items-center gap-3 mb-2">
                         <div className="p-2 bg-blue-600 rounded-lg">
@@ -363,7 +168,7 @@ const GestionRetours = () => {
                     <p className="text-gray-600">Gérez les statuts de livraison et les retours de marchandises</p>
                 </div>
 
-                {/* Desktop Table */}
+            
                 <div className="hidden lg:block bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
                     <div className="overflow-x-auto">
                         <table className="w-full">
@@ -468,7 +273,7 @@ const GestionRetours = () => {
                     </div>
                 </div>
 
-                {/* Mobile Cards */}
+              
                 <div className="lg:hidden space-y-4">
                     {planifications.map((p, i) => (
                         <div key={p.commandePlanifieId} className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">

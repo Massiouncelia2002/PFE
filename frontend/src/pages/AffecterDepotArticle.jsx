@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Search, Plus, X, CheckCircle, AlertCircle, ChevronDown, ChevronUp } from "lucide-react";
 import AdminLayout from "./AdminLayout";
@@ -39,7 +38,7 @@ const AffectationMultiple = () => {
         }
     };
 
-    // Fetch dépôts
+
     useEffect(() => {
         fetch("http://localhost:5000/depot/")
             .then((res) => res.json())
@@ -51,7 +50,7 @@ const AffectationMultiple = () => {
             .catch(() => setDepots([]));
     }, []);
 
-    // Fetch articles
+   
     useEffect(() => {
         fetch("http://localhost:5000/api/articles/")
             .then((res) => res.json())
@@ -63,7 +62,7 @@ const AffectationMultiple = () => {
             .catch(() => setArticles([]));
     }, []);
 
-    // Filtrer dépôts selon recherche
+   
     const filteredDepots = depots.filter((d) => {
         const code = d.codeDepot?.toLowerCase() || "";
         const nom = d.nomDepot?.toLowerCase() || "";
@@ -75,7 +74,7 @@ const AffectationMultiple = () => {
         );
     });
 
-    // Filtrer articles selon recherche
+    
     const filteredArticles = articles.filter((a) => {
         const code = a.codeArticle?.toLowerCase() || "";
         const nom = a.nomArticle?.toLowerCase() || "";
@@ -83,7 +82,7 @@ const AffectationMultiple = () => {
         return code.includes(s) || nom.includes(s);
     });
 
-    // Gérer sélection simple/multiple dépôts
+    
     const toggleDepotSelection = (codeDepot) => {
         setSelectedDepots((prev) =>
             prev.includes(codeDepot)
@@ -92,7 +91,7 @@ const AffectationMultiple = () => {
         );
     };
 
-    // Tout sélectionner / désélectionner pour les dépôts
+   
     const toggleSelectAllDepots = () => {
         if (selectedDepots.length === filteredDepots.length) {
             setSelectedDepots([]);
@@ -101,7 +100,7 @@ const AffectationMultiple = () => {
         }
     };
 
-    // Gérer sélection simple/multiple articles
+    
     const toggleArticleSelection = (codeArticle) => {
         setSelectedArticles((prev) =>
             prev.includes(codeArticle)
@@ -110,7 +109,7 @@ const AffectationMultiple = () => {
         );
     };
 
-    // Tout sélectionner / désélectionner pour les articles
+    
     const toggleSelectAllArticles = () => {
         if (selectedArticles.length === filteredArticles.length) {
             setSelectedArticles([]);
@@ -166,7 +165,7 @@ const AffectationMultiple = () => {
  <AdminLayout>
         <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 py-8 px-4">
             <div className="max-w-6xl mx-auto">
-                {/* Header */}
+                
                 <div className="text-center mb-12">
                     <h1 className="text-4xl font-bold text-slate-800 mb-4">
                         Gestion des Affectations
@@ -177,7 +176,7 @@ const AffectationMultiple = () => {
                 </div>
 
                 <div className="grid lg:grid-cols-2 gap-8">
-                    {/* Formulaire d'affectation */}
+                    
                     <div className="bg-white rounded-2xl shadow-xl p-8 border border-slate-200">
                         <h2 className="text-2xl font-bold text-slate-800 mb-6 flex items-center">
                             <Plus className="mr-3 text-blue-600" size={28} />
@@ -185,7 +184,7 @@ const AffectationMultiple = () => {
                         </h2>
 
                         <form onSubmit={handleSubmit} className="space-y-6">
-                            {/* Dépôts sélectionnés */}
+                            
                             <div className="space-y-3">
                                 <label className="block text-sm font-semibold text-slate-700">
                                     Dépôts sélectionnés
@@ -224,7 +223,7 @@ const AffectationMultiple = () => {
                                 </button>
                             </div>
 
-                            {/* Articles sélectionnés */}
+                          
                             <div className="space-y-3">
                                 <label className="block text-sm font-semibold text-slate-700">
                                     Articles sélectionnés
@@ -280,7 +279,7 @@ const AffectationMultiple = () => {
                         </form>
                     </div>
 
-                    {/* Liste des dépôts */}
+                   
                     <div className="bg-white rounded-2xl shadow-xl p-8 border border-slate-200">
                         <h3 className="text-2xl font-bold text-slate-800 mb-6">
                             Dépôts et Articles Affectés
@@ -341,7 +340,7 @@ const AffectationMultiple = () => {
                     </div>
                 </div>
 
-                {/* Message de notification */}
+               
                 {message && (
                     <div className={`fixed top-4 right-4 z-50 p-4 rounded-xl shadow-lg transform transition-all duration-300 ${
                         message.type === "success" 
@@ -359,7 +358,7 @@ const AffectationMultiple = () => {
                     </div>
                 )}
 
-                {/* Modal dépôts */}
+               
                 {showDepotList && (
                     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4">
                         <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden">
@@ -433,7 +432,7 @@ const AffectationMultiple = () => {
                     </div>
                 )}
 
-                {/* Modal articles */}
+                
                 {showArticleList && (
                     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4">
                         <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden">

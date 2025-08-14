@@ -1,242 +1,3 @@
-// import React, { useEffect, useState } from "react";
-// import axios from "axios";
-
-// function PlanifsDepot() {
-//     const [planifs, setPlanifs] = useState([]);
-//     const [loading, setLoading] = useState(true);
-//     const [error, setError] = useState("");
-
-//     useEffect(() => {
-//         const fetchPlanifs = async () => {
-//             try {
-//                 const token = localStorage.getItem("token");
-//                 const res = await axios.get(
-//                     "http://localhost:5000/api/commandePlanifie/affichePlanificationPourAdminDepot",
-//                     { headers: { Authorization: `Bearer ${token}` } }
-//                 );
-//                 setPlanifs(res.data.data);
-//             } catch (e) {
-//                 console.error(e);
-//                 setError("Impossible de récupérer les planifications.");
-//             } finally {
-//                 setLoading(false);
-//             }
-//         };
-//         fetchPlanifs();
-//     }, []);
-
-//     if (loading) return <div>Chargement...</div>;
-//     if (error) return <div className="text-red-500">{error}</div>;
-
-//     return (
-//         <div className="p-4">
-//             <h2 className="text-2xl font-semibold mb-4">Planifications du dépôt</h2>
-//             {planifs.length === 0 ? (
-//                 <div>Aucune planification</div>
-//             ) : (
-//                 <table className="min-w-full bg-white">
-
-
-//                     <thead className="bg-gray-200">
-//                         <tr>
-
-//                             <th className="px-4 py-2">Code client</th>
-//                             <th className="px-4 py-2">Nom client</th>
-//                             <th className="px-4 py-2">Code article</th>
-//                             <th className="px-4 py-2">Désignation</th>
-//                             <th className="px-4 py-2">Date commande</th>
-//                             <th className="px-4 py-2">Date prévue</th>
-//                             <th className="px-4 py-2">Heure Départ prévue</th>
-//                             <th className="px-4 py-2">Durée (h)</th>
-//                             <th className="px-4 py-2">Quantité transportée</th>
-//                         </tr>
-//                     </thead>
-
-
-
-//                     <tbody>
-//                         {planifs.map((p) =>
-//                             p.commande.articlesCommandes.map((ac, idx) => (
-//                                 <tr key={`${p.commandePlanifieId}-${idx}`} className="border-t">
-
-//                                     <td className="px-4 py-2">{p.commande.client.codeClient}</td>
-//                                     <td className="px-4 py-2">{p.commande.client.nomClient}</td>
-//                                     <td className="px-4 py-2">{ac.article.codeArticle}</td>
-//                                     <td className="px-4 py-2">{ac.article.designation}</td>
-//                                     <td className="px-4 py-2">{p.commande.dateCommande}</td>
-//                                     <td className="px-4 py-2">{p.datePrevue}</td>
-//                                     <td className="px-4 py-2">{p.heurePrevue}</td>
-//                                     <td className="px-4 py-2">{p.dureePrevue}</td>
-//                                     <td className="px-4 py-2">{p.quantiteTransporte}</td>
-//                                 </tr>
-//                             ))
-//                         )}
-//                     </tbody>
-//                 </table>
-//             )}
-//         </div>
-//     );
-// }
-
-// export default PlanifsDepot;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import React, { useEffect, useState } from "react";
-// import axios from "axios";
-
-// function PlanifsDepot() {
-//     const [planifs, setPlanifs] = useState([]);
-//     const [loading, setLoading] = useState(true);
-//     const [error, setError] = useState("");
-
-//     useEffect(() => {
-//         const fetchPlanifs = async () => {
-//             try {
-//                 const token = localStorage.getItem("token");
-//                 const res = await axios.get(
-//                     "http://localhost:5000/api/commandePlanifie/affichePlanificationPourAdminDepot",
-//                     { headers: { Authorization: `Bearer ${token}` } }
-//                 );
-//                 setPlanifs(res.data.data);
-//             } catch (e) {
-//                 console.error(e);
-//                 setError("Impossible de récupérer les planifications.");
-//             } finally {
-//                 setLoading(false);
-//             }
-//         };
-//         fetchPlanifs();
-//     }, []);
-
-//     const handleGenererBon = async (commandePlanifieId) => {
-//         try {
-//             const token = localStorage.getItem("token");
-//             const res = await axios.post(
-//                 `http://localhost:5000/api/commandePlanifie/genererBonLivraison/${commandePlanifieId}`,
-//                 {},
-//                 {
-//                     headers: { Authorization: `Bearer ${token}` },
-//                     responseType: "blob" // pour recevoir le PDF
-//                 }
-//             );
-
-//             const url = window.URL.createObjectURL(new Blob([res.data], { type: 'application/pdf' }));
-//             const link = document.createElement('a');
-//             link.href = url;
-//             link.setAttribute('download', `BonLivraison_${commandePlanifieId}.pdf`);
-//             document.body.appendChild(link);
-//             link.click();
-//             document.body.removeChild(link);
-//         } catch (err) {
-//             console.error(err);
-//             alert("❌ Échec de la génération du bon de livraison.");
-//         }
-//     };
-
-//     if (loading) return <div>Chargement...</div>;
-//     if (error) return <div className="text-red-500">{error}</div>;
-
-//     return (
-//         <div className="p-4">
-//             <h2 className="text-2xl font-semibold mb-4">Planifications du dépôt</h2>
-//             {planifs.length === 0 ? (
-//                 <div>Aucune planification</div>
-//             ) : (
-//                 <table className="min-w-full bg-white">
-//                     <thead className="bg-gray-200">
-//                         <tr>
-//                             <th className="px-4 py-2">Code client</th>
-//                             <th className="px-4 py-2">Nom client</th>
-//                             <th className="px-4 py-2">Code article</th>
-//                             <th className="px-4 py-2">Désignation</th>
-//                             <th className="px-4 py-2">Date commande</th>
-//                             <th className="px-4 py-2">Date prévue</th>
-//                             <th className="px-4 py-2">Heure Départ prévue</th>
-//                             <th className="px-4 py-2">Durée (h)</th>
-//                             <th className="px-4 py-2">Quantité transportée</th>
-//                             <th className="px-4 py-2">Actions</th>
-//                         </tr>
-//                     </thead>
-//                     <tbody>
-//                         {/* {planifs.map((p) =>
-//                             p.commande?.articlesCommandes?.map((ac, idx) => (
-//                                 <tr key={`${p.commandePlanifieId}-${idx}`} className="border-t">
-//                                     <td className="px-4 py-2">{p.commande.client.codeClient}</td>
-//                                     <td className="px-4 py-2">{p.commande.client.nomClient}</td>
-//                                     <td className="px-4 py-2">{ac.article.codeArticle}</td>
-//                                     <td className="px-4 py-2">{ac.article.designation}</td>
-//                                     <td className="px-4 py-2">{p.commande.dateCommande}</td>
-//                                     <td className="px-4 py-2">{p.datePrevue}</td>
-//                                     <td className="px-4 py-2">{p.heurePrevue}</td>
-//                                     <td className="px-4 py-2">{p.dureePrevue}</td>
-//                                     <td className="px-4 py-2">{p.quantiteTransporte}</td>
-//                                     <td className="px-4 py-2">
-//                                         <button
-//                                             onClick={() => handleGenererBon(p.commandePlanifieId)}
-//                                             className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded"
-//                                         >
-//                                             Générer PDF
-//                                         </button>
-//                                     </td>
-//                                 </tr>
-//                             ))
-//                         )} */}
-//                         {planifs.map((p) =>
-//                             p.commande && Array.isArray(p.commande.articlesCommandes)
-//                                 ? p.commande.articlesCommandes.map((ac, idx) => (
-//                                     <tr key={`${p.commandePlanifieId}-${idx}`} className="border-t">
-//                                         <td className="px-4 py-2">{p.commande.client?.codeClient}</td>
-//                                         <td className="px-4 py-2">{p.commande.client?.nomClient}</td>
-//                                         <td className="px-4 py-2">{ac.article?.codeArticle}</td>
-//                                         <td className="px-4 py-2">{ac.article?.designation}</td>
-//                                         <td className="px-4 py-2">{p.commande.dateCommande}</td>
-//                                         <td className="px-4 py-2">{p.datePrevue}</td>
-//                                         <td className="px-4 py-2">{p.heurePrevue}</td>
-//                                         <td className="px-4 py-2">{p.dureePrevue}</td>
-//                                         <td className="px-4 py-2">{p.quantiteTransporte}</td>
-//                                         <td className="px-4 py-2">
-//                                             <button
-//                                                 onClick={() => handleGenererBon(p.commandePlanifieId)}
-//                                                 className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded"
-//                                             >
-//                                                 Générer PDF
-//                                             </button>
-//                                         </td>
-//                                     </tr>
-//                                 ))
-//                                 : null
-//                         )}
-//                     </tbody>
-//                 </table>
-//             )}
-//         </div>
-//     );
-// }
-
-// export default PlanifsDepot;
-
-
-
-
-
-
-
-
-
-
-
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { 
@@ -366,7 +127,7 @@ function PlanifsDepot() {
     return (
        <AdminLayoutDepot >
         <div className={`min-h-screen transition-all duration-300 ${darkMode ? 'bg-gray-900' : 'bg-gradient-to-br from-gray-50 to-gray-100'}`}>
-            {/* Header avec glassmorphism */}
+            
             <div className="sticky top-0 z-50 backdrop-blur-xl bg-white/80 dark:bg-gray-900/80 border-b border-gray-200/50 dark:border-gray-700/50">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex items-center justify-between h-20">
@@ -397,7 +158,7 @@ function PlanifsDepot() {
             </div>
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                {/* Barre de recherche et filtres */}
+                
                 <div className="mb-8">
                     <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl rounded-2xl border border-gray-200/50 dark:border-gray-700/50 p-6 shadow-lg">
                         <div className="flex flex-col sm:flex-row gap-4">
@@ -422,7 +183,7 @@ function PlanifsDepot() {
                     </div>
                 </div>
 
-                {/* Liste des planifications */}
+                
                 {filteredPlanifs.length === 0 ? (
                     <div className="text-center py-16">
                         <div className="inline-flex items-center justify-center w-20 h-20 bg-gray-200 dark:bg-gray-700 rounded-full mb-6">
@@ -444,7 +205,7 @@ function PlanifsDepot() {
                                         key={`${p.commandePlanifieId}-${idx}`}
                                         className="group bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl rounded-2xl border border-gray-200/50 dark:border-gray-700/50 p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.01]"
                                     >
-                                        {/* Header de la carte */}
+                                        
                                         <div className="flex items-center justify-between mb-6">
                                             <div className="flex items-center space-x-4">
                                                 <div className="w-12 h-12 bg-gradient-to-br from-blue-900 to-yellow-500 rounded-xl flex items-center justify-center">
@@ -468,7 +229,7 @@ function PlanifsDepot() {
                                             </div>
                                         </div>
 
-                                        {/* Informations principales */}
+                                        
                                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                                             <div className="bg-blue-50/50 dark:bg-blue-900/20 rounded-xl p-4">
                                                 <div className="flex items-center space-x-3">
@@ -519,7 +280,7 @@ function PlanifsDepot() {
                                             </div>
                                         </div>
 
-                                        {/* Détails supplémentaires */}
+                                      
                                         <div className="bg-gray-50/50 dark:bg-gray-700/30 rounded-xl p-4 mb-6">
                                             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
                                                 <div>
@@ -544,17 +305,14 @@ function PlanifsDepot() {
                                             </div>
                                         </div>
 
-                                        {/* Actions */}
+                                        
                                         <div className="flex items-center justify-between pt-4 border-t border-gray-200/50 dark:border-gray-700/50">
                                             <div className="text-xs text-gray-500 dark:text-gray-400">
                                                 Commandé le {formatDate(p.commande.dateCommande)}
                                             </div>
                                             
                                             <div className="flex space-x-3">
-                                                {/* <button className="flex items-center space-x-2 px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all duration-200">
-                                                    <Eye className="w-4 h-4" />
-                                                    <span className="text-sm">Détails</span>
-                                                </button> */}
+                                               
                                                 
                                                 <button
                                                     onClick={() => handleGenererBon(p.commandePlanifieId)}

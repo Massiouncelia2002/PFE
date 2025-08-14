@@ -46,15 +46,15 @@ const AdminLayoutPlannificateur = ({ children }) => {
     <div className={darkMode ? 'dark' : ''}>
       <div className="min-h-screen bg-white dark:bg-[#0d1117] text-gray-900 dark:text-white">
         <div className="flex">
-          {/* Sidebar Plannificateur */}
+       
           <Sidebar isOpen={isSidebarOpen} closeSidebar={() => setIsSidebarOpen(false)} />
 
-          {/* Main */}
+   
           <main className="flex-1 lg:ml-64 min-h-screen bg-gray-50 dark:bg-[#0d1117]">
-            {/* Topbar */}
+          
             <div className="sticky top-0 z-30 w-full bg-white dark:bg-[#002855] border-b border-gray-200 dark:border-[#003366]/30">
               <div className="flex items-center justify-between px-4 md:px-6 py-4">
-                {/* Left Side */}
+          
                 <div className="flex items-center gap-4">
                   <button
                     onClick={() => setIsSidebarOpen(!isSidebarOpen)}
@@ -67,7 +67,7 @@ const AdminLayoutPlannificateur = ({ children }) => {
                   </p>
                 </div>
 
-                {/* Right Side */}
+                
                 <div className="flex items-center gap-4">
                   <button
                     onClick={() => setDarkMode(!darkMode)}
@@ -119,7 +119,7 @@ const AdminLayoutPlannificateur = ({ children }) => {
               </div>
             </div>
 
-            {/* Page content */}
+       
             <div className="p-4 md:p-6 lg:p-8">{children}</div>
           </main>
         </div>

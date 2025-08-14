@@ -1,154 +1,3 @@
-
-// import React, { useEffect, useState } from "react";
-// import axios from "axios";
-// import { useNavigate } from "react-router-dom";
-
-// const PlanifierMesDepots = () => {
-//   const navigate = useNavigate();
-//   const [depots, setDepots] = useState([]);
-//   const [selectedDepot, setSelectedDepot] = useState(null);
-//   const [articles, setArticles] = useState([]);
-//   const [message, setMessage] = useState("");
-
-//   const token = localStorage.getItem("token");
-//   const headers = { Authorization: `Bearer ${token}` };
-
-//   // 🔄 Récupérer les dépôts à l'initialisation
-//   useEffect(() => {
-//     const fetchDepots = async () => {
-//       try {
-//         const res = await axios.get("http://localhost:5000/depot/mes-depots", { headers });
-//         setDepots(res.data);
-//         if (res.data.length === 1) {
-//           setSelectedDepot(res.data[0]);
-//         }
-//       } catch (err) {
-//         console.error(err);
-//         setMessage("Erreur lors de la récupération des dépôts.");
-//       }
-//     };
-//     fetchDepots();
-//   }, []);
-
-//   // 🔄 Récupérer les articles avec demande + stock quand un dépôt est sélectionné
-//   useEffect(() => {
-//     const fetchData = async () => {
-//       if (!selectedDepot) return;
-
-//       try {
-//         const res = await axios.get(
-//           `http://localhost:5000/articleDepot/demandes/${selectedDepot.codeDepot}`,
-//           { headers }
-//         );
-//         setArticles(res.data);
-//       } catch (err) {
-//         console.error(err);
-//         setMessage("Erreur lors de la récupération des données du dépôt.");
-//       }
-//     };
-
-//     fetchData();
-//   }, [selectedDepot]);
-
-//   const handlePlanifier = () => {
-//   navigate("/AfficherCommandesParClient", {
-//     state: {
-//       articles,
-//       codeDepot: selectedDepot.codeDepot
-//     },
-//   });
-//   // navigate("/AfficherCommandesPlanifiees", {
-//   //   state: {
-//   //     articles,
-//   //     codeDepot: selectedDepot.codeDepot
-//   //   },
-//   // });
-// };
-
-//   return (
-//     <div className="container mt-4">
-//       <h2>Planification des commandes par dépôt</h2>
-
-//       {message && <div className="alert alert-danger">{message}</div>}
-
-//       {depots.length > 1 && (
-//         <div className="mb-3">
-//           <label className="form-label">Choisir un dépôt :</label>
-//           <select
-//             className="form-select"
-//             value={selectedDepot?.codeDepot || ""}
-//             onChange={(e) =>
-//               setSelectedDepot(depots.find((d) => d.codeDepot === e.target.value))
-//             }
-//           >
-//             <option value="">-- Sélectionner --</option>
-//             {depots.map((d) => (
-//               <option key={d.codeDepot} value={d.codeDepot}>
-//                 {d.nom} ({d.codeDepot})
-//               </option>
-//             ))}
-//           </select>
-//         </div>
-//       )}
-
-//       {selectedDepot && articles.length > 0 && (
-//         <>
-//           <table className="table table-bordered">
-//             <thead className="table-light">
-//               <tr>
-//                 <th>Article</th>
-//                 <th>Demandé</th>
-//                 <th>Stocké</th>
-//                 <th>Stock Max</th>
-//                 <th>Stock Alerte</th>
-//                 <th>Statut</th>
-//               </tr>
-//             </thead>
-//             <tbody>
-//               {articles.map((article) => {
-//                 const ok = article.quantiteDemandeeTotale <= article.quantiteStockee;
-//                 return (
-//                   <tr key={article.codeArticle}>
-//                     <td>{article.designation} ({article.codeArticle})</td>
-//                     <td>{article.quantiteDemandeeTotale}</td>
-//                     <td>{article.quantiteStockee}</td>
-//                     <td>{article.stockMax}</td>
-//                     <td>{article.stockAlert}</td>
-//                     <td>
-//                       <span
-//                         className={`text-sm font-semibold ${ok ? "text-green-600" : "text-red-600"}`}
-//                       >
-//                         {ok ? "Stock suffisant" : "Stock insuffisant"}
-//                       </span>
-//                     </td>
-//                   </tr>
-//                 );
-//               })}
-//             </tbody>
-//           </table>
-
-//           {/* ✅ Bouton global pour tout planifier */}
-//           <div className="text-end mt-3">
-//             <button className="btn btn-success" onClick={handlePlanifier}>
-//               Planifier tous les articles
-//             </button>
-//           </div>
-//         </>
-//       )}
-
-//       {selectedDepot && articles.length === 0 && (
-//         <p className="text-muted">Aucun article trouvé pour ce dépôt.</p>
-//       )}
-//     </div>
-//   );
-// };
-
-// export default PlanifierMesDepots;
-
-
-
-
-
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -165,7 +14,7 @@ const PlanifierMesDepots = () => {
   const token = localStorage.getItem("token");
   const headers = { Authorization: `Bearer ${token}` };
 
-  // 🔄 Récupérer les dépôts à l'initialisation
+
   useEffect(() => {
     const fetchDepots = async () => {
       try {
@@ -182,7 +31,7 @@ const PlanifierMesDepots = () => {
     fetchDepots();
   }, []);
 
-  // 🔄 Récupérer les articles avec demande + stock quand un dépôt est sélectionné
+  
   useEffect(() => {
     const fetchData = async () => {
       if (!selectedDepot) return;
@@ -237,7 +86,7 @@ const PlanifierMesDepots = () => {
   return (
     <AdminLayoutPlannificateur>
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
-      {/* Header avec gradient */}
+     
       <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-blue-700 shadow-2xl">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="flex items-center space-x-4">
@@ -266,7 +115,7 @@ const PlanifierMesDepots = () => {
           </div>
         )}
 
-        {/* Sélecteur de dépôt moderne */}
+       
         {depots.length > 1 && (
           <div className="mb-8">
             <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-6 backdrop-blur-sm">
@@ -297,7 +146,7 @@ const PlanifierMesDepots = () => {
 
         {selectedDepot && articles.length > 0 && (
           <>
-            {/* Tableau de bord des statistiques */}
+            
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
               <div className="bg-white rounded-2xl shadow-xl p-6 border border-gray-100 hover:shadow-2xl transition-all duration-300">
                 <div className="flex items-center justify-between">
@@ -336,7 +185,7 @@ const PlanifierMesDepots = () => {
               </div>
             </div>
 
-            {/* Tableau moderne et responsive */}
+     
             <div className="bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-100">
               <div className="overflow-x-auto">
                 <table className="w-full">
@@ -414,7 +263,7 @@ const PlanifierMesDepots = () => {
                 </table>
               </div>
 
-              {/* Bouton de planification moderne */}
+            
               <div className="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4">
                 <div className="flex justify-end">
                   <button

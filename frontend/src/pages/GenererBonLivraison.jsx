@@ -3,8 +3,8 @@ import axios from "axios";
 
 function ListeCommandesPlanifiees({ clientId }) {
   const [commandes, setCommandes] = useState([]);
-  const [depotId, setDepotId] = useState(""); // à lier avec un select ou autre
-  const [token, setToken] = useState(""); // récupère depuis auth si besoin
+  const [depotId, setDepotId] = useState(""); 
+  const [token, setToken] = useState(""); 
 
   useEffect(() => {
     if (depotId) {
@@ -22,14 +22,14 @@ function ListeCommandesPlanifiees({ clientId }) {
         {},
         {
           headers: {
-            Authorization: `Bearer ${token}`, // si auth active
+            Authorization: `Bearer ${token}`, 
           },
         }
       );
 
       const { downloadUrl } = response.data;
 
-      // ✅ Ouvrir le PDF directement
+      
       window.open(`http://localhost:5000${downloadUrl}`, "_blank");
     } catch (error) {
       console.error("Erreur génération bon de livraison :", error);

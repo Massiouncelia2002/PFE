@@ -1,187 +1,3 @@
-
-// import React, { useState } from "react";
-// import AdminLayout from "../pages/AdminLayout";
-// import { Button } from "../components/ui/Button";
-// import Input from "../components/ui/Input";
-
-// const wilayasByRegion = {
-//   "Centre": ["Alger", "Blida", "Boumerdes", "Tipaza", "Médéa"],
-//   "Est": ["Constantine", "Annaba", "Sétif", "Batna", "Béjaïa"],
-//   "Ouest": ["Oran", "Tlemcen", "Mostaganem", "Sidi Bel Abbès"],
-//   "Sud": ["Tamanrasset", "Adrar", "Ouargla", "Illizi", "Tindouf"]
-// };
-
-// const ModifierDepotForm = ({ onSubmit, initialData = {}, onShowDepots }) => {
-//   const [formData, setFormData] = useState({
-//     nomDepot: "",
-//     typeDepot: "",
-//     capaciteDepot: "",
-//     description: "",
-//     region: "",
-//     wilaya: "",
-//     ...initialData,
-//   });
-
-//   const [errors, setErrors] = useState({});
-//   const [message, setMessage] = useState("");
-
-//   const handleChange = (e) => {
-//     const { name, value, type } = e.target;
-
-//     setFormData((prev) => ({
-//       ...prev,
-//       [name]: type === "number" ? parseInt(value, 10) || "" : value,
-//       ...(name === "region" ? { wilaya: "" } : {}),
-//     }));
-//   };
-
-//   const validateForm = ({ nomDepot, typeDepot, capaciteDepot, region, wilaya }) => {
-//     const nomRegex = /^(?=.*[a-zA-ZÀ-ÿ])[a-zA-ZÀ-ÿ0-9\s\-']+$/;
-//     const errors = {};
-
-//     if (!nomDepot || nomDepot.trim() === "") {
-//       errors.nomDepot = "Le champ 'Nom du dépôt' est obligatoire.";
-//     } else if (!nomRegex.test(nomDepot.trim())) {
-//       errors.nomDepot = "Le nom du dépôt est invalide. Il doit contenir au moins une lettre.";
-//     }
-
-//     if (!typeDepot || typeDepot.trim() === "") {
-//       errors.typeDepot = "Le champ 'Type de dépôt' est obligatoire.";
-//     }
-
-//     if (!capaciteDepot || String(capaciteDepot).trim() === "") {
-//       errors.capaciteDepot = "Le champ 'Capacité du dépôt' est obligatoire.";
-//     } else if (isNaN(Number(capaciteDepot)) || Number(capaciteDepot) <= 0) {
-//       errors.capaciteDepot = "La capacité du dépôt doit être un nombre positif.";
-//     }
-
-//     if (!region || region.trim() === "") {
-//       errors.region = "Le champ 'Région' est obligatoire.";
-//     }
-
-//     if (!wilaya || wilaya.trim() === "") {
-//       errors.wilaya = "Le champ 'Wilaya' est obligatoire.";
-//     }
-
-//     return errors;
-//   };
-
-//   const handleSubmit = (e) => {
-//     e.preventDefault();
-//     const formErrors = validateForm(formData);
-//     if (Object.keys(formErrors).length > 0) {
-//       setErrors(formErrors);
-//       return;
-//     }
-
-//     setErrors({});
-//     onSubmit(formData);
-//     setMessage("✅ Dépôt mis à jour avec succès !");
-//   };
-
-//   return (
-//     <AdminLayout>
-//       <div className="p-6 space-y-6">
-//         <h2 className="text-2xl font-bold">Modifier le dépôt</h2>
-
-//         <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4 max-w-3xl">
-//           <div>
-//             {errors.nomDepot && <p className="text-red-600 mb-1">{errors.nomDepot}</p>}
-//             <Input
-//               name="nomDepot"
-//               placeholder="Nom Dépôt"
-//               value={formData.nomDepot}
-//               onChange={handleChange}
-//             />
-//           </div>
-
-//           <div>
-//             {errors.typeDepot && <p className="text-red-600 mb-1">{errors.typeDepot}</p>}
-//             <label className="block mb-1 font-medium">Type de dépôt</label>
-//             <select
-//               name="typeDepot"
-//               value={formData.typeDepot}
-//               onChange={handleChange}
-//               className="w-full border p-2 rounded"
-//             >
-//               <option value="">Sélectionnez un type</option>
-//               <option value="C">CLR</option>
-//             </select>
-//           </div>
-
-//           <div>
-//             {errors.capaciteDepot && <p className="text-red-600 mb-1">{errors.capaciteDepot}</p>}
-//             <Input
-//               name="capaciteDepot"
-//               type="number"
-//               placeholder="Capacité Dépôt"
-//               value={formData.capaciteDepot}
-//               onChange={handleChange}
-//             />
-//           </div>
-
-//           <div>
-//             <Input
-//               name="description"
-//               placeholder="Description"
-//               value={formData.description}
-//               onChange={handleChange}
-//             />
-//           </div>
-
-//           <div>
-//             {errors.region && <p className="text-red-600 mb-1">{errors.region}</p>}
-//             <label className="block mb-1 font-medium">Région</label>
-//             <select
-//               name="region"
-//               value={formData.region}
-//               onChange={handleChange}
-//               className="w-full border p-2 rounded"
-//             >
-//               <option value="">Sélectionnez une région</option>
-//               {Object.keys(wilayasByRegion).map((region) => (
-//                 <option key={region} value={region}>
-//                   {region}
-//                 </option>
-//               ))}
-//             </select>
-//           </div>
-
-//           <div>
-//             {errors.wilaya && <p className="text-red-600 mb-1">{errors.wilaya}</p>}
-//             <label className="block mb-1 font-medium">Wilaya</label>
-//             <select
-//               name="wilaya"
-//               value={formData.wilaya}
-//               onChange={handleChange}
-//               className="w-full border p-2 rounded"
-//               disabled={!formData.region}
-//             >
-//               <option value="">Sélectionnez une wilaya</option>
-//               {formData.region &&
-//                 wilayasByRegion[formData.region].map((wilaya) => (
-//                   <option key={wilaya} value={wilaya}>
-//                     {wilaya}
-//                   </option>
-//                 ))}
-//             </select>
-//           </div>
-
-//           <div className="col-span-2">
-//             <Button type="submit">Enregistrer</Button>
-//           </div>
-//         </form>
-
-//         {message && <p className="text-green-600 mt-4">{message}</p>}
-//       </div>
-//     </AdminLayout>
-//   );
-// };
-
-// export default ModifierDepotForm;
-
-
-
 import React, { useState } from "react";
 import { ArrowLeft, Building, Box, Ruler, MapPin, FileText, Check } from "lucide-react";
 import AdminLayout from "../pages/AdminLayout";
@@ -286,7 +102,7 @@ const ModifierDepotForm = ({ onSubmit, initialData = {} }) => {
     <AdminLayout>
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 p-6">
         <div className="max-w-4xl mx-auto">
-          {/* Header */}
+       
           <div className="flex items-center justify-between mb-8">
             <button
               onClick={handleBack}
@@ -301,9 +117,9 @@ const ModifierDepotForm = ({ onSubmit, initialData = {} }) => {
             </div>
           </div>
 
-          {/* Carte principale */}
+          
           <div className="bg-white/90 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/30 overflow-hidden">
-            {/* Header de la carte */}
+         
             <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-6 text-white">
               <div className="flex items-center space-x-3">
                 <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
@@ -316,12 +132,11 @@ const ModifierDepotForm = ({ onSubmit, initialData = {} }) => {
               </div>
             </div>
 
-            {/* Formulaire */}
+        
             <div className="p-8">
               <form onSubmit={handleSubmit} className="space-y-6">
-                {/* Informations du dépôt */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {/* Nom du dépôt */}
+                 
                   <div className="group">
                     <label className="block text-sm font-semibold text-slate-700 mb-2 flex items-center space-x-2">
                       <Building className="w-4 h-4 text-blue-500" />
@@ -343,7 +158,7 @@ const ModifierDepotForm = ({ onSubmit, initialData = {} }) => {
                     )}
                   </div>
 
-                  {/* Type de dépôt */}
+                  
                   <div className="group">
                     <label className="block text-sm font-semibold text-slate-700 mb-2 flex items-center space-x-2">
                       <Box className="w-4 h-4 text-blue-500" />
@@ -366,7 +181,7 @@ const ModifierDepotForm = ({ onSubmit, initialData = {} }) => {
                     )}
                   </div>
 
-                  {/* Capacité */}
+                  
                   <div className="group">
                     <label className="block text-sm font-semibold text-slate-700 mb-2 flex items-center space-x-2">
                       <Ruler className="w-4 h-4 text-blue-500" />
@@ -388,7 +203,7 @@ const ModifierDepotForm = ({ onSubmit, initialData = {} }) => {
                     )}
                   </div>
 
-                  {/* Description */}
+                 
                   <div className="group">
                     <label className="block text-sm font-semibold text-slate-700 mb-2 flex items-center space-x-2">
                       <FileText className="w-4 h-4 text-blue-500" />
@@ -404,7 +219,7 @@ const ModifierDepotForm = ({ onSubmit, initialData = {} }) => {
                     />
                   </div>
 
-                  {/* Région */}
+                  
                   <div className="group">
                     <label className="block text-sm font-semibold text-slate-700 mb-2 flex items-center space-x-2">
                       <MapPin className="w-4 h-4 text-blue-500" />
@@ -431,7 +246,7 @@ const ModifierDepotForm = ({ onSubmit, initialData = {} }) => {
                     )}
                   </div>
 
-                  {/* Wilaya */}
+                 
                   <div className="group">
                     <label className="block text-sm font-semibold text-slate-700 mb-2 flex items-center space-x-2">
                       <MapPin className="w-4 h-4 text-blue-500" />
@@ -461,7 +276,7 @@ const ModifierDepotForm = ({ onSubmit, initialData = {} }) => {
                   </div>
                 </div>
 
-                {/* Boutons d'action */}
+              
                 <div className="flex flex-col sm:flex-row gap-4 pt-6">
                   <button
                     type="submit"
@@ -496,7 +311,7 @@ const ModifierDepotForm = ({ onSubmit, initialData = {} }) => {
                 </div>
               </form>
 
-              {/* Message de succès/erreur */}
+        
               {message && (
                 <div className={`mt-6 p-4 rounded-xl animate-in slide-in-from-top-4 duration-300 ${
                   message.startsWith("✅") 

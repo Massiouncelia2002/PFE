@@ -100,7 +100,7 @@ const UtilisateurTable = ({ utilisateurs, onDelete, onEdit }) => {
     <AdminLayout>
       <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50 p-4 sm:p-6">
         <div className="max-w-7xl mx-auto">
-          {/* Header */}
+        
           <div className="mb-6 sm:mb-8">
             <div className="flex items-center mb-3 sm:mb-4">
               <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl flex items-center justify-center mr-3 sm:mr-4 shadow-lg">
@@ -112,7 +112,7 @@ const UtilisateurTable = ({ utilisateurs, onDelete, onEdit }) => {
               </div>
             </div>
 
-            {/* Search and Filter Bar */}
+            
             <div className="bg-white rounded-xl shadow-lg p-3 sm:p-4 border border-gray-100">
               <div className="flex flex-col md:flex-row gap-3 sm:gap-4">
                 <div className="relative flex-1">
@@ -153,9 +153,9 @@ const UtilisateurTable = ({ utilisateurs, onDelete, onEdit }) => {
             </div>
           </div>
 
-          {/* Table */}
+        
           <div className="bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden">
-            {/* Desktop Table */}
+           
             <div className="hidden md:block overflow-x-auto">
               <table className="w-full">
                 <thead>
@@ -176,14 +176,14 @@ const UtilisateurTable = ({ utilisateurs, onDelete, onEdit }) => {
                       key={user.codeUtilisateur}
                       className={`transition-all duration-200 ${index % 2 === 0 ? 'bg-gray-50/30' : 'bg-white'} hover:bg-blue-50`}
                     >
-                      {/* Code */}
+                      
                       <td className="px-4 sm:px-6 py-3">
                         <span className="font-mono text-xs sm:text-sm text-gray-900 bg-gray-100 px-2 py-1 rounded">
                           {user.codeUtilisateur}
                         </span>
                       </td>
 
-                      {/* User Info */}
+                      
                       <td className="px-4 sm:px-6 py-3">
                         <div className="flex items-center">
                           <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-blue-600 to-blue-700 rounded-full flex items-center justify-center text-white font-semibold text-xs sm:text-sm mr-2 sm:mr-3 shadow-lg">
@@ -195,13 +195,13 @@ const UtilisateurTable = ({ utilisateurs, onDelete, onEdit }) => {
                         </div>
                       </td>
 
-                      {/* Contact */}
+                     
                       <td className="px-4 sm:px-6 py-3 text-xs sm:text-sm text-gray-600 flex items-center">
                         <Mail className="w-4 h-4 mr-2 text-gray-400" />
                         <span className="truncate">{user.email}</span>
                       </td>
 
-                      {/* Fonction */}
+                      
                       <td className="px-4 sm:px-6 py-3">
                         <div className="space-y-1 text-xs sm:text-sm">
                           <div className="flex items-center text-gray-900">
@@ -215,12 +215,12 @@ const UtilisateurTable = ({ utilisateurs, onDelete, onEdit }) => {
                         </div>
                       </td>
 
-                      {/* Rôle */}
+                      
                       <td className="px-4 sm:px-6 py-3">
                         <RoleBadge role={user.role} />
                       </td>
 
-                      {/* Dates */}
+                     
                       <td className="px-4 sm:px-6 py-3 text-xs space-y-1">
                         <div className="flex items-center text-gray-600">
                           <Calendar className="w-3 h-3 mr-1 text-gray-400" />
@@ -234,12 +234,12 @@ const UtilisateurTable = ({ utilisateurs, onDelete, onEdit }) => {
                         )}
                       </td>
 
-                      {/* Statut */}
+                      
                       <td className="px-4 sm:px-6 py-3">
                         <StatusBadge status={user.statut} />
                       </td>
 
-                      {/* Actions */}
+                     
                       <td className="px-4 sm:px-6 py-3 text-center">
                         <div className="flex items-center justify-center space-x-1">
                           <ActionButton
@@ -262,7 +262,6 @@ const UtilisateurTable = ({ utilisateurs, onDelete, onEdit }) => {
               </table>
             </div>
 
-            {/* Mobile List */}
             <div className="md:hidden">
               {filteredUsers.map((user, index) => (
                 <div 

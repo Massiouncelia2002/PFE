@@ -1,115 +1,3 @@
-
-
-
-// import React, { useState } from "react";
-// import axios from "axios";
-// import { Pencil, Trash2 } from "lucide-react";
-// import AdminLayout from "../pages/AdminLayout";
-
-// const DepotTable = ({ depots, fetchDepots }) => {
-//   const [errorMessage, setErrorMessage] = useState("");
-
-//   const handleDelete = async (codeDepot, codeUtilisateur) => {
-//     if (codeUtilisateur) {
-//       setErrorMessage("Ce dépôt est déjà affecté à un utilisateur et ne peut pas être supprimé.");
-//       return; // Empêche la suppression si le dépôt est affecté à un utilisateur
-//     }
-
-//     const confirmed = window.confirm("Êtes-vous sûr de vouloir supprimer ce dépôt ?");
-//     if (!confirmed) return;
-
-//     try {
-//       const res = await axios.delete(`http://localhost:5000/depot/${codeDepot}`);
-//       if (res.status === 200) {
-//         setErrorMessage(""); // Clear any previous error
-//         fetchDepots();
-//       }
-//     } catch (error) {
-//       console.error("Erreur lors de la suppression du dépôt", error);
-//       setErrorMessage(
-//         error.response?.data?.message || "Une erreur est survenue lors de la suppression."
-//       );
-//     }
-//   };
-
-//   const handleEdit = (codeDepot) => {
-//     window.location.href = `/modifier-depot/${codeDepot}`;
-//   };
-
-//   return (
-//     <AdminLayout>
-//       <div className="p-6 space-y-6">
-//         <h2 className="text-2xl font-bold mb-4">Liste des dépôts</h2>
-
-//         {/* 🔴 Affichage d’un message d’erreur s’il y en a un */}
-//         {errorMessage && (
-//           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-//             {errorMessage}
-//           </div>
-//         )}
-
-//         <div className="overflow-auto rounded-lg shadow border">
-//           <table className="min-w-full bg-white text-sm text-left">
-//             <thead className="bg-gray-100 text-gray-700 uppercase text-xs">
-//               <tr>
-//                 <th className="px-6 py-3">Code Dépôt</th>
-//                 <th className="px-6 py-3">Nom</th>
-//                 <th className="px-6 py-3">Type</th>
-//                 <th className="px-6 py-3">Capacité</th>
-//                 <th className="px-6 py-3">Description</th>
-//                 <th className="px-6 py-3">Région</th>
-//                 <th className="px-6 py-3">Wilaya</th>
-//                 <th className="px-6 py-3 text-center">Actions</th>
-//               </tr>
-//             </thead>
-//             <tbody>
-//               {depots.map((d) => (
-//                 <tr key={d.codeDepot} className="border-t group hover:bg-gray-50 transition">
-//                   <td className="px-6 py-4">{d.codeDepot}</td>
-//                   <td className="px-6 py-4">{d.nomDepot}</td>
-//                   <td className="px-6 py-4">{d.typeDepot}</td>
-//                   <td className="px-6 py-4">{d.capaciteDepot}</td>
-//                   <td className="px-6 py-4">{d.description || "—"}</td>
-//                   <td className="px-6 py-4">{d.region}</td>
-//                   <td className="px-6 py-4">{d.wilaya || "—"}</td>
-//                   <td className="px-6 py-4 text-center">
-//                     <div className="flex justify-center gap-2">
-//                       <button
-//                         onClick={() => handleEdit(d.codeDepot)}
-//                         className="bg-yellow-600 text-white p-2 rounded hover:bg-yellow-700 transition"
-//                       >
-//                         <Pencil className="w-4 h-4" />
-//                       </button>
-//                       <button
-//                         onClick={() => handleDelete(d.codeDepot, d.codeUtilisateur)}
-//                         disabled={!!d.codeUtilisateur} // Désactive si affecté à un utilisateur
-//                         className={`p-2 rounded text-white transition ${
-//                           d.codeUtilisateur
-//                             ? "bg-gray-400 cursor-not-allowed" // Si affecté, grisé
-//                             : "bg-red-600 hover:bg-red-700" // Sinon, rouge avec hover
-//                         }`}
-//                         title={
-//                           d.codeUtilisateur
-//                             ? "Ce dépôt est affecté à un utilisateur"
-//                             : "Supprimer le dépôt"
-//                         }
-//                       >
-//                         <Trash2 className="w-4 h-4" />
-//                       </button>
-//                     </div>
-//                   </td>
-//                 </tr>
-//               ))}
-//             </tbody>
-//           </table>
-//         </div>
-//       </div>
-//     </AdminLayout>
-//   );
-// };
-
-// export default DepotTable;
-
 import React, { useState } from "react";
 import axios from "axios";
 import { Pencil, Trash2, Search, Filter, Building, Box, Ruler, MapPin, Download, Plus, AlertCircle } from "lucide-react";
@@ -197,7 +85,7 @@ const DepotTable = ({ depots, fetchDepots }) => {
     <AdminLayout>
       <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50 p-4 sm:p-6">
         <div className="max-w-7xl mx-auto">
-          {/* Header */}
+    
           <div className="mb-6 sm:mb-8">
             <div className="flex items-center mb-3 sm:mb-4">
               <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl flex items-center justify-center mr-3 sm:mr-4 shadow-lg">
@@ -209,7 +97,7 @@ const DepotTable = ({ depots, fetchDepots }) => {
               </div>
             </div>
 
-            {/* Search and Filter Bar */}
+           
             <div className="bg-white rounded-xl shadow-lg p-3 sm:p-4 border border-gray-100">
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                 <div className="relative flex-1">
@@ -248,7 +136,7 @@ const DepotTable = ({ depots, fetchDepots }) => {
             </div>
           </div>
 
-          {/* Error Message */}
+         
           {errorMessage && (
             <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl animate-in slide-in-from-top-4 duration-300">
               <div className="flex items-center text-red-800">
@@ -258,7 +146,7 @@ const DepotTable = ({ depots, fetchDepots }) => {
             </div>
           )}
 
-          {/* Desktop Table */}
+ 
           <div className="hidden md:block bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full">
@@ -279,30 +167,30 @@ const DepotTable = ({ depots, fetchDepots }) => {
                       key={depot.codeDepot}
                       className={`transition-all duration-200 ${index % 2 === 0 ? 'bg-gray-50/30' : 'bg-white'} hover:bg-blue-50`}
                     >
-                      {/* Code */}
+                     
                       <td className="px-4 sm:px-6 py-4">
                         <span className="font-mono text-sm text-gray-900 bg-gray-100 px-2 py-1 rounded">
                           {depot.codeDepot}
                         </span>
                       </td>
 
-                      {/* Nom */}
+                     
                       <td className="px-4 sm:px-6 py-4 font-semibold text-gray-900">
                         {depot.nomDepot}
                       </td>
 
-                      {/* Type */}
+                      
                       <td className="px-4 sm:px-6 py-4">
                         <TypeBadge type={depot.typeDepot} />
                       </td>
 
-                      {/* Capacité */}
+                     
                       <td className="px-4 sm:px-6 py-4 text-sm text-gray-600 flex items-center">
                         <Ruler className="w-4 h-4 mr-2 text-gray-400" />
                         {depot.capaciteDepot}
                       </td>
 
-                      {/* Localisation */}
+                      
                       <td className="px-4 sm:px-6 py-4">
                         <div className="space-y-1 text-sm">
                           <div className="flex items-center text-gray-900">
@@ -316,12 +204,12 @@ const DepotTable = ({ depots, fetchDepots }) => {
                         </div>
                       </td>
 
-                      {/* Description */}
+                    
                       <td className="px-4 sm:px-6 py-4 text-sm text-gray-600">
                         {depot.description || "—"}
                       </td>
 
-                      {/* Actions */}
+                    
                       <td className="px-4 sm:px-6 py-4 text-center">
                         <div className="flex items-center justify-center space-x-1">
                           <ActionButton
@@ -362,7 +250,7 @@ const DepotTable = ({ depots, fetchDepots }) => {
             )}
           </div>
 
-          {/* Mobile Cards */}
+          
           <div className="md:hidden space-y-4">
             {filteredDepots.length === 0 ? (
               <div className="text-center py-12 bg-white rounded-xl shadow-xl border border-gray-100">

@@ -1,244 +1,3 @@
-
-
-
-// import React, { useState, useEffect } from "react";
-
-// const ImporterCommandes = () => {
-//   const [fichier, setFichier] = useState(null);
-//   const [message, setMessage] = useState("");
-//   const [type, setType] = useState("success");
-//   const [commandes, setCommandes] = useState([]);
-//   const [searchTerm, setSearchTerm] = useState("");
-//   const [dateDebut, setDateDebut] = useState("");
-//   const [dateFin, setDateFin] = useState("");
-
-//   const handleFileChange = (e) => {
-//     setFichier(e.target.files[0]);
-//   };
-
-
-
-
-//   const handleSubmit = async (e) => {
-//   e.preventDefault();
-
-//   if (!fichier) {
-//     setMessage("Veuillez sélectionner un fichier Excel.");
-//     setType("danger");
-//     return;
-//   }
-
-//   const formData = new FormData();
-//   formData.append("file", fichier);
-
-//   const token = localStorage.getItem("token");
-
-//   try {
-//     const response = await fetch("http://localhost:5000/api/commande/commandes", {
-//       method: "POST",
-//       headers: {
-//         Authorization: `Bearer ${token}`
-//       },
-//       body: formData,
-//     });
-
-//     const result = await response.json();
-
-//     if (response.ok && result.success) {
-//       setType("success");
-//       setMessage(result.message || "Fichier importé avec succès.");
-//       fetchCommandesParDepot(); // recharge les commandes liées à tes dépôts
-//     } else {
-//       setType("danger");
-//       setMessage(result.error || result.message || "Erreur lors de l'importation du fichier.");
-//     }
-//   } catch (error) {
-//     console.error("Erreur lors de l'envoi du fichier :", error);
-//     setType("danger");
-//     setMessage("Erreur lors de l'envoi du fichier.");
-//   }
-// };
-
-// const fetchCommandes = async () => {
-//   try {
-//     const token = localStorage.getItem("token");
-//     const response = await fetch("http://localhost:5000/api/commande/getcommandes", {
-//       headers: {
-//         Authorization: `Bearer ${token}`
-//       }
-//     });
-//     const result = await response.json();
-//     if (response.ok) {
-//       setCommandes(result.data || []);
-//     } else {
-//       setMessage(result.error || "Erreur lors du chargement des commandes.");
-//       setType("danger");
-//     }
-//   } catch (error) {
-//     console.error("Erreur de récupération :", error);
-//   }
-// };
-
-// const fetchCommandesParDepot = async () => {
-//   try {
-//     const token = localStorage.getItem("token");
-//     const response = await fetch("http://localhost:5000/api/commande/getcommandesByDepot", {
-//       headers: {
-//         Authorization: `Bearer ${token}`
-//       }
-//     });
-//     const result = await response.json();
-//     if (response.ok) {
-//       setCommandes(result.data || []);
-//     } else {
-//       setMessage(result.error || "Erreur lors du chargement des commandes.");
-//       setType("danger");
-//     }
-//   } catch (error) {
-//     console.error("Erreur de récupération des commandes :", error);
-//   }
-// };
-
-
-
-
-
-
-//   useEffect(() => {
-//     fetchCommandesParDepot();
-//   }, []);
-
-//   const commandesFiltrees = commandes.filter((cmd) => {
-//     const recherche = searchTerm.toLowerCase();
-//     const matchTexte =
-//       (cmd.codeClient && cmd.codeClient.toLowerCase().includes(recherche)) ||
-//       (cmd.nomClient && cmd.nomClient.toLowerCase().includes(recherche)) ||
-//       (cmd.codeArticle && cmd.codeArticle.toLowerCase().includes(recherche)) ||
-//       (cmd.codeCommande && cmd.codeCommande.toLowerCase().includes(recherche)) ||
-//       (cmd.designation && cmd.designation.toLowerCase().includes(recherche));
-
-//     const dateCmd = new Date(cmd.dateCommande);
-//     const dansPlage =
-//       (!dateDebut || dateCmd >= new Date(dateDebut)) &&
-//       (!dateFin || dateCmd <= new Date(dateFin));
-
-//     return matchTexte && dansPlage;
-//   });
-
-//   return (
-//     <div className="container mt-5">
-//       <h2>Importer les Commandes Clients</h2>
-
-//       <form onSubmit={handleSubmit}>
-//         <div className="mb-3">
-//           <input
-//             type="file"
-//             accept=".xlsx"
-//             onChange={handleFileChange}
-//             className="form-control"
-//             required
-//           />
-//         </div>
-//         <button type="submit" className="btn btn-primary me-3">
-//           Importer
-//         </button>
-//         <button type="button" onClick={fetchCommandes} className="btn btn-success">
-//           Toutes les commandes
-//         </button>
-//       </form>
-
-//       {message && (
-//         <div className={`alert alert-${type} mt-3`} role="alert">
-//           {message}
-//         </div>
-//       )}
-
-//       {/* Filtres */}
-//       <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-//         <div>
-//           <input
-//             type="text"
-//             placeholder="Rechercher client, article, code..."
-//             className="w-full p-2 border border-gray-300 rounded-md"
-//             value={searchTerm}
-//             onChange={(e) => setSearchTerm(e.target.value)}
-//           />
-//         </div>
-//         <div>
-//           <label htmlFor="dateDebut" className="d-block">Date début</label>
-//           <input
-//             type="date"
-//             className="w-full p-2 border border-gray-300 rounded-md"
-//             value={dateDebut}
-//             onChange={(e) => setDateDebut(e.target.value)}
-//           />
-//         </div>
-//         <div>
-//           <label htmlFor="dateFin" className="d-block">Date fin</label>
-//           <input
-//             type="date"
-//             className="w-full p-2 border border-gray-300 rounded-md"
-//             value={dateFin}
-//             onChange={(e) => setDateFin(e.target.value)}
-//           />
-//         </div>
-//       </div>
-
-//       {/* Tableau */}
-//       {(searchTerm.trim() || dateDebut || dateFin) && commandesFiltrees.length > 0 && (
-//         <table className="table table-bordered mt-4">
-//           <thead className="table-light">
-//             <tr>
-//               <th>Code Commande</th>
-//               <th>Date</th>
-//               <th>Code Client</th>
-//               <th>Nom Client</th>
-//               <th>Code Article</th>
-//               <th>Désignation</th>
-//               <th>Quantité Demandée</th>
-//             </tr>
-//           </thead>
-//           <tbody>
-//             {commandesFiltrees.map((cmd, index) => (
-//               <tr key={index}>
-//                 <td>{cmd.codeCommande}</td>
-//                 <td>{new Date(cmd.dateCommande).toLocaleDateString()}</td>
-//                 <td>{cmd.codeClient}</td>
-//                 <td>{cmd.nomClient}</td>
-//                 <td>{cmd.codeArticle}</td>
-//                 <td>{cmd.designation}</td>
-//                 <td>{cmd.quantiteDemandee}</td>
-//               </tr>
-//             ))}
-//           </tbody>
-//         </table>
-//       )}
-
-//       {/* Filtrage commandes utilisateur */}
-//       <button
-//         type="button"
-//         onClick={fetchCommandesParDepot}
-//         className="btn btn-warning mt-3"
-//       >
-//         Filtrer mes commandes
-//       </button>
-
-//       {/* Aucun résultat */}
-//       {(searchTerm.trim() || dateDebut || dateFin) && commandesFiltrees.length === 0 && (
-//         <div className="alert alert-info mt-4">
-//           Aucun résultat trouvé pour la recherche.
-//         </div>
-//       )}
-//     </div>
-//   );
-// };
-
-// export default ImporterCommandes;
-
-
-
-
-
 import React, { useState, useEffect, useRef } from "react";
 import { Upload, FileText, Search, Calendar, Filter, Eye, Check, X, AlertCircle, Download, Trash2 } from "lucide-react";
 import AdminLayoutPlannificateur from './AdminLayoutPlannificateur'; 
@@ -392,7 +151,7 @@ const ImporterCommandes = () => {
      <AdminLayoutPlannificateur  >
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-4 md:p-8">
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
+       
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
@@ -407,7 +166,7 @@ const ImporterCommandes = () => {
           </div>
         </div>
 
-        {/* Zone d'import */}
+       
         <div className="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden mb-8">
           <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-6">
             <h2 className="text-xl font-semibold text-white flex items-center gap-2">
@@ -419,7 +178,7 @@ const ImporterCommandes = () => {
 
           <div className="p-6">
             <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Zone de drag & drop */}
+            
               <div
                 className={`relative border-2 border-dashed rounded-xl p-8 text-center transition-all duration-300 ${
                   isDragging
@@ -478,7 +237,7 @@ const ImporterCommandes = () => {
                 )}
               </div>
 
-              {/* Boutons d'action */}
+             
               <div className="flex flex-wrap gap-3">
                 <button
                   type="submit"
@@ -509,7 +268,7 @@ const ImporterCommandes = () => {
               </div>
             </form>
 
-            {/* Messages */}
+           
             {message && (
               <div className={`mt-6 p-4 rounded-xl flex items-start gap-3 ${
                 type === "success" 
@@ -527,7 +286,7 @@ const ImporterCommandes = () => {
           </div>
         </div>
 
-        {/* Filtres de recherche */}
+        
         <div className="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden mb-8">
           <div className="bg-gradient-to-r from-slate-700 to-slate-800 p-6">
             <h2 className="text-xl font-semibold text-white flex items-center gap-2">
@@ -581,7 +340,7 @@ const ImporterCommandes = () => {
           </div>
         </div>
 
-        {/* Tableau des résultats */}
+      
         {(searchTerm.trim() || dateDebut || dateFin) && (
           <div className="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
             <div className="bg-gradient-to-r from-indigo-600 to-purple-600 p-6">

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import {
   Menu,
@@ -95,7 +94,7 @@ const Sidebar = ({ isOpen = true, closeSidebar = () => {} }) => {
 
   return (
     <>
-      {/* Overlay pour mobile */}
+     
       <div
         className={`fixed inset-0 bg-black/40 backdrop-blur-sm z-40 lg:hidden transition-opacity duration-300 ${
           isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
@@ -108,7 +107,7 @@ const Sidebar = ({ isOpen = true, closeSidebar = () => {} }) => {
           isOpen ? 'translate-x-0' : '-translate-x-full'
         } lg:translate-x-0 bg-[#002855] dark:bg-[#1f2937] shadow-2xl border-r border-[#003366]/30 dark:border-[#333333]/30`}
       >
-        {/* Header avec logo */}
+        
         <div className="px-6 py-6 border-b border-[#003366]/30 dark:border-[#333333]/30">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 bg-[#ffffff] dark:bg-[#333333] rounded-lg flex items-center justify-center shadow">

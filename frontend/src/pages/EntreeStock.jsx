@@ -1,237 +1,3 @@
-
-// import React, { useEffect, useState } from "react";
-// import axios from "axios";
-// import { Button } from "../components/ui/Button";
-// import Input from "../components/ui/Input";
-// import AdminLayoutDepot from "./AdminLayoutDepot";
-// import Select from "react-select";
-
-// const EntreeStock = () => {
-//     const [depots, setDepots] = useState([]);
-//     const [selectedDepot, setSelectedDepot] = useState(null);
-//     const [articles, setArticles] = useState([]);
-//     const [entrees, setEntrees] = useState({});
-//     const [dateEntree, setDateEntree] = useState("");
-//     const [loading, setLoading] = useState(false);
-//     const [darkMode, setDarkMode] = useState(false);
-//     const [searchTerm, setSearchTerm] = useState("");
-//     const [selectedArticle, setSelectedArticle] = useState(null);
-//     const [searchQuery, setSearchQuery] = useState("");
-//     const [selectedArticles, setSelectedArticles] = useState([]);
-
-//     const filteredArticles = articles.filter((article) =>
-//         article.designation.toLowerCase().includes(searchQuery.toLowerCase()) ||
-//         article.codeArticle.toLowerCase().includes(searchQuery.toLowerCase())
-//     );
-
-//     const handleSelectArticle = (article) => {
-//         const exists = selectedArticles.find(a => a.codeArticle === article.codeArticle);
-//         if (!exists) {
-//             setSelectedArticles([...selectedArticles, { ...article, quantiteEntree: "", commentaire: "" }]);
-//         }
-//     };
-
-//     useEffect(() => {
-//         fetchDepots();
-//     }, []);
-
-//     useEffect(() => {
-//         if (selectedDepot) {
-//             fetchArticles(selectedDepot.codeDepot);
-//         }
-//     }, [selectedDepot]);
-
-//     const fetchDepots = async () => {
-//         try {
-//             const token = localStorage.getItem("token");
-//             const res = await axios.get("http://localhost:5000/depot/mes-depots", {
-//                 headers: { Authorization: `Bearer ${token}` }
-//             });
-//             setDepots(res.data);
-//             if (res.data.length === 1) {
-//                 setSelectedDepot(res.data[0]);
-//             }
-//         } catch (err) {
-//             console.error("Erreur récupération dépôts :", err);
-//         }
-//     };
-
-//     const fetchArticles = async (codeDepot) => {
-//         try {
-//             const token = localStorage.getItem("token");
-//             const res = await axios.get(`http://localhost:5000/articleDepot/depots/${codeDepot}/articles`, {
-//                 headers: { Authorization: `Bearer ${token}` }
-//             });
-//             setArticles(res.data);
-//         } catch (err) {
-//             console.error("Erreur récupération des articles :", err);
-//         }
-//     };
-
-//     const handleChange = (e, codeArticle, field) => {
-//         setEntrees({
-//             ...entrees,
-//             [codeArticle]: {
-//                 ...entrees[codeArticle],
-//                 [field]: e.target.value
-//             }
-//         });
-//     };
-
-//     const handleSaveEntree = async () => {
-//         const dateNow = new Date();
-//         const dateChoisie = new Date(dateEntree);
-
-//         if (!dateEntree) {
-//             alert("La date d'entrée est obligatoire.");
-//             return;
-//         }
-
-//         if (dateChoisie > dateNow) {
-//             alert("La date d'entrée ne peut pas être dans le futur.");
-//             return;
-//         }
-
-//         const articlesPayload = Object.entries(entrees)
-//             .filter(([_, entry]) => parseFloat(entry.quantiteEntree) > 0)
-//             .map(([codeArticle, entry]) => ({
-//                 codeArticle,
-//                 quantiteEntree: parseFloat(entry.quantiteEntree),
-//                 commentaire: entry.commentaire?.trim() || ""
-//             }));
-
-//         if (articlesPayload.length === 0) {
-//             alert("Aucune entrée valide à enregistrer.");
-//             return;
-//         }
-
-//         const confirmed = window.confirm("Confirmer l'enregistrement de l'entrée pour les articles sélectionnés ?");
-//         if (!confirmed) return;
-
-//         setLoading(true);
-
-//         try {
-//             const token = localStorage.getItem("token");
-
-//             await axios.post("http://localhost:5000/entree/entrees", {
-//                 codeDepot: selectedDepot.codeDepot,
-//                 dateEntree,
-//                 articles: articlesPayload
-//             }, {
-//                 headers: {
-//                     Authorization: `Bearer ${token}`,
-//                     "Content-Type": "application/json"
-//                 }
-//             });
-
-//             alert("✅ Entrée enregistrée avec succès !");
-//             setEntrees({});
-//             setDateEntree("");
-//         } catch (err) {
-//             console.error("❌ Erreur lors de l'enregistrement :", err);
-//             const msg = err.response?.data?.message || "Erreur lors de l'enregistrement.";
-//             alert("Erreur : " + msg);
-//         }
-
-//         setLoading(false);
-//     };
-
-//     return (
-//         <AdminLayoutDepot
-//             darkMode={darkMode}
-//             setDarkMode={setDarkMode}
-//             searchTerm={searchTerm}
-//             setSearchTerm={setSearchTerm}
-//         >
-//             <div className="max-w-4xl mx-auto p-4">
-//                 <h1 className="text-2xl font-bold mb-6 text-gray-800 dark:text-white">Gestion des Entrées de Stock</h1>
-
-//                 <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-6">
-//                     {depots.length === 1 && (
-//                         <div className="mb-6">
-//                             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-//                                 Dépôt affecté :
-//                             </label>
-//                             <div className="p-2 bg-gray-100 dark:bg-gray-700 rounded text-gray-800 dark:text-white">
-//                                 {depots[0].nomDepot} - {depots[0].codeDepot}
-//                             </div>
-//                         </div>
-//                     )}
-//                     <div className="mb-6">
-//                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-//                             Date d'entrée (commune à tous les articles)
-//                         </label>
-//                         <Input
-//                             type="date"
-//                             value={dateEntree}
-//                             onChange={(e) => setDateEntree(e.target.value)}
-//                             className="w-full"
-//                         />
-//                     </div>
-
-//                     {articles.length === 0 && (
-//                         <p className="text-gray-500 dark:text-gray-400">Aucun article trouvé pour vos dépôts affectés.</p>
-//                     )}
-
-//                     {articles.length > 0 && (
-//                         <div className="space-y-4">
-//                             {articles.map((article) => {
-//                                 const entry = entrees[article.codeArticle] || {};
-//                                 return (
-//                                     <div
-//                                         key={article.codeArticle}
-//                                         className="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg shadow border border-gray-200 dark:border-gray-600"
-//                                     >
-//                                         <h3 className="font-semibold text-lg text-gray-800 dark:text-white">
-//                                             {article.designation} ({article.codeArticle}) — Dépôt: {article.codeDepot}
-//                                         </h3>
-//                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-//                                             <div>
-//                                                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-//                                                     Quantité à ajouter
-//                                                 </label>
-//                                                 <Input
-//                                                     type="number"
-//                                                     value={entry.quantiteEntree || ""}
-//                                                     onChange={(e) => handleChange(e, article.codeArticle, "quantiteEntree")}
-//                                                     className="w-full"
-//                                                 />
-//                                             </div>
-//                                             <div className="md:col-span-2">
-//                                                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-//                                                     Commentaire (optionnel)
-//                                                 </label>
-//                                                 <textarea
-//                                                     placeholder="Commentaire..."
-//                                                     value={entry.commentaire || ""}
-//                                                     onChange={(e) => handleChange(e, article.codeArticle, "commentaire")}
-//                                                     className="border p-2 rounded w-full h-20 bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-//                                                 />
-//                                             </div>
-//                                         </div>
-//                                     </div>
-//                                 );
-//                             })}
-//                             <div className="text-right">
-//                                 <Button
-//                                     onClick={handleSaveEntree}
-//                                     disabled={loading}
-//                                     className="mt-4"
-//                                 >
-//                                     Enregistrer l'entrée globale
-//                                 </Button>
-//                             </div>
-//                         </div>
-//                     )}
-//                 </div>
-//             </div>
-//         </AdminLayoutDepot>
-//     );
-// };
-
-// export default EntreeStock;
-
-
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Button } from "../components/ui/Button";
@@ -385,7 +151,7 @@ const EntreeStock = () => {
 
     const hasValidEntries = Object.values(entrees).some(entry => parseFloat(entry.quantiteEntree) > 0);
 
-    // Fonctions d'import
+    
     const handleFileSelect = (file) => {
         setImportFile(file);
         if (file) {
@@ -488,7 +254,7 @@ const EntreeStock = () => {
             searchTerm={searchTerm}
             setSearchTerm={setSearchTerm}
         >
-            {/* Overlay pour fermer le menu d'import */}
+          
             {showImportOptions && (
                 <div 
                     className="fixed inset-0 z-10" 
@@ -496,7 +262,7 @@ const EntreeStock = () => {
                 ></div>
             )}
 
-            {/* Modal de prévisualisation d'import */}
+            
             {showPreview && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
                     <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-4xl w-full mx-4 max-h-[80vh] overflow-hidden">
@@ -603,7 +369,7 @@ const EntreeStock = () => {
             )}
 
             <div className="max-w-6xl mx-auto p-6">
-                {/* En-tête avec animation */}
+                
                 <div className="text-center mb-8 animate-fade-in">
                     <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full mb-4 shadow-xl">
                         <Package className="w-8 h-8 text-white" />
@@ -616,10 +382,10 @@ const EntreeStock = () => {
                     </p>
                 </div>
 
-                {/* Carte principale */}
+               
                 <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 dark:border-gray-700/20 p-8 mb-8 hover:shadow-3xl transition-all duration-500">
                     
-                    {/* Informations du dépôt */}
+                  
                     <div className="mb-8">
                         <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-2xl p-6 border border-blue-200/50 dark:border-blue-700/50">
                             <div className="flex items-center space-x-3 mb-2">
@@ -641,7 +407,7 @@ const EntreeStock = () => {
                         </div>
                     </div>
 
-                    {/* Date d'entrée et Import */}
+                   
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
                         <div>
                             <div className="flex items-center space-x-3 mb-4">
@@ -658,7 +424,7 @@ const EntreeStock = () => {
                             />
                         </div>
 
-                        {/* Section Import */}
+                    
                         <div>
                             <div className="flex items-center space-x-3 mb-4">
                                 <Upload className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
@@ -681,11 +447,11 @@ const EntreeStock = () => {
                                     </div>
                                 </Button>
 
-                                {/* Zone d'import */}
+                               
                                 {showImportOptions && (
                                     <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-600 z-20 overflow-hidden">
                                         <div className="p-4">
-                                            {/* Zone de drag & drop */}
+                                           
                                             <div
                                                 className={`border-2 border-dashed rounded-xl p-8 text-center transition-all duration-300 ${
                                                     dragOver 
@@ -725,7 +491,7 @@ const EntreeStock = () => {
                                                 </div>
                                             </div>
 
-                                            {/* Format attendu */}
+                                        
                                             <div className="mt-4 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
                                                 <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                                     Format CSV attendu :
@@ -766,7 +532,7 @@ const EntreeStock = () => {
                         </div>
                     </div>
 
-                    {/* Barre de recherche */}
+                  
                     <div className="mb-8">
                         <div className="relative max-w-md">
                             <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
@@ -780,7 +546,7 @@ const EntreeStock = () => {
                         </div>
                     </div>
 
-                    {/* Liste des articles */}
+            
                     {filteredArticles.length === 0 && (
                         <div className="text-center py-12">
                             <Package className="w-16 h-16 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
@@ -806,14 +572,14 @@ const EntreeStock = () => {
                                         }`}
                                         style={{ animationDelay: `${index * 100}ms` }}
                                     >
-                                        {/* Badge de statut */}
+                                       
                                         {hasEntry && (
                                             <div className="absolute -top-2 -right-2 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-full p-2 shadow-lg">
                                                 <Check className="w-4 h-4" />
                                             </div>
                                         )}
 
-                                        {/* En-tête de l'article */}
+                                        
                                         <div className="flex items-center justify-between mb-6">
                                             <div>
                                                 <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-1">
@@ -840,7 +606,7 @@ const EntreeStock = () => {
                                             )}
                                         </div>
 
-                                        {/* Champs de saisie */}
+                                      
                                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                                             <div className="lg:col-span-1">
                                                 <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
@@ -872,7 +638,7 @@ const EntreeStock = () => {
                                             </div>
                                         </div>
 
-                                        {/* Indicateur de progression */}
+                                     
                                         <div className="mt-4 h-1 bg-gray-200 dark:bg-gray-600 rounded-full overflow-hidden">
                                             <div 
                                                 className={`h-full transition-all duration-700 ${
@@ -886,7 +652,7 @@ const EntreeStock = () => {
                                 );
                             })}
 
-                            {/* Bouton d'enregistrement */}
+                          
                             <div className="flex justify-center pt-8">
                                 <Button
                                     onClick={handleSaveEntree}
@@ -910,7 +676,7 @@ const EntreeStock = () => {
                     )}
                 </div>
 
-                {/* Statistiques rapides */}
+             
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-lg rounded-2xl p-6 border border-white/20 dark:border-gray-700/20 hover:shadow-xl transition-all duration-300">
                         <div className="flex items-center space-x-3">
@@ -954,7 +720,7 @@ const EntreeStock = () => {
                 </div>
             </div>
 
-            {/* CSS pour les animations personnalisées */}
+
             <style jsx>{`
                 @keyframes fade-in {
                     from {

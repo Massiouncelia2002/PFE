@@ -1,95 +1,3 @@
-
-
-
-
-
-// import React from "react";
-// import { useNavigate } from "react-router-dom";
-// import axios from "axios";
-// import { Pencil, Trash2 } from "lucide-react";
-// import AdminLayout from "../pages/AdminLayout";
-
-// const ClientTable = ({ clients, fetchClients }) => {
-//   const navigate = useNavigate();
-
-//   const handleDelete = async (id) => {
-//     const firstConfirm = window.confirm("Êtes-vous sûr de vouloir supprimer ce client ?");
-//     if (!firstConfirm) return;
-  
-//     const secondConfirm = window.confirm("Cette action est irréversible. Voulez-vous vraiment continuer ?");
-//     if (!secondConfirm) return;
-  
-//     try {
-//       const res = await axios.delete(`http://localhost:5000/client/${id}`);
-//       if (res.status === 200) {
-//         alert("Client supprimé avec succès !");
-//         fetchClients();
-//       } else {
-//         console.error("Échec de la suppression", res);
-//       }
-//     } catch (error) {
-//       console.error("Erreur lors de la suppression du client", error);
-//     }
-//   };
-
-//   const handleEdit = (id) => {
-//     navigate(`/modifier-client/${id}`);
-//   };
-
-//   return (
-//     <AdminLayout>
-//       <div className="p-6 space-y-6">
-//         <h2 className="text-2xl font-bold mb-4">Liste des clients</h2>
-
-//         <div className="overflow-auto rounded-lg shadow border">
-//           <table className="min-w-full bg-white text-sm text-left">
-//             <thead className="bg-gray-100 text-gray-700 uppercase text-xs">
-//               <tr>
-//                 <th className="px-6 py-3">Code Client</th>
-//                 <th className="px-6 py-3">Nom</th>
-//                 <th className="px-6 py-3">Email</th>
-//                 <th className="px-6 py-3">Adresse</th>
-//                 <th className="px-6 py-3">Téléphone</th>
-//                 <th className="px-6 py-3">Dépôt affecté</th>
-//                 <th className="px-6 py-3 text-right">Actions</th>
-//               </tr>
-//             </thead>
-//             <tbody>
-//               {clients.map((c) => (
-//                 <tr key={c.codeClient} className="border-t group hover:bg-gray-50 transition">
-//                   <td className="px-6 py-4">{c.codeClient}</td>
-//                   <td className="px-6 py-4">{c.nomClient}</td>
-//                   <td className="px-6 py-4">{c.email}</td>
-//                   <td className="px-6 py-4">{c.adress}</td>
-//                   <td className="px-6 py-4">{c.tel}</td>
-//                   <td className="px-6 py-4">{c.codeDepot}</td>
-//                   <td className="px-6 py-4 text-right flex justify-end gap-2">
-//                     <button
-//                       onClick={() => handleEdit(c.codeClient)}
-//                       className="flex items-center gap-1 bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600 transition"
-//                     >
-//                       <Pencil className="h-4 w-4" />
-//                     </button>
-//                     <button
-//                       onClick={() => handleDelete(c.codeClient)}
-//                       className="flex items-center gap-1 bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 transition"
-//                     >
-//                       <Trash2 className="h-4 w-4" />
-//                     </button>
-//                   </td>
-//                 </tr>
-//               ))}
-//             </tbody>
-//           </table>
-//         </div>
-//       </div>
-//     </AdminLayout>
-//   );
-// };
-
-// export default ClientTable;
-
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -155,7 +63,7 @@ const ClientTable = ({ clients, fetchClients }) => {
     <AdminLayout>
       <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50 p-4 sm:p-6">
         <div className="max-w-7xl mx-auto">
-          {/* Header */}
+       
           <div className="mb-6 sm:mb-8">
             <div className="flex items-center mb-3 sm:mb-4">
               <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl flex items-center justify-center mr-3 sm:mr-4 shadow-lg">
@@ -167,7 +75,7 @@ const ClientTable = ({ clients, fetchClients }) => {
               </div>
             </div>
 
-            {/* Search and Filter Bar */}
+      
             <div className="bg-white rounded-xl shadow-lg p-3 sm:p-4 border border-gray-100">
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                 <div className="relative flex-1">
@@ -208,7 +116,7 @@ const ClientTable = ({ clients, fetchClients }) => {
             </div>
           </div>
 
-          {/* Desktop Table */}
+          
           <div className="hidden md:block bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full">
@@ -228,21 +136,21 @@ const ClientTable = ({ clients, fetchClients }) => {
                       key={client.codeClient}
                       className={`transition-all duration-200 ${index % 2 === 0 ? 'bg-gray-50/30' : 'bg-white'} hover:bg-blue-50`}
                     >
-                      {/* Code */}
+                      
                       <td className="px-4 sm:px-6 py-4">
                         <span className="font-mono text-sm text-gray-900 bg-gray-100 px-2 py-1 rounded">
                           {client.codeClient}
                         </span>
                       </td>
 
-                      {/* Client Info */}
+                     
                       <td className="px-4 sm:px-6 py-4">
                         <div className="font-semibold text-gray-900">
                           {client.nomClient}
                         </div>
                       </td>
 
-                      {/* Contact */}
+                     
                       <td className="px-4 sm:px-6 py-4">
                         <div className="space-y-1 text-sm">
                           <div className="flex items-center text-gray-600">
@@ -256,7 +164,7 @@ const ClientTable = ({ clients, fetchClients }) => {
                         </div>
                       </td>
 
-                      {/* Adresse */}
+                      
                       <td className="px-4 sm:px-6 py-4 text-sm text-gray-600">
                         <div className="flex items-center">
                           <MapPin className="w-4 h-4 mr-2 text-gray-400" />
@@ -264,14 +172,13 @@ const ClientTable = ({ clients, fetchClients }) => {
                         </div>
                       </td>
 
-                      {/* Dépôt */}
+                     
                       <td className="px-4 sm:px-6 py-4">
                         <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-blue-100 text-blue-800 border border-blue-200">
                           {client.codeDepot}
                         </span>
                       </td>
 
-                      {/* Actions */}
                       <td className="px-4 sm:px-6 py-4 text-center">
                         <div className="flex items-center justify-center space-x-1">
                           <ActionButton
@@ -303,7 +210,7 @@ const ClientTable = ({ clients, fetchClients }) => {
             )}
           </div>
 
-          {/* Mobile Cards */}
+
           <div className="md:hidden space-y-4">
             {filteredClients.length === 0 ? (
               <div className="text-center py-12 bg-white rounded-xl shadow-xl border border-gray-100">

@@ -1,4 +1,3 @@
-
 import React from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -9,13 +8,13 @@ const AjouterClient = () => {
 
   const handleAddClient = async (data) => {
     try {
-      // Vérification basique
+     
       if (!data || Object.keys(data).length === 0) {
         console.error("Les données du client sont vides ou invalides.");
         return;
       }
 
-      // Requête POST vers le backend
+      
       const response = await axios.post("http://localhost:5000/client", data);
 
       if (response.status === 200 || response.status === 201) {

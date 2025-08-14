@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import {
   MenuIcon,
@@ -48,7 +47,7 @@ const AdminLayoutDepot = ({ children }) => {
           <Sidebar isOpen={isSidebarOpen} closeSidebar={() => setIsSidebarOpen(false)} />
 
           <main className="flex-1 lg:ml-64">
-            {/* Topbar */}
+          
             <div className="sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 z-30">
               <div className="flex items-center justify-between px-4 md:px-6 py-4">
                 <div className="flex items-center gap-4">
@@ -59,7 +58,7 @@ const AdminLayoutDepot = ({ children }) => {
                     {isSidebarOpen ? <XIcon className="w-6 h-6" /> : <MenuIcon className="w-6 h-6" />}
                   </button>
 
-                  {/* Message de bienvenue */}
+                 
                   <p className="text-sm md:text-base font-medium text-gray-700 dark:text-gray-200">
                     Bienvenue, {user.role} : {user.nom} {user.prenom}
                   </p>
@@ -116,8 +115,7 @@ const AdminLayoutDepot = ({ children }) => {
               </div>
             </div>
 
-            {/* Main content */}
-            <div className="p-4 md:p-6 lg:p-8">{children}</div>
+                   <div className="p-4 md:p-6 lg:p-8">{children}</div>
           </main>
         </div>
       </div>
